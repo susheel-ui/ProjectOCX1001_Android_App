@@ -1,0 +1,35 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="45dp"
+    android:viewportWidth="80"
+    android:viewportHeight="45">
+
+    <!-- Main body -->
+    <path
+        android:fillColor="#BBDEFB"
+        android:pathData="M5,20h45v20h-45z" />
+
+    <!-- Back box -->
+    <path
+        android:fillColor="#90A4AE"
+        android:pathData="M50,25h20v15h-20z"/>
+
+    <!-- Left wheel (converted circle) -->
+    <path
+        android:fillColor="#263238"
+        android:pathData="
+            M20,33
+            a5,5 0 1,0 0,10
+            a5,5 0 1,0 0,-10
+        "/>
+
+    <!-- Right wheel (converted circle) -->
+    <path
+        android:fillColor="#263238"
+        android:pathData="
+            M60,33
+            a5,5 0 1,0 0,10
+            a5,5 0 1,0 0,-10
+        "/>
+
+</vector>

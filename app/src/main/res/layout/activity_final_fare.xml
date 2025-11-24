@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <!-- SCROLLABLE CONTENT -->
+    <ScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottomSection"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Vehicle Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="@drawable/white_card"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/vehicleImage"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:src="@drawable/scooter" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="12dp">
+
+                    <TextView
+                        android:id="@+id/vehicleName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Scooter"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="#000" />
+
+
+
+                    <TextView
+                        android:id="@+id/addressDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View Address Details"
+                        android:textColor="#2E64FE"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- GOODS TYPE CARD -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="@drawable/white_card"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Goods Type"
+                    android:textSize="16sp"
+                    android:textColor="#444" />
+
+                <TextView
+                    android:id="@+id/goodsType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="General • Loose"
+                    android:textSize="16sp"
+                    android:textColor="#000" />
+
+                <TextView
+                    android:layout_width="124dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"
+                    android:text="Change"
+                    android:textColor="#2E64FE"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- WARNING -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="@drawable/yellow_card"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Do not send restricted items"
+                    android:textSize="16sp"
+                    android:textColor="#000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View List"
+                    android:textSize="16sp"
+                    android:textColor="#2E64FE" />
+            </LinearLayout>
+
+            <!-- FINAL FARE AMOUNT -->
+            <TextView
+                android:id="@+id/finalFareText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="₹0"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#000"
+                android:padding="16dp"
+                android:background="@drawable/white_card"
+                android:layout_marginBottom="12dp" />
+
+            <!-- RULES -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Read Before Booking"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:layout_marginBottom="6dp" />
+
+            <LinearLayout
+                android:id="@+id/rulesCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/white_card"
+                android:padding="16dp"
+                android:orientation="vertical">
+
+                <TextView android:id="@+id/rule1" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView android:id="@+id/rule2" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView android:id="@+id/rule3" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView android:id="@+id/rule4" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView android:id="@+id/rule5" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView android:id="@+id/rule6" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView android:id="@+id/rule7" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- BOTTOM SECTION: GST + PAYMENT + BOOK BUTTON -->
+    <LinearLayout
+        android:id="@+id/bottomSection"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- GST BAR -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#0039A6"
+            android:padding="16dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="18% GST included in final fare"
+                android:textColor="#FFF"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- PAYMENT -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_card"
+            android:padding="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Choose Payment Method"
+                android:textColor="#000"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/paymentMethod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cash"
+                android:textColor="#000"
+                android:textSize="17sp"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:id="@+id/paymentFare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹99"
+                android:textColor="#000"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+
+<!--         Bottom confirm button -->
+        <Button
+            android:id="@+id/bookNowButton"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="Confirm and Proceed"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:backgroundTint="@color/color_primary"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
