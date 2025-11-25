@@ -1,131 +1,133 @@
 package com.example.project_a_android_userapp
 
-import android.Manifest
-import android.content.pm.PackageManager
+import android.content.Intent
+import android.location.Geocoder
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import kotlinx.coroutines.*
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.json.JSONArray
-import org.osmdroid.config.Configuration
-import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.Marker
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import androidx.fragment.app.Fragment
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import java.util.*
 
-class Pickup_Drop_Selector_Activity : AppCompatActivity() {
+class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
 
-    private lateinit var mapView: MapView
+    private lateinit var gMap: GoogleMap
     private lateinit var pickupEdit: EditText
     private lateinit var dropEdit: EditText
     private lateinit var submitButton: Button
 
-    private var pickupMarker: Marker? = null
-    private var dropMarker: Marker? = null
-    private var pickupPoint: GeoPoint? = null
-    private var dropPoint: GeoPoint? = null
+    private var isSelectingPickup = true
 
-    private val client = OkHttpClient()
-    private val LOCATION_PERMISSION_REQUEST = 100
+    private val PICKUP_REQUEST = 101
+    private val DROP_REQUEST = 102
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Configuration.getInstance().load(this, getPreferences(MODE_PRIVATE))
         setContentView(R.layout.activity_pickup_drop_selector)
 
-        mapView = findViewById(R.id.mapView)
+        // Initialize Places API
+        Places.initialize(this, "YOUR_API_KEY")
+
         pickupEdit = findViewById(R.id.pickupEdit)
         dropEdit = findViewById(R.id.dropEdit)
         submitButton = findViewById(R.id.submitButton)
 
-        // Initialize 2D Map
-        mapView.setTileSource(TileSourceFactory.MAPNIK)
-        mapView.setMultiTouchControls(true)
-        mapView.controller.setZoom(15.0)
-        mapView.controller.setCenter(GeoPoint(25.4489, 78.5683)) // Jhansi
+        val mapFragment =
+            supportFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
+        mapFragment.getMapAsync(this)
 
-        // Tap to select pickup/drop
-        mapView.setOnTouchListener { _, event ->
-            if (event.action == android.view.MotionEvent.ACTION_UP) {
-                val geo = mapView.projection.fromPixels(event.x.toInt(), event.y.toInt())
-                val point = GeoPoint(geo.latitude, geo.longitude)
-
-                if (pickupPoint == null) setPickup(point)
-                else setDrop(point)
-            }
-            true
-        }
-
-        // Autocomplete for pickup/drop
-        pickupEdit.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) fetchAutocomplete(pickupEdit.text.toString()) { point -> point?.let { setPickup(it) } }
-        }
-        dropEdit.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) fetchAutocomplete(dropEdit.text.toString()) { point -> point?.let { setDrop(it) } }
-        }
+        pickupEdit.setOnClickListener { openAutocomplete(PICKUP_REQUEST) }
+        dropEdit.setOnClickListener { openAutocomplete(DROP_REQUEST) }
 
         submitButton.setOnClickListener {
-            if (pickupPoint != null && dropPoint != null) {
-                val intent = android.content.Intent(this, SenderDetailsActivity::class.java)
-                intent.putExtra("pickupLat", pickupPoint!!.latitude)
-                intent.putExtra("pickupLon", pickupPoint!!.longitude)
-                intent.putExtra("dropLat", dropPoint!!.latitude)
-                intent.putExtra("dropLon", dropPoint!!.longitude)
-                startActivity(intent)
+            if (pickupEdit.text.isEmpty()) {
+                Toast.makeText(this, "Select Pickup", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (dropEdit.text.isEmpty()) {
+                Toast.makeText(this, "Select Drop", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val intent = Intent(this, SenderDetailsActivity::class.java)
+            intent.putExtra("pickupAddress", pickupEdit.text.toString())
+            intent.putExtra("dropAddress", dropEdit.text.toString())
+            startActivity(intent)
+        }
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        gMap = googleMap
+
+        val default = LatLng(25.4489, 78.5683)
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(default, 16f))
+
+        gMap.setOnCameraIdleListener {
+            val center = gMap.cameraPosition.target
+            val address = getAddress(center)
+
+            if (isSelectingPickup) {
+                pickupEdit.setText(address)
             } else {
-                Toast.makeText(this, "Please select both pickup and drop points", Toast.LENGTH_SHORT).show()
+                dropEdit.setText(address)
             }
         }
 
-    }
-
-    private fun setPickup(point: GeoPoint) {
-        pickupMarker?.let { mapView.overlays.remove(it) }
-        pickupMarker = Marker(mapView).apply {
-            position = point
-            title = "Pickup"
-            mapView.overlays.add(this)
+        // Make user switch manually using click
+        pickupEdit.setOnFocusChangeListener { _, focused ->
+            if (focused) isSelectingPickup = true
         }
-        pickupPoint = point
-        mapView.controller.animateTo(point)
-        mapView.invalidate()
-        Toast.makeText(this, "Pickup selected", Toast.LENGTH_SHORT).show()
-    }
 
-    private fun setDrop(point: GeoPoint) {
-        dropMarker?.let { mapView.overlays.remove(it) }
-        dropMarker = Marker(mapView).apply {
-            position = point
-            title = "Drop"
-            mapView.overlays.add(this)
+        dropEdit.setOnFocusChangeListener { _, focused ->
+            if (focused) isSelectingPickup = false
         }
-        dropPoint = point
-        mapView.controller.animateTo(point)
-        mapView.invalidate()
-        Toast.makeText(this, "Drop selected", Toast.LENGTH_SHORT).show()
     }
 
-    private fun fetchAutocomplete(query: String, callback: (GeoPoint?) -> Unit) {
-        if (query.isEmpty()) return
-        val url = "https://nominatim.openstreetmap.org/search?q=$query&format=json&limit=1"
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val request = Request.Builder().url(url).header("User-Agent", "OSMApp").build()
-                val response = client.newCall(request).execute()
-                val array = JSONArray(response.body?.string())
-                if (array.length() > 0) {
-                    val obj = array.getJSONObject(0)
-                    val lat = obj.getDouble("lat")
-                    val lon = obj.getDouble("lon")
-                    withContext(Dispatchers.Main) { callback(GeoPoint(lat, lon)) }
-                } else withContext(Dispatchers.Main) { callback(null) }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) { callback(null) }
+    private fun getAddress(latLng: LatLng): String {
+        return try {
+            val geocoder = Geocoder(this, Locale.getDefault())
+            val list = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+            list?.get(0)?.getAddressLine(0) ?: ""
+        } catch (e: Exception) {
+            ""
+        }
+    }
+
+    private fun openAutocomplete(req: Int) {
+        val fields = listOf(
+            Place.Field.ADDRESS,
+            Place.Field.LAT_LNG
+        )
+
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+            .build(this)
+
+        startActivityForResult(intent, req)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK && data != null) {
+            val place = Autocomplete.getPlaceFromIntent(data)
+
+            when (requestCode) {
+                PICKUP_REQUEST -> {
+                    pickupEdit.setText(place.address)
+                    place.latLng?.let { gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it, 16f)) }
+                }
+                DROP_REQUEST -> {
+                    dropEdit.setText(place.address)
+                    place.latLng?.let { gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it, 16f)) }
+                }
             }
         }
     }

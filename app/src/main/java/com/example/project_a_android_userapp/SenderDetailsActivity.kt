@@ -13,8 +13,8 @@ class SenderDetailsActivity : AppCompatActivity() {
     private lateinit var typeRadioGroup: RadioGroup
     private lateinit var confirmButton: Button
 
-    private var pickupLat: Double = 0.0
-    private var pickupLon: Double = 0.0
+    private var pickupLat = 0.0
+    private var pickupLon = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,20 +34,22 @@ class SenderDetailsActivity : AppCompatActivity() {
             val name = nameEdit.text.toString()
             val phone = phoneEdit.text.toString()
             val typeId = typeRadioGroup.checkedRadioButtonId
-            val type = findViewById<RadioButton>(typeId)?.text.toString()
 
             if (house.isEmpty() || name.isEmpty() || phone.isEmpty() || typeId == -1) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
-            } else {
-                val intent = Intent(this, ReceiverDetailsActivity::class.java)
-                intent.putExtra("pickupLat", pickupLat)
-                intent.putExtra("pickupLon", pickupLon)
-                intent.putExtra("house", house)
-                intent.putExtra("name", name)
-                intent.putExtra("phone", phone)
-                intent.putExtra("type", type)
-                startActivity(intent)
+                return@setOnClickListener
             }
+
+            val type = findViewById<RadioButton>(typeId).text.toString()
+
+            val intent = Intent(this, ReceiverDetailsActivity::class.java)
+            intent.putExtra("pickupLat", pickupLat)
+            intent.putExtra("pickupLon", pickupLon)
+            intent.putExtra("house", house)
+            intent.putExtra("name", name)
+            intent.putExtra("phone", phone)
+            intent.putExtra("type", type)
+            startActivity(intent)
         }
     }
 }

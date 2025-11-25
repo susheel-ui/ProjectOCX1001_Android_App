@@ -2,22 +2,20 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_primary">
 
-    <!-- Back Button -->
+    <!-- BACK BUTTON -->
     <ImageButton
         android:id="@+id/BackButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_margin="16dp"
         android:background="@android:color/transparent"
         android:src="@drawable/baseline_arrow_back_ios_24"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <!-- Title -->
     <TextView
@@ -25,220 +23,121 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Fare and Details"
+        android:textColor="@android:color/white"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@id/BackButton"
         app:layout_constraintBottom_toBottomOf="@id/BackButton"
-        app:layout_constraintTop_toTopOf="@id/BackButton"/>
+        app:layout_constraintStart_toEndOf="@id/BackButton"/>
 
-    <!-- Pickup & Drop Card (with icons) -->
+    <!-- Pickup/Drop Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/pickupDropCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="12dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
         app:layout_constraintTop_toBottomOf="@id/BackButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:orientation="vertical"
+            android:padding="18dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="18dp">
+            android:layout_height="wrap_content">
 
-            <!-- Pickup -->
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_location_on_green"/>
-
-                <TextView
-                    android:id="@+id/pickupText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Pickup: "
-                    android:layout_marginStart="10dp"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"/>
-            </LinearLayout>
-
-            <!-- Drop -->
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/pickupText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp">
+                android:text="Pickup"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
 
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_location_on_red"/>
-
-                <TextView
-                    android:id="@+id/dropText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Drop: "
-                    android:layout_marginStart="10dp"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"/>
-            </LinearLayout>
-
+            <TextView
+                android:id="@+id/dropText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Drop"
+                android:textSize="16sp"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Map View (rounded corners) -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/mapHolderCard"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="10dp"
-        app:layout_constraintTop_toBottomOf="@id/pickupDropCard"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bikeCard">
-
-        <org.osmdroid.views.MapView
-            android:id="@+id/mapView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </androidx.cardview.widget.CardView>
-
-    <!-- BIKE -->
+    <!-- VEHICLE CARDS (BIKE / TRUCK / BIG TRUCK) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/bikeCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_margin="16dp"
+        android:clickable="true"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
-        android:clickable="true"
-        android:foreground="?attr/selectableItemBackground"
-        app:layout_constraintTop_toBottomOf="@id/mapHolderCard"
+        app:layout_constraintTop_toBottomOf="@id/pickupDropCard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical"
+        <TextView
+            android:id="@+id/bikeFareText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/scooter" />
-
-            <TextView
-                android:id="@+id/bikeFareText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Bike: ₹0"
-                android:layout_marginStart="12dp"
-                android:textSize="17sp"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Bike: ₹0"
+            android:textSize="16sp"/>
     </androidx.cardview.widget.CardView>
 
-    <!-- TRUCK -->
     <androidx.cardview.widget.CardView
         android:id="@+id/truckCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:clickable="true"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
-        android:clickable="true"
-        android:foreground="?attr/selectableItemBackground"
         app:layout_constraintTop_toBottomOf="@id/bikeCard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical"
+        <TextView
+            android:id="@+id/truckFareText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="69dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/truck_10ft" />
-
-            <TextView
-                android:id="@+id/truckFareText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Truck: ₹0"
-                android:layout_marginStart="12dp"
-                android:textSize="17sp"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Truck: ₹0"
+            android:textSize="16sp"/>
     </androidx.cardview.widget.CardView>
 
-    <!-- BIG TRUCK -->
     <androidx.cardview.widget.CardView
         android:id="@+id/bigTruckCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="4dp"
+        android:layout_margin="16dp"
+        android:clickable="true"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
-        android:clickable="true"
-        android:foreground="?attr/selectableItemBackground"
         app:layout_constraintTop_toBottomOf="@id/truckCard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical"
+        <TextView
+            android:id="@+id/bigTruckFareText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="69dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/truck_17ft" />
-
-            <TextView
-                android:id="@+id/bigTruckFareText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Big Truck: ₹0"
-                android:layout_marginStart="12dp"
-                android:textSize="17sp"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Big Truck: ₹0"
+            android:textSize="16sp"/>
     </androidx.cardview.widget.CardView>
 
-    <!-- Confirm Button -->
+    <!-- CONFIRM BUTTON -->
     <Button
         android:id="@+id/submitFareButton"
         android:layout_width="0dp"
         android:layout_height="52dp"
         android:layout_margin="16dp"
         android:text="Confirm"
-        android:textColor="@color/white"
         android:textStyle="bold"
+        android:textColor="@android:color/white"
         android:backgroundTint="@color/green"
         app:layout_constraintTop_toBottomOf="@id/bigTruckCard"
         app:layout_constraintStart_toStartOf="parent"
