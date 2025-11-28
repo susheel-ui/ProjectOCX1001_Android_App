@@ -10,6 +10,7 @@
 
 
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -22,7 +23,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCU5teqJUDv29Sy17ReirpLmyQz5C3g-RM"/>
+            android:value="AIzaSyCG4YVvKPVB_nruoVtL8RqS0ek8kxp69Xw"/>
 
         <!-- Main Activities -->
         <activity

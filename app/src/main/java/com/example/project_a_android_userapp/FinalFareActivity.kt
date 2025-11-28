@@ -53,9 +53,9 @@ class FinalFareActivity : AppCompatActivity() {
 
         // Image by vehicle
         when (vehicle) {
-            "Bike" -> vehicleImage.setImageResource(R.drawable.scooter)
-            "Truck" -> vehicleImage.setImageResource(R.drawable.truck_10ft)
-            "Big Truck" -> vehicleImage.setImageResource(R.drawable.truck_17ft)
+            "Bike" -> vehicleImage.setImageResource(R.drawable.mini_3w)
+            "Truck" -> vehicleImage.setImageResource(R.drawable.loader)
+            "Big Truck" -> vehicleImage.setImageResource(R.drawable.truck)
         }
 
         // Button Action

@@ -1,134 +1,125 @@
 package com.example.project_a_android_userapp
 
-import android.content.Intent
 import android.location.Geocoder
 import android.os.Bundle
+import android.view.View
+import android.view.animation.TranslateAnimation
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.widget.Autocomplete
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
-import java.util.*
+import java.util.Locale
 
 class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
 
+    private lateinit var vm: LocationViewModel
     private lateinit var gMap: GoogleMap
     private lateinit var pickupEdit: EditText
     private lateinit var dropEdit: EditText
-    private lateinit var submitButton: Button
+    private lateinit var pickupPin: ImageView
+    private lateinit var dropPin: ImageView
+    private lateinit var btnSelectPickup: Button
+    private lateinit var btnSelectDrop: Button
+    private lateinit var btnNext: Button
 
-    private var isSelectingPickup = true
-
-    private val PICKUP_REQUEST = 101
-    private val DROP_REQUEST = 102
+    private var mode = "" // "pickup" / "drop"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pickup_drop_selector)
 
-        // Initialize Places API
-        Places.initialize(this, "YOUR_API_KEY")
+        // get shared vm from application
+        vm = (application as MyApp).vm
 
         pickupEdit = findViewById(R.id.pickupEdit)
         dropEdit = findViewById(R.id.dropEdit)
-        submitButton = findViewById(R.id.submitButton)
+        pickupPin = findViewById(R.id.pickupPin)
+        dropPin = findViewById(R.id.dropPin)
+        btnSelectPickup = findViewById(R.id.btnPickupSelect)
+        btnSelectDrop = findViewById(R.id.btnDropSelect)
+        btnNext = findViewById(R.id.btnNext)
 
-        val mapFragment =
-            supportFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
+        pickupPin.visibility = View.GONE
+        dropPin.visibility = View.GONE
+
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.mapFragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        pickupEdit.setOnClickListener { openAutocomplete(PICKUP_REQUEST) }
-        dropEdit.setOnClickListener { openAutocomplete(DROP_REQUEST) }
+        btnSelectPickup.setOnClickListener {
+            mode = "pickup"
+            pickupPin.visibility = View.VISIBLE
+            dropPin.visibility = View.GONE
+            Toast.makeText(this, "Move map to set Pickup", Toast.LENGTH_SHORT).show()
+        }
 
-        submitButton.setOnClickListener {
-            if (pickupEdit.text.isEmpty()) {
-                Toast.makeText(this, "Select Pickup", Toast.LENGTH_SHORT).show()
+        btnSelectDrop.setOnClickListener {
+            mode = "drop"
+            dropPin.visibility = View.VISIBLE
+            pickupPin.visibility = View.GONE
+            Toast.makeText(this, "Move map to set Drop", Toast.LENGTH_SHORT).show()
+        }
+
+        btnNext.setOnClickListener {
+            if (vm.pickupAddress.isEmpty()) {
+                Toast.makeText(this, "Pickup not selected!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (dropEdit.text.isEmpty()) {
-                Toast.makeText(this, "Select Drop", Toast.LENGTH_SHORT).show()
+            if (vm.dropAddress.isEmpty()) {
+                Toast.makeText(this, "Drop not selected!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val intent = Intent(this, SenderDetailsActivity::class.java)
-            intent.putExtra("pickupAddress", pickupEdit.text.toString())
-            intent.putExtra("dropAddress", dropEdit.text.toString())
-            startActivity(intent)
+            // navigate to SenderDetailsActivity — no extras required
+            startActivity(android.content.Intent(this, SenderDetailsActivity::class.java))
         }
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        gMap = googleMap
-
-        val default = LatLng(25.4489, 78.5683)
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(default, 16f))
+    override fun onMapReady(map: GoogleMap) {
+        gMap = map
+        val start = LatLng(25.44, 78.56)
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, 16f))
 
         gMap.setOnCameraIdleListener {
-            val center = gMap.cameraPosition.target
-            val address = getAddress(center)
-
-            if (isSelectingPickup) {
-                pickupEdit.setText(address)
-            } else {
-                dropEdit.setText(address)
-            }
-        }
-
-        // Make user switch manually using click
-        pickupEdit.setOnFocusChangeListener { _, focused ->
-            if (focused) isSelectingPickup = true
-        }
-
-        dropEdit.setOnFocusChangeListener { _, focused ->
-            if (focused) isSelectingPickup = false
+            if (mode.isEmpty()) return@setOnCameraIdleListener
+            val pos = gMap.cameraPosition.target
+            animatePin()
+            fetchAddress(pos)
         }
     }
 
-    private fun getAddress(latLng: LatLng): String {
-        return try {
-            val geocoder = Geocoder(this, Locale.getDefault())
-            val list = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-            list?.get(0)?.getAddressLine(0) ?: ""
-        } catch (e: Exception) {
-            ""
-        }
+    private fun animatePin() {
+        val pin = if (mode == "pickup") pickupPin else dropPin
+        val anim = TranslateAnimation(0f, 0f, -40f, 0f)
+        anim.duration = 250
+        pin.startAnimation(anim)
     }
 
-    private fun openAutocomplete(req: Int) {
-        val fields = listOf(
-            Place.Field.ADDRESS,
-            Place.Field.LAT_LNG
-        )
+    private fun fetchAddress(latLng: LatLng) {
+        Thread {
+            try {
+                val geo = Geocoder(this, Locale.getDefault())
+                val res = geo.getFromLocation(latLng.latitude, latLng.longitude, 1)
+                val address = res?.get(0)?.getAddressLine(0) ?: ""
 
-        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
-            .build(this)
-
-        startActivityForResult(intent, req)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == RESULT_OK && data != null) {
-            val place = Autocomplete.getPlaceFromIntent(data)
-
-            when (requestCode) {
-                PICKUP_REQUEST -> {
-                    pickupEdit.setText(place.address)
-                    place.latLng?.let { gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it, 16f)) }
+                runOnUiThread {
+                    if (mode == "pickup") {
+                        vm.pickupLat = latLng.latitude
+                        vm.pickupLon = latLng.longitude
+                        vm.pickupAddress = address
+                        pickupEdit.setText(address)
+                    } else {
+                        vm.dropLat = latLng.latitude
+                        vm.dropLon = latLng.longitude
+                        vm.dropAddress = address
+                        dropEdit.setText(address)
+                    }
                 }
-                DROP_REQUEST -> {
-                    dropEdit.setText(place.address)
-                    place.latLng?.let { gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it, 16f)) }
-                }
+            } catch (_: Exception) {
             }
-        }
+        }.start()
     }
 }

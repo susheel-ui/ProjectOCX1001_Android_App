@@ -36,7 +36,7 @@
                     android:id="@+id/vehicleImage"
                     android:layout_width="55dp"
                     android:layout_height="55dp"
-                    android:src="@drawable/scooter" />
+                    android:src="@drawable/mini_3w" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
