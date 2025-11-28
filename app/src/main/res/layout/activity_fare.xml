@@ -110,6 +110,16 @@
                 android:textColor="#444"
                 android:layout_marginTop="8dp"/>
 
+            <TextView
+                android:id="@+id/timeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time: --"
+                android:textSize="14sp"
+                android:textColor="#444"
+                android:layout_marginTop="4dp"/>
+
+
             <!-- EDIT BUTTON -->
             <Button
                 android:id="@+id/editLocationBtn"
@@ -159,7 +169,7 @@
                     <ImageView
                         android:layout_width="70dp"
                         android:layout_height="70dp"
-                        android:src="@drawable/loader"/>
+                        android:src="@drawable/mini_3w"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -213,7 +223,7 @@
                     <ImageView
                         android:layout_width="70dp"
                         android:layout_height="70dp"
-                        android:src="@drawable/mini_3w"/>
+                        android:src="@drawable/loader"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
