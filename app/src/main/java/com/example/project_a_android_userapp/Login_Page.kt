@@ -2,28 +2,111 @@ package com.example.project_a_android_userapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.project_a_android_userapp.databinding.ActivityLoginPageBinding
-import com.example.project_a_android_userapp.databinding.ActivityMainBinding
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
+import java.io.IOException
 
 class Login_Page : AppCompatActivity() {
-    lateinit var binding: ActivityLoginPageBinding
+
+    private lateinit var binding: ActivityLoginPageBinding
+    private val client = OkHttpClient()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityLoginPageBinding.inflate(layoutInflater)
-enableEdgeToEdge()
         setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         binding.loginButton.setOnClickListener {
-            val intent = Intent(this, ResistrationActivity::class.java)
-            startActivity(intent)
+            val phone = binding.phoneEditText.text.toString().trim()
+
+            if (phone.isEmpty()) {
+                Toast.makeText(this, "Enter phone", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            callLoginApi(phone)
         }
+    }
+
+    private fun callLoginApi(phone: String) {
+
+        val json = """{"mobile":"$phone"}"""
+        val body = json.toRequestBody("application/json".toMediaType())
+
+        val request = Request.Builder()
+            .url("http://10.0.2.2:8080/auth/login")
+            .post(body)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+
+            override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread {
+                    Toast.makeText(this@Login_Page, "Network Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+
+                val rawBody = response.body?.string()
+                var jsonObj = JSONObject()
+
+                // ⭐ Avoid crash if body is empty
+                if (!rawBody.isNullOrEmpty()) {
+                    jsonObj = JSONObject(rawBody)
+                }
+
+                runOnUiThread {
+
+                    when (response.code) {
+
+                        404 -> {   // phone not found → register
+                            if (jsonObj.optString("code") == "NEED_REGISTER") {
+
+                                LocalStorage.savePhone(this@Login_Page, phone)
+
+                                startActivity(Intent(this@Login_Page, ResistrationActivity::class.java))
+                            } else {
+                                Toast.makeText(this@Login_Page, "User not found", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                        200 -> {   // OTP sent → go to OTP screen
+                            if (jsonObj.optString("code") == "OTP_SENT") {
+
+                                LocalStorage.savePhone(this@Login_Page, phone)
+
+                                startActivity(Intent(this@Login_Page, OTP_verifyActivity::class.java))
+                            } else {
+                                Toast.makeText(this@Login_Page, "Unexpected Response", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                        else -> {
+                            Toast.makeText(
+                                this@Login_Page,
+                                "Unexpected Error: ${response.code}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            }
+        })
     }
 }

@@ -105,13 +105,13 @@
                     android:entries="@array/country_codes" />
 
                 <EditText
-                    android:id="@+id/mobile_number_edittext"
+                    android:id="@+id/phoneEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:hint="Mobile Number"
+                    android:hint="Enter phone number"
                     android:inputType="phone" />
             </LinearLayout>
 
