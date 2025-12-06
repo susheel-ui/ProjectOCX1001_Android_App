@@ -7,7 +7,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.project_a_android_userapp.api.ApiClient
+import com.example.project_a_android_userapp.api.VerifyOtpBody
 import com.example.project_a_android_userapp.databinding.ActivityOtpVerifyBinding
+import okhttp3.ResponseBody
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class OTP_verifyActivity : AppCompatActivity() {
 
@@ -25,20 +32,14 @@ class OTP_verifyActivity : AppCompatActivity() {
             insets
         }
 
-        // -----------------------------------------
-        // 🔥 Load stored phone (NOT shown to user)
-        // -----------------------------------------
         val phone = LocalStorage.getPhone(this)
 
-        if (phone.isNullOrBlank()) {
-            Toast.makeText(this, "Phone missing, login again", Toast.LENGTH_SHORT).show()
+        if (phone.isNullOrEmpty()) {
+            Toast.makeText(this, "Phone missing. Login again.", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
 
-        // -----------------------------------------
-        // OTP Verify Button Click
-        // -----------------------------------------
         binding.verifyButton.setOnClickListener {
 
             val otp = binding.otpEditText.text.toString().trim()
@@ -48,12 +49,57 @@ class OTP_verifyActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // 🔥 Here you will send OTP + phone to backend:
-            // verifyOtp(phone, otp)
-
-            // For now just go to Home Screen
-            val intent = Intent(this, Home_Activity::class.java)
-            startActivity(intent)
+            verifyOtpApi(phone, otp)
         }
+    }
+
+    private fun verifyOtpApi(mobile: String, otp: String) {
+
+        val body = VerifyOtpBody(mobile, otp)
+
+        ApiClient.api.verifyOtp(body).enqueue(object : Callback<ResponseBody> {
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
+                if (!response.isSuccessful) {
+                    Toast.makeText(this@OTP_verifyActivity, "Invalid OTP", Toast.LENGTH_LONG).show()
+                    return
+                }
+
+                val bodyStr = response.body()?.string()
+                if (bodyStr.isNullOrEmpty()) {
+                    Toast.makeText(this@OTP_verifyActivity, "Empty server response", Toast.LENGTH_LONG).show()
+                    return
+                }
+
+                val json = JSONObject(bodyStr)
+
+                val code = json.optString("code")
+                val token = json.optString("token")
+                val role = json.optString("role")
+
+                if (code == "LOGIN_SUCCESS") {
+
+                    LocalStorage.saveToken(this@OTP_verifyActivity, token)
+                    LocalStorage.saveRole(this@OTP_verifyActivity, role)
+
+                    Toast.makeText(this@OTP_verifyActivity, "OTP Verified", Toast.LENGTH_SHORT).show()
+
+                    startActivity(Intent(this@OTP_verifyActivity, Home_Activity::class.java))
+                    finish()
+
+                } else {
+                    Toast.makeText(this@OTP_verifyActivity, "OTP Invalid", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Toast.makeText(
+                    this@OTP_verifyActivity,
+                    "Network Error: ${t.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        })
     }
 }

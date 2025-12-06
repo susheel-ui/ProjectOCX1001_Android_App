@@ -5,7 +5,14 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.project_a_android_userapp.api.ApiClient
+import com.example.project_a_android_userapp.api.RideRequestBody
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FinalFareActivity : AppCompatActivity() {
 
@@ -17,17 +24,12 @@ class FinalFareActivity : AppCompatActivity() {
 
         vm = (application as MyApp).vm
 
-        // Vehicle from VM ONLY
         val vehicle = vm.selectedVehicle
-
-        // Original Fare (without GST)
         val originalFare = vm.finalFare
 
-        // Calculate GST here only
         val gst = originalFare * 0.18
         val finalFareWithGST = originalFare + gst
 
-        // Views
         val vehicleImage = findViewById<ImageView>(R.id.vehicleImage)
         val gstFareText = findViewById<TextView>(R.id.finalFareText)
         val originalFareText = findViewById<TextView>(R.id.paymentFare)
@@ -42,18 +44,15 @@ class FinalFareActivity : AppCompatActivity() {
 
         val bookButton = findViewById<Button>(R.id.bookNowButton)
 
-        // Show original + GST prices
         originalFareText.text = "₹${String.format("%.2f", finalFareWithGST)}"
         gstFareText.text = "₹${String.format("%.2f", originalFare)}"
 
-        // Vehicle Image
         when (vehicle) {
             "Bike" -> vehicleImage.setImageResource(R.drawable.mini_3w)
             "Loader" -> vehicleImage.setImageResource(R.drawable.loader)
             "Truck" -> vehicleImage.setImageResource(R.drawable.truck)
         }
 
-        // Rules
         rule1.text = "Fare doesn't include labour charges for loading & unloading."
         rule2.text = "Fare includes 25 mins free loading/unloading time."
         rule3.text = "Extra time will be chargeable."
@@ -62,10 +61,44 @@ class FinalFareActivity : AppCompatActivity() {
         rule6.text = "Fare includes toll and permit charges, if any."
         rule7.text = "We don't allow overloading."
 
-        // BOOK now → no data passed via Intent
+        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        //  BOOK NOW → SEND NOTIFICATION → THEN MOVE SCREEN
+        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
         bookButton.setOnClickListener {
-            startActivity(Intent(this, WaitingForApprovalActivity::class.java))
-            finish()
+
+            val body = RideRequestBody(
+                message = "New Ride Request",
+                fare = vm.finalFare,
+                vehicle = vm.selectedVehicle ?: "",
+                pickup = vm.pickupAddress ?: "",
+                drop = vm.dropAddress ?: "",
+                distance = vm.distanceText ?: "0 km"
+            )
+
+
+            Toast.makeText(this, "Sending request...", Toast.LENGTH_SHORT).show()
+
+            ApiClient.api.sendRideRequest(body).enqueue(object : Callback<ResponseBody> {
+
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@FinalFareActivity, "Request Sent!", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this@FinalFareActivity, WaitingForApprovalActivity::class.java))
+                        finish()
+
+                    } else {
+                        Toast.makeText(this@FinalFareActivity, "Failed to send. Try again.", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Toast.makeText(this@FinalFareActivity, "Network Error", Toast.LENGTH_LONG).show()
+                }
+            })
         }
     }
 }

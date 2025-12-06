@@ -35,10 +35,14 @@ class Login_Page : AppCompatActivity() {
             val phone = binding.phoneEditText.text.toString().trim()
 
             if (phone.isEmpty()) {
-                Toast.makeText(this, "Enter phone", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Enter phone number", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+            // Save phone first
+            LocalStorage.savePhone(this, phone)
+
+            // Call login API
             callLoginApi(phone)
         }
     }
@@ -64,33 +68,24 @@ class Login_Page : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
 
                 val rawBody = response.body?.string()
-                var jsonObj = JSONObject()
-
-                // ⭐ Avoid crash if body is empty
-                if (!rawBody.isNullOrEmpty()) {
-                    jsonObj = JSONObject(rawBody)
-                }
+                val json = if (!rawBody.isNullOrEmpty()) JSONObject(rawBody) else JSONObject()
 
                 runOnUiThread {
 
+                    val code = json.optString("code")
+
                     when (response.code) {
 
-                        404 -> {   // phone not found → register
-                            if (jsonObj.optString("code") == "NEED_REGISTER") {
-
-                                LocalStorage.savePhone(this@Login_Page, phone)
-
+                        404 -> {   // NEED REGISTER
+                            if (code == "NEED_REGISTER") {
                                 startActivity(Intent(this@Login_Page, ResistrationActivity::class.java))
                             } else {
                                 Toast.makeText(this@Login_Page, "User not found", Toast.LENGTH_SHORT).show()
                             }
                         }
 
-                        200 -> {   // OTP sent → go to OTP screen
-                            if (jsonObj.optString("code") == "OTP_SENT") {
-
-                                LocalStorage.savePhone(this@Login_Page, phone)
-
+                        200 -> {   // OTP SENT
+                            if (code == "OTP_SENT") {
                                 startActivity(Intent(this@Login_Page, OTP_verifyActivity::class.java))
                             } else {
                                 Toast.makeText(this@Login_Page, "Unexpected Response", Toast.LENGTH_SHORT).show()
