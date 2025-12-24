@@ -27,13 +27,10 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var pickupEdit: EditText
     private lateinit var dropEdit: EditText
     private lateinit var btnNext: Button
-
     private lateinit var pickupPin: ImageView
     private lateinit var dropPin: ImageView
-
     private val REQ_PICKUP = 1001
     private val REQ_DROP = 1002
-
     private var isSelectingPickup = false
     private var isSelectingDrop = false
 

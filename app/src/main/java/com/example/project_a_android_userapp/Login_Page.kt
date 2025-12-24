@@ -53,7 +53,7 @@ class Login_Page : AppCompatActivity() {
         val body = json.toRequestBody("application/json".toMediaType())
 
         val request = Request.Builder()
-            .url("http://10.0.2.2:8080/auth/login")
+            .url("http://192.168.29.149:8080/auth/login")
             .post(body)
             .build()
 
