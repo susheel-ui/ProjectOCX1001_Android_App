@@ -6,34 +6,32 @@
     android:layout_height="match_parent"
     android:background="#F5F7FA">
 
-    <!-- HEADER BAR -->
+    <!-- ================= HEADER BAR ================= -->
     <LinearLayout
         android:id="@+id/headerBar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="16dp"
-        android:orientation="horizontal"
         android:background="#FFFFFF"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/backButton"
             android:layout_width="26dp"
             android:layout_height="26dp"
             android:src="@drawable/baseline_arrow_back_ios_24"/>
 
         <TextView
-            android:id="@+id/screenTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:text="Select Vehicle"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp"/>
+            android:textStyle="bold"/>
     </LinearLayout>
 
-    <!-- PICKUP / DROP CARD -->
+    <!-- ================= LOCATION CARD ================= -->
     <androidx.cardview.widget.CardView
         android:id="@+id/locationCard"
         android:layout_width="0dp"
@@ -51,108 +49,54 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- PICKUP -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/pickupText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:text="Pickup Address"/>
 
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:src="@drawable/ic_location_on_green"/>
-
-                <TextView
-                    android:id="@+id/pickupText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pickup Address"
-                    android:layout_marginStart="8dp"
-                    android:textSize="15sp"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="#E0E0E0"/>
-
-            <!-- DROP -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/dropText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:layout_marginTop="6dp"
+                android:text="Drop Address"/>
 
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:src="@drawable/ic_location_on_red"/>
-
-                <TextView
-                    android:id="@+id/dropText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Drop Address"
-                    android:layout_marginStart="8dp"
-                    android:textSize="15sp"/>
-            </LinearLayout>
-
-            <!-- DISTANCE -->
             <TextView
                 android:id="@+id/distanceText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Distance: 0 km"
-                android:textSize="14sp"
-                android:textColor="#444"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="6dp"
+                android:text="Distance"/>
 
             <TextView
                 android:id="@+id/timeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Time: --"
-                android:textSize="14sp"
-                android:textColor="#444"
-                android:layout_marginTop="4dp"/>
-
-
-            <!-- EDIT BUTTON -->
-            <Button
-                android:id="@+id/editLocationBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="41dp"
-                android:layout_marginTop="12dp"
-                android:backgroundTint="#EAF3FF"
-                android:text="Edit Locations"
-                android:textColor="#0059FF"
-                android:textSize="12sp"/>
+                android:text="Time"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- SCROLL VEHICLE LIST -->
+    <!-- ================= VEHICLE LIST ================= -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/locationCard"
         app:layout_constraintBottom_toTopOf="@id/proceedBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
-            android:id="@+id/vehicleContainer"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- 1️⃣ BIKE -->
+            <!-- ================= TWO WHEELER ================= -->
+
+            <!-- Bike EV -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/vehicleBike"
+                android:id="@+id/vehicleBikeEv"
                 android:layout_width="match_parent"
                 android:layout_height="110dp"
                 android:layout_marginBottom="12dp"
@@ -162,9 +106,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="16dp"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
 
                     <ImageView
                         android:layout_width="70dp"
@@ -174,18 +118,17 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:paddingStart="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Bike (2-Wheeler)"
-                            android:textSize="16sp"
-                            android:textStyle="bold"/>
+                            android:text="Bike EV"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
 
-                        <!-- ⭐ UPDATED WEIGHT -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -195,18 +138,18 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/bikeFareText"
+                        android:id="@+id/bikeEvFareText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="₹0"
-                        android:textSize="18sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textSize="18sp"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- 2️⃣ LOADER -->
+            <!-- Bike Petrol -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/vehicleLoader"
+                android:id="@+id/vehicleBikePetrol"
                 android:layout_width="match_parent"
                 android:layout_height="110dp"
                 android:layout_marginBottom="12dp"
@@ -216,9 +159,64 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="16dp"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/mini_3w"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingStart="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bike Petrol"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="20 Kg Capacity"
+                            android:textSize="13sp"
+                            android:textColor="#6A6A6A"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/bikePetrolFareText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹0"
+                        android:textStyle="bold"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ================= THREE WHEELER ================= -->
+
+            <!-- Loader EV -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/vehicleLoaderEv"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
 
                     <ImageView
                         android:layout_width="70dp"
@@ -228,18 +226,17 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:paddingStart="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Loader (3-Wheeler)"
-                            android:textSize="16sp"
-                            android:textStyle="bold"/>
+                            android:text="Loader EV"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
 
-                        <!-- ⭐ UPDATED WEIGHT -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -249,18 +246,18 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/loaderFareText"
+                        android:id="@+id/loaderEvFareText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="₹0"
-                        android:textSize="18sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textSize="18sp"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- 3️⃣ TRUCK -->
+            <!-- Loader Petrol -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/vehicleTruck"
+                android:id="@+id/vehicleLoaderPetrol"
                 android:layout_width="match_parent"
                 android:layout_height="110dp"
                 android:layout_marginBottom="12dp"
@@ -270,9 +267,117 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="16dp"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/loader"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingStart="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Loader Petrol"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="50 Kg Capacity"
+                            android:textSize="13sp"
+                            android:textColor="#6A6A6A"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/loaderPetrolFareText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹0"
+                        android:textStyle="bold"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Loader CNG -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/vehicleLoaderCng"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/loader"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingStart="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Loader CNG"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="50 Kg Capacity"
+                            android:textSize="13sp"
+                            android:textColor="#6A6A6A"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/loaderCngFareText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹0"
+                        android:textStyle="bold"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ================= FOUR WHEELER ================= -->
+
+            <!-- Truck EV -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/vehicleTruckEv"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
 
                     <ImageView
                         android:layout_width="70dp"
@@ -282,18 +387,17 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:paddingStart="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Truck (4-Wheeler)"
-                            android:textSize="16sp"
-                            android:textStyle="bold"/>
+                            android:text="Truck EV"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
 
-                        <!-- ⭐ UPDATED WEIGHT -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -303,24 +407,130 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/truckFareText"
+                        android:id="@+id/truckEvFareText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="₹0"
-                        android:textSize="18sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Truck Petrol -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/vehicleTruckPetrol"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/truck"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingStart="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Truck Petrol"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1700 Kg Capacity"
+                            android:textSize="13sp"
+                            android:textColor="#6A6A6A"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/truckPetrolFareText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹0"
+                        android:textStyle="bold"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Truck CNG -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/vehicleTruckCng"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/truck"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingStart="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Truck CNG"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1700 Kg Capacity"
+                            android:textSize="13sp"
+                            android:textColor="#6A6A6A"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/truckCngFareText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹0"
+                        android:textStyle="bold"
+                        android:textSize="18sp"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
     </ScrollView>
 
-    <!-- PROCEED BUTTON -->
+    <!-- ================= PROCEED BUTTON ================= -->
     <Button
         android:id="@+id/proceedBtn"
         android:layout_width="0dp"
         android:layout_height="55dp"
-        android:text="Proceed with Bike"
+        android:text="Proceed"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         android:backgroundTint="#F4C430"
@@ -328,4 +538,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
