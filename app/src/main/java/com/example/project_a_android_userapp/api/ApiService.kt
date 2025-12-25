@@ -1,5 +1,6 @@
 package com.example.project_a_android_userapp.api
 
+import com.google.gson.JsonObject
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -14,5 +15,11 @@ interface ApiService {
 
     @POST("/auth/verify")
     fun verifyOtp(@Body body: VerifyOtpBody): Call<ResponseBody>
+
+    @POST("user/calculate")
+    fun calculateFare(
+        @Body body: JsonObject
+    ): Call<List<JsonObject>>
+
 
 }
