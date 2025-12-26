@@ -4,7 +4,10 @@ import com.google.gson.JsonObject
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ApiService {
     @POST("/api/send-ride-notification")
@@ -30,6 +33,16 @@ interface ApiService {
     fun sendRideNotification(
         @Body body: RideNotificationRequest
     ): Call<String>
+
+    @GET("user/driver-contact")
+    fun getDriverContact(
+        @Query("rideId") rideId: Long
+    ): Call<DriverContactResponse>
+
+    @GET("user/driver-location")
+    fun getDriverLiveLocation(
+        @Query("driverId") driverId: Long
+    ): Call<DriverLiveLocationResponse>
 
 
 }

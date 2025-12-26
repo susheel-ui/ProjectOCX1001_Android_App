@@ -46,7 +46,7 @@ class FinalFareActivity : AppCompatActivity() {
 
         bookButton.setOnClickListener {
 
-            bookButton.isEnabled = false // prevent double click
+            bookButton.isEnabled = false
 
             val createRideRequest = CreateRideRequest(
                 pickupLat = vm.pickupLat,
@@ -89,21 +89,22 @@ class FinalFareActivity : AppCompatActivity() {
 
                             val ride = response.body()!!
 
-                            // ✅ SEND FCM NOTIFICATION WITH rideId
+                            // ✅ STORE rideId locally
+                            LocalStorage.saveActiveRideId(
+                                this@FinalFareActivity,
+                                ride.rideId
+                            )
+
+                            // ✅ SEND NOTIFICATION
                             sendNotification(ride.rideId)
 
-                            Toast.makeText(
-                                this@FinalFareActivity,
-                                "Ride Created (ID: ${ride.rideId})",
-                                Toast.LENGTH_SHORT
-                            ).show()
-
-                            val intent = Intent(
-                                this@FinalFareActivity,
-                                WaitingForApprovalActivity::class.java
+                            // ✅ MOVE TO WAITING SCREEN
+                            startActivity(
+                                Intent(
+                                    this@FinalFareActivity,
+                                    WaitingForApprovalActivity::class.java
+                                )
                             )
-                            intent.putExtra("rideId", ride.rideId)
-                            startActivity(intent)
                             finish()
 
                         } else {
@@ -128,7 +129,7 @@ class FinalFareActivity : AppCompatActivity() {
         }
     }
 
-    // ================= SEND NOTIFICATION API =================
+    // ================= SEND NOTIFICATION =================
 
     private fun sendNotification(rideId: Long) {
 
@@ -144,17 +145,8 @@ class FinalFareActivity : AppCompatActivity() {
 
         ApiClient.api.sendRideNotification(notificationRequest)
             .enqueue(object : Callback<String> {
-
-                override fun onResponse(
-                    call: Call<String>,
-                    response: Response<String>
-                ) {
-                    // silent success
-                }
-
-                override fun onFailure(call: Call<String>, t: Throwable) {
-                    // silent failure (ride already created)
-                }
+                override fun onResponse(call: Call<String>, response: Response<String>) {}
+                override fun onFailure(call: Call<String>, t: Throwable) {}
             })
     }
 

@@ -1,53 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Driver Info Card -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/infoCard"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    <!-- 🗺 MAP (70%) -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="7"/>
+
+    <!-- 🚗 DRIVER INFO (30%) -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3">
+
+        <TextView
+            android:id="@+id/driverName"
+            android:text="Driver Name"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="12dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/driverNameText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Driver: "
-                android:textSize="18sp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/driverPhoneText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Phone: "
+                android:id="@+id/driverPhone"
+                android:text="9999999999"
                 android:textSize="16sp"
-                android:layout_marginTop="4dp"/>
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
 
-            <TextView
-                android:id="@+id/vehicleText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vehicle: "
-                android:textSize="16sp"
-                android:layout_marginTop="4dp"/>
-
+            <ImageButton
+                android:id="@+id/btnCallDriver"
+                android:src="@android:drawable/ic_menu_call"
+                android:background="@android:color/transparent"
+                android:layout_width="48dp"
+                android:layout_height="48dp"/>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+</LinearLayout>
