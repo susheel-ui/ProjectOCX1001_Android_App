@@ -23,7 +23,6 @@ class LocationViewModel {
     // ---------------------------
     var distanceText: String = ""       // Example: "12 km"
     var durationText: String = ""       // Example: "25 mins"
-
     var distanceValue: Int = 0          // In meters
     var durationValue: Int = 0          // In seconds
 

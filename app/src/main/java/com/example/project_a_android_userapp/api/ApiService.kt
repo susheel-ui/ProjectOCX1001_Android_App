@@ -21,5 +21,15 @@ interface ApiService {
         @Body body: JsonObject
     ): Call<List<JsonObject>>
 
+    @POST("/user/create-ride")
+    fun createRide(
+        @Body body: CreateRideRequest
+    ): Call<CreateRideResponse>
+
+    @POST("/api/send-ride-notification")
+    fun sendRideNotification(
+        @Body body: RideNotificationRequest
+    ): Call<String>
+
 
 }

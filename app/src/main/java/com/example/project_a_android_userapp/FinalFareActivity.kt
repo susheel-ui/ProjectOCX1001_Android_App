@@ -7,9 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.project_a_android_userapp.api.ApiClient
-import com.example.project_a_android_userapp.api.RideRequestBody
-import okhttp3.ResponseBody
+import com.example.project_a_android_userapp.api.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,86 +22,150 @@ class FinalFareActivity : AppCompatActivity() {
 
         vm = (application as MyApp).vm
 
-        val vehicle = vm.selectedVehicle
-        val originalFare = vm.finalFare
+        val vehicleImage = findViewById<ImageView>(R.id.vehicleImage)
+        val finalFareText = findViewById<TextView>(R.id.finalFareText)
+        val paymentFare = findViewById<TextView>(R.id.paymentFare)
+        val bookButton = findViewById<Button>(R.id.bookNowButton)
 
+        // ================= UI =================
+
+        val originalFare = vm.finalFare
         val gst = originalFare * 0.18
         val finalFareWithGST = originalFare + gst
 
-        val vehicleImage = findViewById<ImageView>(R.id.vehicleImage)
-        val gstFareText = findViewById<TextView>(R.id.finalFareText)
-        val originalFareText = findViewById<TextView>(R.id.paymentFare)
+        paymentFare.text = "₹${String.format("%.2f", finalFareWithGST)}"
+        finalFareText.text = "₹${String.format("%.2f", originalFare)}"
 
-        val rule1 = findViewById<TextView>(R.id.rule1)
-        val rule2 = findViewById<TextView>(R.id.rule2)
-        val rule3 = findViewById<TextView>(R.id.rule3)
-        val rule4 = findViewById<TextView>(R.id.rule4)
-        val rule5 = findViewById<TextView>(R.id.rule5)
-        val rule6 = findViewById<TextView>(R.id.rule6)
-        val rule7 = findViewById<TextView>(R.id.rule7)
-
-        val bookButton = findViewById<Button>(R.id.bookNowButton)
-
-        originalFareText.text = "₹${String.format("%.2f", finalFareWithGST)}"
-        gstFareText.text = "₹${String.format("%.2f", originalFare)}"
-
-        when (vehicle) {
+        when (vm.selectedVehicle) {
             "Bike" -> vehicleImage.setImageResource(R.drawable.mini_3w)
             "Loader" -> vehicleImage.setImageResource(R.drawable.loader)
             "Truck" -> vehicleImage.setImageResource(R.drawable.truck)
         }
 
-        rule1.text = "Fare doesn't include labour charges for loading & unloading."
-        rule2.text = "Fare includes 25 mins free loading/unloading time."
-        rule3.text = "Extra time will be chargeable."
-        rule4.text = "Fare may change if route or location changes."
-        rule5.text = "Parking charges to be paid by customer."
-        rule6.text = "Fare includes toll and permit charges, if any."
-        rule7.text = "We don't allow overloading."
-
-        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        //  BOOK NOW → SEND NOTIFICATION → THEN MOVE SCREEN
-        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        // ================= BOOK NOW =================
 
         bookButton.setOnClickListener {
 
-            val body = RideRequestBody(
-                message = "New Ride Request",
-                fare = vm.finalFare,
-                vehicle = vm.selectedVehicle ?: "",
-                pickup = vm.pickupAddress ?: "",
-                drop = vm.dropAddress ?: "",
-                distance = vm.distanceText ?: "0 km"
+            bookButton.isEnabled = false // prevent double click
+
+            val createRideRequest = CreateRideRequest(
+                pickupLat = vm.pickupLat,
+                pickupLon = vm.pickupLon,
+                pickupAddress = vm.pickupAddress,
+
+                dropLat = vm.dropLat,
+                dropLon = vm.dropLon,
+                dropAddress = vm.dropAddress,
+
+                distanceText = vm.distanceText,
+                durationText = vm.durationText,
+                distanceValue = vm.distanceValue,
+                durationValue = vm.durationValue,
+
+                senderHouse = vm.senderHouse,
+                senderName = vm.senderName,
+                senderPhone = vm.senderPhone,
+                senderType = vm.senderType,
+
+                receiverHouse = vm.receiverHouse,
+                receiverName = vm.receiverName,
+                receiverPhone = vm.receiverPhone,
+                receiverType = vm.receiverType,
+
+                vehicleInfo = vm.selectedVehicle,
+                finalFare = vm.finalFare
             )
 
+            Toast.makeText(this, "Creating ride...", Toast.LENGTH_SHORT).show()
 
-            Toast.makeText(this, "Sending request...", Toast.LENGTH_SHORT).show()
+            ApiClient.api.createRide(createRideRequest)
+                .enqueue(object : Callback<CreateRideResponse> {
 
-            ApiClient.api.sendRideRequest(body).enqueue(object : Callback<ResponseBody> {
+                    override fun onResponse(
+                        call: Call<CreateRideResponse>,
+                        response: Response<CreateRideResponse>
+                    ) {
+                        if (response.isSuccessful && response.body() != null) {
+
+                            val ride = response.body()!!
+
+                            // ✅ SEND FCM NOTIFICATION WITH rideId
+                            sendNotification(ride.rideId)
+
+                            Toast.makeText(
+                                this@FinalFareActivity,
+                                "Ride Created (ID: ${ride.rideId})",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            val intent = Intent(
+                                this@FinalFareActivity,
+                                WaitingForApprovalActivity::class.java
+                            )
+                            intent.putExtra("rideId", ride.rideId)
+                            startActivity(intent)
+                            finish()
+
+                        } else {
+                            bookButton.isEnabled = true
+                            Toast.makeText(
+                                this@FinalFareActivity,
+                                "Ride creation failed",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<CreateRideResponse>, t: Throwable) {
+                        bookButton.isEnabled = true
+                        Toast.makeText(
+                            this@FinalFareActivity,
+                            "Network error: ${t.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                })
+        }
+    }
+
+    // ================= SEND NOTIFICATION API =================
+
+    private fun sendNotification(rideId: Long) {
+
+        val notificationRequest = RideNotificationRequest(
+            rideId = rideId,
+            message = "New Ride Request",
+            fare = vm.finalFare,
+            vehicle = mapVehicleForBackend(vm.selectedVehicle),
+            pickup = vm.pickupAddress,
+            drop = vm.dropAddress,
+            distance = vm.distanceText
+        )
+
+        ApiClient.api.sendRideNotification(notificationRequest)
+            .enqueue(object : Callback<String> {
 
                 override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
+                    call: Call<String>,
+                    response: Response<String>
                 ) {
-                    if (response.isSuccessful) {
-                        Toast.makeText(this@FinalFareActivity, "Request Sent!", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this@FinalFareActivity, WaitingForApprovalActivity::class.java))
-                        finish()
-
-                    } else {
-                        Toast.makeText(this@FinalFareActivity, "Failed to send. Try again.", Toast.LENGTH_LONG).show()
-                    }
+                    // silent success
                 }
 
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Toast.makeText(this@FinalFareActivity, "Network Error", Toast.LENGTH_LONG).show()
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    // silent failure (ride already created)
                 }
             })
+    }
+
+    // ================= VEHICLE MAPPING =================
+
+    private fun mapVehicleForBackend(vehicle: String): String {
+        return when (vehicle) {
+            "Bike" -> "BIKE"
+            "Loader" -> "THREE_WHEELER"
+            "Truck" -> "FOUR_WHEELER_EV"
+            else -> vehicle.uppercase()
         }
     }
 }
-
-
-
-
-
