@@ -5,30 +5,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 🗺 MAP (70%) -->
+    <!-- 🗺 MAP -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7"/>
+        android:layout_weight="8.5"/>
 
-    <!-- 🚗 DRIVER INFO (30%) -->
+    <!-- 🚗 DRIVER INFO -->
     <LinearLayout
         android:orientation="vertical"
         android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3">
+        android:layout_weight="1.5">
 
-        <TextView
-            android:id="@+id/driverName"
-            android:text="Driver Name"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <!-- NAME + VEHICLE -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/imgVehicleType"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/truck"
+                android:contentDescription="Vehicle Type"/>
+
+            <TextView
+                android:id="@+id/driverName"
+                android:text="Driver Name"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <!-- PHONE + CALL -->
         <LinearLayout
             android:orientation="horizontal"
             android:gravity="center_vertical"

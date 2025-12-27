@@ -59,6 +59,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation("com.google.maps.android:android-maps-utils:3.8.2")
 
 }
 

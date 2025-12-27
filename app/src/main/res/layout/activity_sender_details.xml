@@ -160,15 +160,21 @@
 
                     <RadioButton
                         android:id="@+id/homeRadio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="Home" />
 
                     <RadioButton
                         android:id="@+id/shopRadio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:text="Shop" />
 
                     <RadioButton
                         android:id="@+id/otherRadio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:text="Other" />
                 </RadioGroup>
