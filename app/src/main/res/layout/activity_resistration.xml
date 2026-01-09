@@ -5,31 +5,46 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ResistrationActivity"
-    >
+    tools:context=".ResistrationDriver">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/app_name"
-        android:textSize="48dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+    <!-- Logo -->
+    <LinearLayout
+        android:id="@+id/layoutLogo"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Zarkit"
+            android:textColor="@color/color_primary"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" Partner"
+            android:textColor="#A0A0A0"
+            android:textSize="28sp" />
+    </LinearLayout>
+
+    <!-- Mobile -->
     <LinearLayout
         android:id="@+id/linearLayout_mobileno"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/layoutLogo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
             android:id="@+id/country_code"
@@ -47,6 +62,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tvChange"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -54,76 +70,70 @@
             android:textColor="@color/color_primary" />
     </LinearLayout>
 
+    <!-- Name -->
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        android:layout_margin="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout_mobileno"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout_mobileno">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <EditText
-            android:layout_width="match_parent"
+            android:id="@+id/firstNameEditText"
+            android:layout_width="0dp"
             android:layout_height="70dp"
             android:layout_weight="1"
-            android:hint="First Name" />
+            android:hint="First Name *"
+            android:inputType="textPersonName" />
 
         <EditText
-            android:layout_width="match_parent"
+            android:id="@+id/lastNameEditText"
+            android:layout_width="0dp"
             android:layout_height="70dp"
             android:layout_weight="1"
-            android:hint="Last Name"
-
-            />
+            android:hint="Last Name (Optional)"
+            android:inputType="textPersonName" />
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_marginTop="16dp"
-        android:hint="Email"
-        android:layout_margin="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
-
+    <!-- Required note -->
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tvRequired"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
-        android:text="Requrenment"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/editText"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        android:text="* First name is required"
+        android:textSize="12sp"
+        android:textColor="#D32F2F"
+        android:layout_marginStart="24dp"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout2"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Spinner
-        android:id="@+id/requrmentSpinner"
+    <!-- Email -->
+    <EditText
+        android:id="@+id/emailEditText"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_margin="20dp"
-        android:layout_marginTop="20dp"
-        android:entries="@array/requirement_list"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
+        android:layout_marginTop="8dp"
+        android:hint="Email (Optional)"
+        android:inputType="textEmailAddress"
+        app:layout_constraintTop_toBottomOf="@id/tvRequired"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Register -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        android:maxWidth="800dp"
-        android:text="Register"
         android:backgroundTint="@color/color_primary"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Register"
+        app:layout_constraintTop_toBottomOf="@id/emailEditText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/requrmentSpinner"
-        />
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

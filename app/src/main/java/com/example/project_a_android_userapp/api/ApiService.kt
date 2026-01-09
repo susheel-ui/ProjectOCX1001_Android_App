@@ -7,6 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -43,6 +44,24 @@ interface ApiService {
     fun getDriverLiveLocation(
         @Query("driverId") driverId: Long
     ): Call<DriverLiveLocationResponse>
+
+    @POST("/api/call/ride/connect")
+    fun callDriver(
+        @Header("Authorization") auth: String,
+        @Body body: Map<String, Long>   // ✅ FIXED
+    ): Call<String>
+
+    @POST("user/{rideId}/cancel")
+    fun cancelRide(
+        @Path("rideId") rideId: Long,
+        @Query("userId") userId: Long,
+        @Header("Authorization") authHeader: String
+    ): Call<String>
+
+    @POST("auth/register")
+    fun register(
+        @Body body: RegisterBody
+    ): Call<ResponseBody>
 
 
 }

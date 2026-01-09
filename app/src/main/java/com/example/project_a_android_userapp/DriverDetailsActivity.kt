@@ -39,6 +39,8 @@ class DriverDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var driverId: Long = -1L
     private var vehicleType = "TRUCK"
 
+    private var isCallingInProgress = false
+
     private val handler = Handler(Looper.getMainLooper())
     private var driverMarker: Marker? = null
     private var routePolyline: Polyline? = null
@@ -80,15 +82,57 @@ class DriverDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         fetchDriverContact(rideId)
 
         btnCall.setOnClickListener {
-            if (driverPhone.isNotEmpty()) {
-                startActivity(
-                    Intent(
-                        Intent.ACTION_DIAL,
-                        Uri.parse("tel:+91$driverPhone")
-                    )
-                )
+
+            // Prevent multiple taps (Ola/Uber style)
+            if (isCallingInProgress) return@setOnClickListener
+
+            val rideId = LocalStorage.getActiveRideId(this)
+            if (rideId <= 0) {
+                toast("Ride not active")
+                return@setOnClickListener
             }
+
+            val token = LocalStorage.getToken(this)
+            if (token.isNullOrEmpty()) {
+                toast("Session expired")
+                return@setOnClickListener
+            }
+
+            isCallingInProgress = true
+            btnCall.isEnabled = false
+
+            toast("Connecting call…")
+
+            val auth = "Bearer $token"
+            val body = mapOf("rideId" to rideId)
+
+            ApiClient.api.callDriver(auth, body)
+                .enqueue(object : Callback<String> {
+
+                    override fun onResponse(
+                        call: Call<String>,
+                        response: Response<String>
+                    ) {
+                        isCallingInProgress = false
+                        btnCall.isEnabled = true
+
+                        if (response.isSuccessful) {
+                            // OLA / UBER STYLE MESSAGE
+                            toast("You will receive a call shortly")
+                        } else {
+                            toast("Unable to connect call")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        isCallingInProgress = false
+                        btnCall.isEnabled = true
+                        toast("Call connection failed")
+                    }
+                })
         }
+
+
     }
 
     override fun onMapReady(map: GoogleMap) {

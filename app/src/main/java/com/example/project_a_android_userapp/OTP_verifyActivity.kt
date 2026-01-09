@@ -23,6 +23,7 @@ class OTP_verifyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         binding = ActivityOtpVerifyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -32,6 +33,7 @@ class OTP_verifyActivity : AppCompatActivity() {
             insets
         }
 
+        // ✅ Get phone from LocalStorage
         val phone = LocalStorage.getPhone(this)
 
         if (phone.isNullOrEmpty()) {
@@ -40,6 +42,18 @@ class OTP_verifyActivity : AppCompatActivity() {
             return
         }
 
+        // ✅ Show phone number in UI
+        binding.phoneNumberText.text = phone
+
+        // ✅ Change number → back to Login
+        binding.changeButton.setOnClickListener {
+            val intent = Intent(this, Login_Page::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            finish()
+        }
+
+        // ✅ Verify OTP
         binding.verifyButton.setOnClickListener {
 
             val otp = binding.otpEditText.text.toString().trim()
@@ -48,6 +62,9 @@ class OTP_verifyActivity : AppCompatActivity() {
                 Toast.makeText(this, "Enter OTP", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            // Prevent double clicks
+            binding.verifyButton.isEnabled = false
 
             verifyOtpApi(phone, otp)
         }
@@ -59,16 +76,29 @@ class OTP_verifyActivity : AppCompatActivity() {
 
         ApiClient.api.verifyOtp(body).enqueue(object : Callback<ResponseBody> {
 
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+
+                binding.verifyButton.isEnabled = true
 
                 if (!response.isSuccessful) {
-                    Toast.makeText(this@OTP_verifyActivity, "Invalid OTP", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@OTP_verifyActivity,
+                        "Invalid OTP",
+                        Toast.LENGTH_LONG
+                    ).show()
                     return
                 }
 
                 val bodyStr = response.body()?.string()
                 if (bodyStr.isNullOrEmpty()) {
-                    Toast.makeText(this@OTP_verifyActivity, "Empty server response", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@OTP_verifyActivity,
+                        "Empty server response",
+                        Toast.LENGTH_LONG
+                    ).show()
                     return
                 }
 
@@ -77,23 +107,40 @@ class OTP_verifyActivity : AppCompatActivity() {
                 val code = json.optString("code")
                 val token = json.optString("token")
                 val role = json.optString("role")
+                val userId = json.optInt("userId", -1)
 
                 if (code == "LOGIN_SUCCESS") {
 
+                    // ✅ Save login data
                     LocalStorage.saveToken(this@OTP_verifyActivity, token)
                     LocalStorage.saveRole(this@OTP_verifyActivity, role)
 
-                    Toast.makeText(this@OTP_verifyActivity, "OTP Verified", Toast.LENGTH_SHORT).show()
+                    if (userId != -1) {
+                        LocalStorage.saveUserId(this@OTP_verifyActivity, userId)
+                    }
 
-                    startActivity(Intent(this@OTP_verifyActivity, Home_Activity::class.java))
+                    Toast.makeText(
+                        this@OTP_verifyActivity,
+                        "OTP Verified",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    startActivity(
+                        Intent(this@OTP_verifyActivity, Home_Activity::class.java)
+                    )
                     finish()
 
                 } else {
-                    Toast.makeText(this@OTP_verifyActivity, "OTP Invalid", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@OTP_verifyActivity,
+                        "OTP Invalid",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                binding.verifyButton.isEnabled = true
                 Toast.makeText(
                     this@OTP_verifyActivity,
                     "Network Error: ${t.message}",
