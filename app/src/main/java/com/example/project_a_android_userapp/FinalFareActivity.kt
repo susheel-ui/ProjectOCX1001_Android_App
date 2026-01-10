@@ -4,10 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.project_a_android_userapp.api.*
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,6 +17,44 @@ import retrofit2.Response
 class FinalFareActivity : AppCompatActivity() {
 
     private lateinit var vm: LocationViewModel
+
+    private lateinit var selectedGoods: String
+
+    private fun showGoodsBottomSheet() {
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.bottom_sheet_goods_type, null)
+        dialog.setContentView(view)
+
+        fun selectGoods(name: String) {
+            selectedGoods = name
+        }
+
+        view.findViewById<LinearLayout>(R.id.optionPharma)
+            .setOnClickListener { selectGoods("Pharmaceutical / Healthcare") }
+
+        view.findViewById<LinearLayout>(R.id.optionPlastic)
+            .setOnClickListener { selectGoods("Plastic Products") }
+
+        view.findViewById<LinearLayout>(R.id.optionRubber)
+            .setOnClickListener { selectGoods("Rubber Products") }
+
+        view.findViewById<LinearLayout>(R.id.optionTextile)
+            .setOnClickListener { selectGoods("Textiles / Garments") }
+
+        view.findViewById<LinearLayout>(R.id.optionTimber)
+            .setOnClickListener { selectGoods("Timbers / Plywoods / Papers") }
+
+        view.findViewById<LinearLayout>(R.id.optionBooks)
+            .setOnClickListener { selectGoods("Books / Stationery / Gifts / Toys") }
+
+        view.findViewById<Button>(R.id.btnConfirmGoods).setOnClickListener {
+            findViewById<TextView>(R.id.goodsType).text = selectedGoods
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

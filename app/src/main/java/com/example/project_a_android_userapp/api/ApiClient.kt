@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
  
-    private const val BASE_URL = "http://192.168.29.149:8080/"
+    private const val BASE_URL = "http://72.60.200.11:8080/"
 
     // Add JWT token to header
     private val authInterceptor = Interceptor { chain ->

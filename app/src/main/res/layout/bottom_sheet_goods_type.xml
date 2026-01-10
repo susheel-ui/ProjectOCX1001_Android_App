@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Goods Type"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginBottom="12dp"/>
+
+    <LinearLayout
+        android:id="@+id/optionPharma"
+        style="@style/GoodsOption"
+        android:text="Pharmaceutical / Healthcare Products" />
+
+    <LinearLayout
+        android:id="@+id/optionPlastic"
+        style="@style/GoodsOption"
+        android:text="Plastic Products" />
+
+    <LinearLayout
+        android:id="@+id/optionRubber"
+        style="@style/GoodsOption"
+        android:text="Rubber Products" />
+
+    <LinearLayout
+        android:id="@+id/optionTextile"
+        style="@style/GoodsOption"
+        android:text="Textiles / Garments / Fashion Accessories" />
+
+    <LinearLayout
+        android:id="@+id/optionTimber"
+        style="@style/GoodsOption"
+        android:text="Timbers / Plywoods / Papers" />
+
+    <LinearLayout
+        android:id="@+id/optionBooks"
+        style="@style/GoodsOption"
+        android:text="Books / Stationery / Gifts / Toys" />
+
+    <Button
+        android:id="@+id/btnConfirmGoods"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Confirm"
+        android:layout_marginTop="12dp"/>
+</LinearLayout>
