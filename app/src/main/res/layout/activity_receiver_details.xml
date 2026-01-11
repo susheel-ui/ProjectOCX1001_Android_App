@@ -6,49 +6,49 @@
     android:layout_height="match_parent"
     android:background="#F2F2F2">
 
-    <!-- BACK -->
+    <!-- 🔙 BACK -->
     <ImageButton
         android:id="@+id/BackButton"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="12dp"
+        android:padding="8dp"
         android:background="@android:color/transparent"
         android:src="@drawable/baseline_arrow_back_ios_24"
         app:tint="@android:color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- RESPONSIVE MAP -->
+    <!-- 🗺 MAP (RESPONSIVE HEIGHT) -->
     <fragment
         android:id="@+id/miniMapFragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.38"
+        app:layout_constraintHeight_percent="0.35"
         app:layout_constraintTop_toBottomOf="@id/BackButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- CENTER PIN -->
+    <!-- 📍 CENTER PIN -->
     <ImageView
         android:id="@+id/centerPin"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:src="@drawable/ic_location_on_green"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:src="@drawable/ic_location_on_red"
         app:layout_constraintTop_toTopOf="@id/miniMapFragment"
         app:layout_constraintBottom_toBottomOf="@id/miniMapFragment"
         app:layout_constraintStart_toStartOf="@id/miniMapFragment"
         app:layout_constraintEnd_toEndOf="@id/miniMapFragment"/>
 
-    <!-- ADDRESS CARD -->
+    <!-- 📦 ADDRESS + FORM CARD -->
     <androidx.cardview.widget.CardView
         android:id="@+id/addressCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="10dp"
+        android:layout_margin="12dp"
         app:cardCornerRadius="20dp"
-        app:cardElevation="10dp"
+        app:cardElevation="8dp"
         app:layout_constraintTop_toBottomOf="@id/miniMapFragment"
         app:layout_constraintBottom_toTopOf="@id/confirmButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +63,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="14dp">
+
+                <!-- Drag handle -->
+                <View
+                    android:layout_width="36dp"
+                    android:layout_height="4dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="12dp"
+                    android:background="#D0D0D0"/>
 
                 <!-- SHORT ADDRESS -->
                 <LinearLayout
@@ -73,20 +81,22 @@
                     android:gravity="center_vertical">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:src="@drawable/ic_location_on_red"/>
 
                     <TextView
                         android:id="@+id/addressShort"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:layout_weight="1"
-                        android:layout_marginStart="10dp"
-                        android:text="Azadpur"
-                        android:textSize="18sp"
+                        android:text="Loading..."
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@android:color/black"/>
+                        android:textColor="@android:color/black"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
                 </LinearLayout>
 
                 <!-- FULL ADDRESS -->
@@ -94,48 +104,64 @@
                     android:id="@+id/addressLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="Azadpur, Delhi, India"
-                    android:textSize="14sp"
-                    android:textColor="#666666"/>
+                    android:layout_marginTop="4dp"
+                    android:text="Fetching full address..."
+                    android:textSize="13sp"
+                    android:textColor="#666666"
+                    android:maxLines="2"
+                    android:ellipsize="end"/>
 
                 <!-- HOUSE -->
                 <EditText
                     android:id="@+id/houseEdit"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="14dp"
-                    android:hint="House / Apartment / Shop"
-                    android:background="@android:color/white"
-                    android:padding="12dp"/>
+                    android:layout_height="44dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_input"
+                    android:hint="House / Apartment (optional)"
+                    android:padding="12dp"
+                    android:textSize="14sp"/>
 
                 <!-- NAME -->
                 <EditText
                     android:id="@+id/nameEdit"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="10dp"
-                    android:hint="Receiver's Name"
-                    android:background="@android:color/white"
-                    android:padding="12dp"/>
+                    android:layout_height="44dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_input"
+                    android:hint="Receiver name"
+                    android:padding="12dp"
+                    android:textSize="14sp"/>
 
                 <!-- PHONE -->
                 <EditText
                     android:id="@+id/phoneEdit"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="10dp"
-                    android:hint="Receiver's Mobile Number"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_input"
+                    android:hint="Mobile number (optional)"
                     android:inputType="phone"
-                    android:background="@android:color/white"
-                    android:padding="12dp"/>
+                    android:padding="12dp"
+                    android:textSize="14sp"/>
+
+                <!-- SAVE PHONE -->
+                <CheckBox
+                    android:id="@+id/checkSavePhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Save this number"
+                    android:textSize="12sp"
+                    android:textColor="#555555"/>
 
                 <!-- SAVE AS -->
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Save as (optional):"
+                    android:layout_marginTop="10dp"
+                    android:text="Save as (optional)"
+                    android:textSize="12sp"
                     android:textColor="#444444"/>
 
                 <!-- TYPE -->
@@ -143,44 +169,70 @@
                     android:id="@+id/typeRadioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="6dp"
                     android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/homeRadio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Home"/>
+                        android:text="Home"
+                        android:textSize="13sp"
+                        android:textColor="@android:color/black"
+                        android:buttonTint="#F7C640"
+                        android:padding="4dp"
+                        android:minHeight="0dp"
+                        android:minWidth="0dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
 
                     <RadioButton
                         android:id="@+id/shopRadio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:text="Shop"/>
+                        android:layout_marginStart="14dp"
+                        android:text="Shop"
+                        android:textSize="13sp"
+                        android:textColor="@android:color/black"
+                        android:buttonTint="#F7C640"
+                        android:padding="4dp"
+                        android:minHeight="0dp"
+                        android:minWidth="0dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
 
                     <RadioButton
                         android:id="@+id/otherRadio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:text="Other"/>
+                        android:layout_marginStart="14dp"
+                        android:text="Other"
+                        android:textSize="13sp"
+                        android:textColor="@android:color/black"
+                        android:buttonTint="#F7C640"
+                        android:padding="4dp"
+                        android:minHeight="0dp"
+                        android:minWidth="0dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
                 </RadioGroup>
 
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>
 
-    <!-- FIXED BOTTOM BUTTON -->
-    <Button
+    <!-- ✅ CTA -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/confirmButton"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="52dp"
         android:layout_margin="12dp"
         android:text="Confirm and Proceed"
+        android:textAllCaps="false"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
+        android:textSize="15sp"
         android:backgroundTint="#F7C640"
+        app:cornerRadius="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

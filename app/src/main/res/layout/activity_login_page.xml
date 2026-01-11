@@ -17,6 +17,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/app_subtitle"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -32,17 +33,19 @@
 
     <ImageView
         android:id="@+id/delivery_image"
-        android:layout_width="300sp"
-        android:layout_height="300sp"
+        android:layout_width="251dp"
+        android:layout_height="250dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="16dp"
         android:scaleType="centerCrop"
         android:src="@drawable/app_logo"
-        android:layout_marginTop="50dp"
         app:layout_constraintBottom_toTopOf="@+id/cardView2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"

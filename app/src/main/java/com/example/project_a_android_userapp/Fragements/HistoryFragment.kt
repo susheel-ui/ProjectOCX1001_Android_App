@@ -1,60 +1,152 @@
 package com.example.project_a_android_userapp.Fragements
 
+import android.graphics.Typeface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.project_a_android_userapp.LocalStorage
 import com.example.project_a_android_userapp.R
+import com.example.project_a_android_userapp.api.ApiClient
+import com.example.project_a_android_userapp.api.Trip
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HistoryFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HistoryFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var recyclerView: RecyclerView
+    private val tripList = mutableListOf<Trip>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_history, container, false)
+    ): View {
+
+        val view = inflater.inflate(R.layout.fragment_history, container, false)
+
+        recyclerView = view.findViewById(R.id.rvTrips)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = TripAdapter()
+
+        loadTrips()
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Fragment_history.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HistoryFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun loadTrips() {
+        val userId = LocalStorage.getUserId(requireContext())
+        val token = LocalStorage.getToken(requireContext())
+
+        if (userId <= 0 || token.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        ApiClient.api.getAllTrips(
+            userId,
+            "Bearer $token"
+        ).enqueue(object : Callback<List<Trip>> {
+
+            override fun onResponse(
+                call: Call<List<Trip>>,
+                response: Response<List<Trip>>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    tripList.clear()
+                    tripList.addAll(response.body()!!)
+                    recyclerView.adapter?.notifyDataSetChanged()
+                } else {
+                    Toast.makeText(requireContext(), "No trips found", Toast.LENGTH_SHORT).show()
                 }
             }
+
+            override fun onFailure(call: Call<List<Trip>>, t: Throwable) {
+                Toast.makeText(
+                    requireContext(),
+                    "API error: ${t.localizedMessage}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        })
+    }
+
+    // ---------------- CODE-ONLY ADAPTER ----------------
+
+    inner class TripAdapter :
+        RecyclerView.Adapter<TripAdapter.TripViewHolder>() {
+
+        inner class TripViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val fare: TextView
+            val pickup: TextView
+            val drop: TextView
+            val distance: TextView
+
+            init {
+                val layout = view as LinearLayout
+
+                fare = layout.getChildAt(0) as TextView
+                pickup = layout.getChildAt(1) as TextView
+                drop = layout.getChildAt(2) as TextView
+                distance = layout.getChildAt(3) as TextView
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TripViewHolder {
+            val context = parent.context
+
+            val container = LinearLayout(context).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(32, 24, 32, 24)
+                layoutParams = RecyclerView.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            }
+
+            val fare = TextView(context).apply {
+                textSize = 18f
+                setTypeface(null, Typeface.BOLD)
+                setTextColor(ContextCompat.getColor(context, R.color.color_primary))
+            }
+
+            val pickup = TextView(context).apply {
+                textSize = 14f
+            }
+
+            val drop = TextView(context).apply {
+                textSize = 14f
+            }
+
+            val distance = TextView(context).apply {
+                textSize = 12f
+                setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
+            }
+
+            container.addView(fare)
+            container.addView(pickup)
+            container.addView(drop)
+            container.addView(distance)
+
+            return TripViewHolder(container)
+        }
+
+        override fun onBindViewHolder(holder: TripViewHolder, position: Int) {
+            val trip = tripList[position]
+
+            holder.fare.text = "₹${trip.finalFare}"
+            holder.pickup.text = "Pickup: ${trip.pickupAddress}"
+            holder.drop.text = "Drop: ${trip.dropAddress}"
+            holder.distance.text = "Distance: ${trip.distanceText}"
+        }
+
+        override fun getItemCount(): Int = tripList.size
     }
 }

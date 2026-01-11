@@ -33,7 +33,7 @@ class OTP_verifyActivity : AppCompatActivity() {
             insets
         }
 
-        // ✅ Get phone from LocalStorage
+        //  Get phone from LocalStorage
         val phone = LocalStorage.getPhone(this)
 
         if (phone.isNullOrEmpty()) {

@@ -63,5 +63,16 @@ interface ApiService {
         @Body body: RegisterBody
     ): Call<ResponseBody>
 
+    @GET("user/all-booking/{userId}")
+    fun getAllTrips(
+        @Path("userId") userId: Int,
+        @Header("Authorization") authHeader: String
+    ): Call<List<Trip>>
+
+    @GET("user/{userId}")
+    fun getUserDetails(
+        @Path("userId") userId: Int,
+        @Header("Authorization") authHeader: String
+    ): Call<UserProfileResponse>
 
 }
