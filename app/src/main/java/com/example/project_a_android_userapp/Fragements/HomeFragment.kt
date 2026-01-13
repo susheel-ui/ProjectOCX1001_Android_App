@@ -37,6 +37,7 @@ class HomeFragment : Fragment() {
             val intent = Intent(requireContext(), Pickup_Drop_Selector_Activity::class.java)
             startActivity(intent)
         }
+
     }
 
     override fun onCreateView(

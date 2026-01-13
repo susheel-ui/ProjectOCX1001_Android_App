@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragements.HomeFragment">
 
@@ -23,15 +24,16 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:adjustViewBounds="true"
-        android:contentDescription="Brand Logo"
+        android:contentDescription="@string/appname"
         android:text="@string/app_name"
+        android:textStyle="bold"
         android:textColor="@color/white"
-        android:textSize="46dp"
+        android:textSize="46sp"
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/pickup_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -40,6 +42,7 @@
         android:layout_marginEnd="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
+        android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logo">
@@ -69,7 +72,8 @@
                     android:layout_height="wrap_content"
                     android:text="Pick up from"
                     android:textColor="@android:color/darker_gray"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -85,7 +89,7 @@
             <!--                android:layout_height="24dp"-->
             <!--                android:src="@drawable/ic_arrow_down" />-->
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 
     <androidx.core.widget.NestedScrollView
@@ -95,13 +99,16 @@
        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@id/pickup_card">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+
+            >
 
             <GridLayout
                 android:layout_width="match_parent"
@@ -109,14 +116,18 @@
                 android:columnCount="2"
                 android:useDefaultMargins="true">
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/threeWheelerCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardCornerRadius="12dp">
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="5dp"
+                    android:backgroundTint="@color/white"
+                    >
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="150dp"
                         android:padding="12dp"
                         android:orientation="vertical"
                         >
@@ -137,21 +148,24 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:scaleType="fitXY"
                             android:layout_below="@+id/twoWheelertext"
                             android:layout_alignParentBottom="true"
                             android:src="@drawable/flat_illustration_four_wheeler" />
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/twoWheelerCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardCornerRadius="12dp">
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="5dp"
+                    android:backgroundTint="@color/white"
+                    >
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="150dp"
                         android:padding="12dp"
                         android:orientation="vertical"
                         >
@@ -174,17 +188,20 @@
                             android:layout_alignParentBottom="true"
                             android:layout_alignParentEnd="true"/>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
+                    app:cardElevation="5dp"
+                    android:backgroundTint="@color/white"
                     app:cardCornerRadius="12dp">
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="150dp"
                         android:padding="12dp"
+
                         android:orientation="vertical"
                         >
                         <TextView
@@ -205,16 +222,18 @@
                             android:src="@drawable/flat_illustration_all_india_parcel"
                             android:layout_alignParentBottom="true"/>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
+                    app:cardElevation="5dp"
+                    android:backgroundTint="@color/white"
                     app:cardCornerRadius="12dp">
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="150dp"
                         android:padding="12dp"
                         android:orientation="vertical"
                         >
@@ -237,7 +256,7 @@
                             android:layout_alignParentBottom="true"
                             android:layout_alignParentEnd="true"/>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
             </GridLayout>
 
