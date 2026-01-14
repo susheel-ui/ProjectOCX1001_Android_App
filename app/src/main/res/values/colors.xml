@@ -32,6 +32,7 @@
 
 
         <color name="primary">#F59E0B</color>
+        <color name="primary_varient1">#F59E0B</color>
         <color name="primary_variant">#D97706</color>
         <color name="primary_variant300">#47E08031</color>
         <color name="Orrange_400">#ffedd5</color>
