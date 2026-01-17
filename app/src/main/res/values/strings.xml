@@ -34,4 +34,11 @@
     <string name="goods_type">GOODS TYPE</string>
     <string name="scooter">Scooter</string>
     <string name="view_address_details"><![CDATA[View Address Details >]]></string>
+    <string name="house_apartment_shop_optional">House / Apartment / Shop (optional)</string>
+    <string name="save_as_optional">Save as (optional):</string>
+    <string name="home">Home</string>
+    <string name="shop">Shop</string>
+    <string name="other">Other</string>
+    <string name="sender_s_mobile_number">Sender\'s Mobile number</string>
+    <string name="sender_s_name">Sender\'s Name</string>
 </resources>
