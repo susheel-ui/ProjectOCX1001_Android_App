@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.project_a_android_userapp.Animations_extensions
+import com.example.project_a_android_userapp.Animations_extensions.popClick
 import com.example.project_a_android_userapp.Pickup_Drop_Selector_Activity
 import com.example.project_a_android_userapp.R
 import com.example.project_a_android_userapp.databinding.FragmentHomeBinding
@@ -33,12 +35,35 @@ class HomeFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
         binding = FragmentHomeBinding.inflate(layoutInflater)
-        binding.pickupCard.setOnClickListener {
+        binding.threeWheelerCard.popClick {
+                startActivity(Intent(requireContext(),Pickup_Drop_Selector_Activity::class.java))
+        }
+        binding.twoWheelerCard.popClick {
+
+        }
+        binding.trucksCard.popClick {
+
+        }
+        binding.bulkOrderCard.popClick {
+
+        }
+
+        binding.userCard.popClick {
+
+        }
+        binding.btnChangeAddress.popClick {
+
+        }
+
+        binding.pickupCard.popClick {
             val intent = Intent(requireContext(), Pickup_Drop_Selector_Activity::class.java)
             startActivity(intent)
         }
 
+
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
