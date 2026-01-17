@@ -30,4 +30,8 @@
     <string name="no_order_history_yet">No Order History Yet</string>
     <string name="no_orders_illustration">No orders illustration</string>
     <string name="completed">Completed</string>
+    <string name="change">CHANGE</string>
+    <string name="goods_type">GOODS TYPE</string>
+    <string name="scooter">Scooter</string>
+    <string name="view_address_details"><![CDATA[View Address Details >]]></string>
 </resources>

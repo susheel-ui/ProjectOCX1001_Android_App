@@ -19,7 +19,6 @@
             android:id="@+id/header_layout"
             android:layout_width="0dp"
             android:layout_height="150dp"
-
             android:background="@drawable/bg_bottom_rounded_40dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"

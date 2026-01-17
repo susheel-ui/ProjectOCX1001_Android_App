@@ -176,7 +176,9 @@
                 android:id="@+id/imgCash"
                 android:layout_width="39dp"
                 android:layout_height="57dp"
-                android:src="@drawable/payment" />
+                android:src="@drawable/ic_wallet"
+                app:tint= "@color/primary"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
