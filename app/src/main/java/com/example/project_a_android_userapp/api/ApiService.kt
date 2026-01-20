@@ -56,12 +56,13 @@ interface ApiService {
         @Path("rideId") rideId: Long,
         @Query("userId") userId: Long,
         @Header("Authorization") authHeader: String
-    ): Call<String>
+    ): Call<Void>
 
     @POST("auth/register")
     fun register(
         @Body body: RegisterBody
     ): Call<ResponseBody>
+
 
 
 }

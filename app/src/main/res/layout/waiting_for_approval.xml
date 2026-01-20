@@ -1,274 +1,272 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F2F6FF">
+    android:background="#F4F7FA"
+    android:padding="24dp">
 
-    <!-- SEARCHING DRIVER CARD -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/searchCard"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="6dp"
-        android:backgroundTint="@android:color/white"
-        app:layout_constraintTop_toTopOf="parent"
+    <ImageView
+        android:id="@+id/iv_scooter_bg"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="40dp"
+        android:padding="30dp"
+        android:src="@drawable/flat_illustration_two_wheeler"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
-            android:gravity="center_vertical">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/vehicleInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Searching for drivers nearby…"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:id="@+id/txtSearchingSub"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Finding partner near you."
-                    android:textSize="14sp"
-                    android:layout_marginTop="4dp"
-                    android:textColor="#666" />
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/imgMapPreview"
-                android:layout_width="84dp"
-                android:layout_height="64dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/flat_illustration_two_wheeler" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-
-    <!-- LOCATION CARD -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/locationCard"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="Searching for the best\ndriver..."
+        android:textColor="#1A1C1E"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_scooter_bg" />
+
+    <TextView
+        android:id="@+id/tv_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="6dp"
-        android:backgroundTint="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/searchCard"
+        android:text="Connecting you with nearby partners"
+        android:textColor="#6C757D"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+
+    <TextView
+        android:id="@+id/vehicleInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Matching driver"
+        android:textColor="#6C757D"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_subtitle">
 
         <LinearLayout
-            android:padding="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="20dp">
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/ic_location_on_green" />
-
+                <View
+                    android:id="@+id/dot_pickup"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/ic_location_on_green" />
+                <TextView
+                    android:id="@+id/lbl_pickup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/dot_pickup"
+                    android:text="PICKUP"
+                    android:textColor="#A0AABF"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
                 <TextView
                     android:id="@+id/pickupInfo"
-                    android:layout_marginStart="10dp"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_below="@id/lbl_pickup"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/dot_pickup"
+                    android:text="123 Silicon Valley, Tech Hub"
+                    android:textColor="#1A1C1E"
                     android:textSize="15sp"
-                    android:textColor="@android:color/black"/>
-            </LinearLayout>
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="12dp"
+            <View
+                android:layout_width="1dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="4.5dp"
+                android:background="#E0E0E0" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <View
+                    android:id="@+id/dot_dropoff"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/ic_location_on_red" />
+                <TextView
+                    android:id="@+id/lbl_dropoff"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/dot_dropoff"
+                    android:text="DROP-OFF"
+                    android:textColor="#A0AABF"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/dropInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/lbl_dropoff"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/dot_dropoff"
+                    android:text="789 Innovation Park, Design City"
+                    android:textColor="#1A1C1E"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="20dp"
+                android:background="#F0F0F0" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/ic_location_on_red" />
+                    android:id="@+id/iv_payment"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_wallet"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/dropInfo"
-                    android:layout_marginStart="10dp"
-                    android:layout_width="0dp"
+                    android:id="@+id/lbl_payment"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="15sp"
-                    android:textColor="@android:color/black"/>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/txtViewDetails"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="View Details"
-                android:textColor="#004BFF"
-                android:layout_marginTop="12dp"
-                android:textSize="15sp"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-
-    <!-- CENTER PROGRESSBAR -->
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:indeterminate="true"
-        app:layout_constraintTop_toBottomOf="@id/locationCard"
-        app:layout_constraintBottom_toTopOf="@id/paymentCard"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-
-    <!-- PAYMENT CARD -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/paymentCard"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="10dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="6dp"
-        android:backgroundTint="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/progressBar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/supportCard">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="12dp">
-
-            <ImageView
-                android:id="@+id/imgCash"
-                android:layout_width="39dp"
-                android:layout_height="57dp"
-                android:src="@drawable/ic_wallet"
-                app:tint= "@color/primary"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:orientation="vertical">
+                    android:layout_marginStart="12dp"
+                    android:text="Payment Method"
+                    android:textColor="#A0AABF"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toEndOf="@id/iv_payment"
+                    app:layout_constraintTop_toTopOf="@id/iv_payment" />
 
                 <TextView
-                    android:id="@+id/txtPaymentTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cash"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textColor="#1A1C1E"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@id/lbl_payment"
+                    app:layout_constraintTop_toBottomOf="@id/lbl_payment" />
 
                 <TextView
-                    android:id="@+id/txtPaymentSub"
+                    android:id="@+id/lbl_fare"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Payment Method"
-                    android:textColor="#888"
-                    android:textSize="13sp" />
+                    android:text="Estimated Fare"
+                    android:textColor="#A0AABF"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/iv_payment" />
 
                 <TextView
-                    android:id="@+id/fareInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Fare: ₹0"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
-            </LinearLayout>
+                    android:text="₹249"
+                    android:textColor="#3B82F6"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lbl_fare" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-
-    <!-- SUPPORT CARD -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/supportCard"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/btn_view_details"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="72dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="6dp"
-        android:backgroundTint="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/paymentCard"
+        android:layout_marginTop="20dp"
+        android:drawablePadding="4dp"
+        android:text="View Details"
+        android:textColor="#3B82F6"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cv_details" />
+
+    <LinearLayout
+        android:id="@+id/btn_support"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/btn_view_details"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_view_details">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/user"
+            app:tint="#6C757D" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:text="Support"
+            android:textColor="#495057"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/cancelTrip">
-
-        <LinearLayout
-            android:padding="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/txtSupportTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Facing issue in this order?"
-                android:textSize="14sp"
-                android:textColor="@android:color/black" />
-
-            <TextView
-                android:id="@+id/txtContactSupport"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Contact Support"
-                android:textColor="#004BFF"
-                android:textSize="15sp"
-                android:textStyle="bold"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintBottom_toTopOf="@id/cancelTrip" />
 
 
-    <!-- CANCEL TRIP -->
     <TextView
         android:id="@+id/cancelTrip"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:text="Cancel Trip"
-        android:textColor="#FF3B30"
+        android:textColor="#EF4444"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:gravity="center"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

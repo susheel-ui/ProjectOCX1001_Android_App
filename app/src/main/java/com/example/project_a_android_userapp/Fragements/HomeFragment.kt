@@ -1,95 +1,134 @@
 package com.example.project_a_android_userapp.Fragements
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.project_a_android_userapp.Animations_extensions
-import com.example.project_a_android_userapp.Animations_extensions.popClick
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import com.example.project_a_android_userapp.MyApp
+import com.example.project_a_android_userapp.LocationViewModel
 import com.example.project_a_android_userapp.Pickup_Drop_Selector_Activity
-import com.example.project_a_android_userapp.R
 import com.example.project_a_android_userapp.databinding.FragmentHomeBinding
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import java.util.Locale
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment() {
-    lateinit var binding:FragmentHomeBinding
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private lateinit var binding: FragmentHomeBinding
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    // ✅ USE GLOBAL INSTANCE FROM MyApp
+    private lateinit var vm: LocationViewModel
+
+    private val locationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val granted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
+            if (granted) fetchCurrentLocation()
+            else binding.txtPickupAddress.text = "Location permission denied"
         }
-        binding = FragmentHomeBinding.inflate(layoutInflater)
-        binding.threeWheelerCard.popClick {
-                startActivity(Intent(requireContext(),Pickup_Drop_Selector_Activity::class.java))
-        }
-        binding.twoWheelerCard.popClick {
-
-        }
-        binding.trucksCard.popClick {
-
-        }
-        binding.bulkOrderCard.popClick {
-
-        }
-
-        binding.userCard.popClick {
-
-        }
-        binding.btnChangeAddress.popClick {
-
-        }
-
-        binding.pickupCard.popClick {
-            val intent = Intent(requireContext(), Pickup_Drop_Selector_Activity::class.java)
-            startActivity(intent)
-        }
-
-
-    }
-
-
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // 🔥 THIS IS THE MOST IMPORTANT LINE
+        vm = (requireActivity().application as MyApp).vm
+
+        fusedLocationClient =
+            LocationServices.getFusedLocationProviderClient(requireActivity())
+
+        checkLocationPermission()
+
+        binding.pickupCard.setOnClickListener {
+            startActivity(
+                Intent(requireContext(), Pickup_Drop_Selector_Activity::class.java)
+            )
+        }
+    }
+
+    private fun checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fetchCurrentLocation()
+        } else {
+            locationPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
+
+    private fun fetchCurrentLocation() {
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location ->
+                if (location != null) {
+
+                    // ✅ SAVE IN CLASS INSTANCE
+                    vm.pickupLat = location.latitude
+                    vm.pickupLon = location.longitude
+
+                    fetchAddressFromLatLng(
+                        location.latitude,
+                        location.longitude
+                    )
+                } else {
+                    binding.txtPickupAddress.text = "Unable to get location"
                 }
             }
+            .addOnFailureListener {
+                binding.txtPickupAddress.text = "Location error"
+            }
+    }
+
+    private fun fetchAddressFromLatLng(lat: Double, lng: Double) {
+        Thread {
+            try {
+                val geocoder = Geocoder(requireContext(), Locale.getDefault())
+                val addresses = geocoder.getFromLocation(lat, lng, 1)
+
+                val addressText = if (!addresses.isNullOrEmpty()) {
+                    val addr = addresses[0]
+                    listOfNotNull(
+                        addr.subLocality,
+                        addr.locality,
+                        addr.adminArea
+                    ).joinToString(", ")
+                } else {
+                    "Current location"
+                }
+
+                // ✅ SAVE PICKUP ADDRESS
+                vm.pickupAddress = addressText
+
+                requireActivity().runOnUiThread {
+                    binding.txtPickupAddress.text = addressText
+                }
+
+            } catch (e: Exception) {
+                requireActivity().runOnUiThread {
+                    binding.txtPickupAddress.text = "Location unavailable"
+                }
+            }
+        }.start()
     }
 }

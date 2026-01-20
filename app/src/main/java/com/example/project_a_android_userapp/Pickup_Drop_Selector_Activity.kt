@@ -10,7 +10,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.RectangularBounds
@@ -24,13 +24,16 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var vm: LocationViewModel
     private lateinit var gMap: GoogleMap
+
     private lateinit var pickupEdit: EditText
     private lateinit var dropEdit: EditText
     private lateinit var btnNext: Button
     private lateinit var pickupPin: ImageView
     private lateinit var dropPin: ImageView
+
     private val REQ_PICKUP = 1001
     private val REQ_DROP = 1002
+
     private var isSelectingPickup = false
     private var isSelectingDrop = false
 
@@ -38,19 +41,26 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pickup_drop_selector)
 
+        // ✅ GET GLOBAL VIEWMODEL INSTANCE
         vm = (application as MyApp).vm
 
         pickupEdit = findViewById(R.id.pickupEdit)
         dropEdit = findViewById(R.id.dropEdit)
         btnNext = findViewById(R.id.btnNext)
-
         pickupPin = findViewById(R.id.pickupPin)
         dropPin = findViewById(R.id.dropPin)
 
         pickupPin.visibility = View.GONE
         dropPin.visibility = View.GONE
 
-        // ⭐ Initialize Google Places
+        // ✅ SHOW PICKUP DATA IF COMING FROM HOME
+        if (vm.pickupAddress.isNotEmpty()) {
+            pickupEdit.setText(vm.pickupAddress)
+            pickupPin.visibility = View.VISIBLE
+            isSelectingPickup = true
+        }
+
+        // ⭐ INIT GOOGLE PLACES
         if (!Places.isInitialized()) {
             Places.initialize(
                 applicationContext,
@@ -58,12 +68,11 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
             )
         }
 
-        // ⭐ Load Google Map
+        // ⭐ LOAD MAP
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.mapFragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        // ⭐ Click field → open search
         pickupEdit.setOnClickListener {
             isSelectingPickup = true
             isSelectingDrop = false
@@ -80,67 +89,84 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
             openAutocomplete(false)
         }
 
-        // ⭐ Next button
         btnNext.setOnClickListener {
             if (vm.pickupAddress.isEmpty()) {
-                Toast.makeText(this, "Select Pickup Address", Toast.LENGTH_SHORT).show()
+                toast("Select Pickup Address")
                 return@setOnClickListener
             }
             if (vm.dropAddress.isEmpty()) {
-                Toast.makeText(this, "Select Drop Address", Toast.LENGTH_SHORT).show()
+                toast("Select Drop Address")
                 return@setOnClickListener
             }
 
             fetchDistanceAndTime {
-                startActivity(Intent(this, SenderDetailsActivity::class.java))
+                startActivity(
+                    Intent(this, SenderDetailsActivity::class.java)
+                )
             }
         }
     }
+
+    // ================= MAP =================
 
     override fun onMapReady(map: GoogleMap) {
         gMap = map
 
-        val start = LatLng(25.44, 78.56)
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, 16f))
+        // ✅ CENTER MAP ON PICKUP IF EXISTS
+        if (vm.pickupLat != 0.0 && vm.pickupLon != 0.0) {
+            val pickup = LatLng(vm.pickupLat, vm.pickupLon)
+            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pickup, 17f))
+            pickupPin.visibility = View.VISIBLE
+            isSelectingPickup = true
+        } else {
+            val fallback = LatLng(25.44, 78.56)
+            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fallback, 16f))
+        }
 
-        // ⭐ When user stops dragging → get center location
         gMap.setOnCameraIdleListener {
-            val center = gMap.cameraPosition.target
-            updateLocationFromMap(center)
+            updateLocationFromMap(gMap.cameraPosition.target)
         }
     }
 
-    // ⭐ Update pickup/drop on map drag (Marker stays fixed)
+    // ================= MAP DRAG =================
+
     private fun updateLocationFromMap(latLng: LatLng) {
+        try {
+            val geocoder = Geocoder(this, Locale.getDefault())
+            val list = geocoder.getFromLocation(
+                latLng.latitude,
+                latLng.longitude,
+                1
+            )
 
-        val geocoder = Geocoder(this, Locale.getDefault())
-        val list = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+            if (!list.isNullOrEmpty()) {
+                val shortAddress =
+                    makeShortAddress(list[0].getAddressLine(0) ?: "")
 
-        if (list != null && list.isNotEmpty()) {
-            val address = list[0].getAddressLine(0)
-            val shortAddress = makeShortAddress(address ?: "")
+                if (isSelectingPickup) {
+                    vm.pickupLat = latLng.latitude
+                    vm.pickupLon = latLng.longitude
+                    vm.pickupAddress = shortAddress
+                    pickupEdit.setText(shortAddress)
+                }
 
-            if (isSelectingPickup) {
-                vm.pickupLat = latLng.latitude
-                vm.pickupLon = latLng.longitude
-                vm.pickupAddress = shortAddress
-                pickupEdit.setText(shortAddress)
-
-            } else if (isSelectingDrop) {
-                vm.dropLat = latLng.latitude
-                vm.dropLon = latLng.longitude
-                vm.dropAddress = shortAddress
-                dropEdit.setText(shortAddress)
+                if (isSelectingDrop) {
+                    vm.dropLat = latLng.latitude
+                    vm.dropLon = latLng.longitude
+                    vm.dropAddress = shortAddress
+                    dropEdit.setText(shortAddress)
+                }
             }
+        } catch (_: Exception) {
         }
     }
 
-    // ⭐ Autocomplete with Jhansi priority
+    // ================= AUTOCOMPLETE =================
+
     private fun openAutocomplete(isPickup: Boolean) {
 
         val fields = listOf(
             Place.Field.ID,
-            Place.Field.NAME,
             Place.Field.ADDRESS,
             Place.Field.LAT_LNG
         )
@@ -157,20 +183,25 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
             .setLocationBias(bounds)
             .build(this)
 
-        startActivityForResult(intent, if (isPickup) REQ_PICKUP else REQ_DROP)
+        startActivityForResult(
+            intent,
+            if (isPickup) REQ_PICKUP else REQ_DROP
+        )
     }
 
-    // ⭐ Autocomplete Result
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK && data != null) {
             val place = Autocomplete.getPlaceFromIntent(data)
-            val latLng = place.latLng!!
-            val finalAddress = makeShortAddress(place.address ?: "")
+            val latLng = place.latLng ?: return
+            val address = makeShortAddress(place.address ?: "")
 
             if (requestCode == REQ_PICKUP) {
-
                 isSelectingPickup = true
                 isSelectingDrop = false
                 pickupPin.visibility = View.VISIBLE
@@ -178,11 +209,10 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
 
                 vm.pickupLat = latLng.latitude
                 vm.pickupLon = latLng.longitude
-                vm.pickupAddress = finalAddress
-                pickupEdit.setText(finalAddress)
+                vm.pickupAddress = address
+                pickupEdit.setText(address)
 
             } else {
-
                 isSelectingPickup = false
                 isSelectingDrop = true
                 pickupPin.visibility = View.GONE
@@ -190,57 +220,58 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
 
                 vm.dropLat = latLng.latitude
                 vm.dropLon = latLng.longitude
-                vm.dropAddress = finalAddress
-                dropEdit.setText(finalAddress)
+                vm.dropAddress = address
+                dropEdit.setText(address)
             }
 
-            // keep marker fixed, only move map
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f))
+            gMap.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(latLng, 17f)
+            )
         }
     }
 
-    // ⭐ Short Address Cleaner
-    private fun makeShortAddress(full: String): String {
-        val parts = full.split(",")
-        return if (parts.size >= 2) "${parts[0].trim()}, ${parts[1].trim()}" else full
-    }
+    // ================= DISTANCE =================
 
-    // ⭐ Google Directions API
     private fun fetchDistanceAndTime(onComplete: () -> Unit) {
-
-        val apiKey = getString(R.string.directions_key)
 
         val url =
             "https://maps.googleapis.com/maps/api/directions/json?" +
                     "origin=${vm.pickupLat},${vm.pickupLon}" +
                     "&destination=${vm.dropLat},${vm.dropLon}" +
-                    "&key=$apiKey"
+                    "&key=${getString(R.string.directions_key)}"
 
         Thread {
             try {
-                val response = URL(url).readText()
-                val json = JSONObject(response)
-
-                if (json.getString("status") != "OK") {
-                    runOnUiThread { onComplete() }
-                    return@Thread
-                }
-
+                val json = JSONObject(URL(url).readText())
                 val legs = json.getJSONArray("routes")
                     .getJSONObject(0)
                     .getJSONArray("legs")
                     .getJSONObject(0)
 
-                vm.distanceText = legs.getJSONObject("distance").getString("text")
-                vm.durationText = legs.getJSONObject("duration").getString("text")
-                vm.distanceValue = legs.getJSONObject("distance").getInt("value")
-                vm.durationValue = legs.getJSONObject("duration").getInt("value")
-
-                runOnUiThread { onComplete() }
+                vm.distanceText =
+                    legs.getJSONObject("distance").getString("text")
+                vm.durationText =
+                    legs.getJSONObject("duration").getString("text")
+                vm.distanceValue =
+                    legs.getJSONObject("distance").getInt("value")
+                vm.durationValue =
+                    legs.getJSONObject("duration").getInt("value")
 
             } catch (_: Exception) {
-                runOnUiThread { onComplete() }
             }
+
+            runOnUiThread { onComplete() }
         }.start()
+    }
+
+    private fun makeShortAddress(full: String): String {
+        val parts = full.split(",")
+        return if (parts.size >= 2)
+            "${parts[0].trim()}, ${parts[1].trim()}"
+        else full
+    }
+
+    private fun toast(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 }

@@ -11,63 +11,105 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8.5"/>
+        android:layout_weight="6.5"/>
 
     <!-- 🚗 DRIVER INFO -->
     <LinearLayout
-        android:orientation="vertical"
-        android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.5">
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:padding="16dp">
+
 
         <!-- NAME + VEHICLE -->
         <LinearLayout
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/imgVehicleType"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/truck"
-                android:contentDescription="Vehicle Type"/>
+                android:contentDescription="Vehicle Type"
+                android:src="@drawable/truck" />
+
 
             <TextView
                 android:id="@+id/driverName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Driver Name"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textStyle="bold" />
+
+
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnRefreshRoute"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:contentDescription="Refresh Route"
+            android:src="@drawable/ic_refresh" />
 
         <!-- PHONE + CALL -->
         <LinearLayout
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="12dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/driverPhone"
-                android:text="9999999999"
-                android:textSize="16sp"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="9999999999"
+                android:textSize="16sp" />
 
             <ImageButton
                 android:id="@+id/btnCallDriver"
-                android:src="@android:drawable/ic_menu_call"
-                android:background="@android:color/transparent"
                 android:layout_width="48dp"
-                android:layout_height="48dp"/>
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_menu_call" />
         </LinearLayout>
+
+        <!-- ACTION BUTTONS -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnCancelRide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cancel Ride"
+                android:visibility="gone"
+                android:backgroundTint="@android:color/holo_red_dark"/>
+
+            <Button
+                android:id="@+id/btnPay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Pay Now"
+                android:visibility="gone"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="@android:color/holo_green_dark"/>
+        </LinearLayout>
+
 
     </LinearLayout>
 

@@ -60,6 +60,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-messaging-ktx")
     implementation("com.google.maps.android:android-maps-utils:3.8.2")
+    implementation("com.razorpay:checkout:1.6.40")
 
 }
 

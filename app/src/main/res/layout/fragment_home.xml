@@ -98,9 +98,10 @@
                     android:textStyle="bold"
                     android:textColor="@color/text_secondary"/>
                 <TextView
+                    android:id="@+id/txtPickupAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="33, Azadpur, Delhi, India"
+                    android:text="Fetching location..."
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
                     android:maxLines="1"

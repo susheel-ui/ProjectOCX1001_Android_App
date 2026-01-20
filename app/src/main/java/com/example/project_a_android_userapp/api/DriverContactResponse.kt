@@ -4,6 +4,7 @@ data class DriverContactResponse(
     val driverId: Long,
     val driverName: String,
     val driverPhone: String,
-    val vehicleType: String
+    val vehicleType: String,
+    val rideStatus: String
 
 )
