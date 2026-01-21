@@ -1,60 +1,112 @@
 package com.example.project_a_android_userapp.Fragements
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
+import androidx.fragment.app.Fragment
+import com.example.project_a_android_userapp.LocalStorage
+import com.example.project_a_android_userapp.Login_Page
 import com.example.project_a_android_userapp.R
+import com.example.project_a_android_userapp.api.ApiClient
+import com.example.project_a_android_userapp.model.UserResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [UserFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class UserFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+// Helper class to manage a label/value pair like First Name or Last Name
+class UserField(private val valueTextView: TextView) {
+    fun setText(text: String) {
+        valueTextView.text = text
     }
+
+    fun getText(): String {
+        return valueTextView.text.toString()
+    }
+}
+
+class UserFragment : Fragment() {
+
+    // Main user info
+    private lateinit var userNameText: TextView
+    private lateinit var emailText: TextView
+    private lateinit var mobileText: TextView
+    private lateinit var profileImage: ImageView
+    private lateinit var logoutButton: Button
+
+    // First Name and Last Name fields using helper class
+    private lateinit var firstNameField: UserField
+    private lateinit var lastNameField: UserField
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user, container, false)
+
+        val view = inflater.inflate(R.layout.fragment_user, container, false)
+
+        // Bind main userNameText
+        userNameText = view.findViewById(R.id.userNameText)
+
+        // Bind First Name and Last Name TextViews
+        firstNameField = UserField(view.findViewById(R.id.firstNameValue))
+        lastNameField = UserField(view.findViewById(R.id.lastNameValue))
+
+        emailText = view.findViewById(R.id.emailText)
+        mobileText = view.findViewById(R.id.mobileText)
+        profileImage = view.findViewById(R.id.profileImage)
+        logoutButton = view.findViewById(R.id.logoutButton)
+
+        fetchUserData()
+
+        // Logout
+        logoutButton.setOnClickListener {
+            LocalStorage.clear(requireContext())
+            Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()
+            val intent = Intent(requireContext(), Login_Page::class.java)
+
+            // Clear activity stack (IMPORTANT)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+            startActivity(intent)
+        }
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment UserFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            UserFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun fetchUserData() {
+        val userId = LocalStorage.getUserId(requireContext())
+
+        if (userId == -1) {
+            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        ApiClient.api.getUserById(userId).enqueue(object : Callback<UserResponse> {
+            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
+                if (response.isSuccessful && response.body() != null) {
+                    val user = response.body()!!
+
+                    // Set main user name
+                    userNameText.text = "${user.firstName} ${user.lastName}"
+
+                    // Set First Name and Last Name fields
+                    firstNameField.setText(user.firstName)
+                    lastNameField.setText(user.lastName)
+
+                    // Set email and mobile
+                    emailText.text = user.email
+                    mobileText.text = user.mobile
+                } else {
+                    Toast.makeText(requireContext(), "Failed to fetch user data", Toast.LENGTH_SHORT).show()
                 }
             }
+
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

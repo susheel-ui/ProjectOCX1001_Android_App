@@ -1,116 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 🗺 MAP -->
+    <!-- MAP -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="6.5"/>
+        android:layout_height="match_parent" />
 
-    <!-- 🚗 DRIVER INFO -->
+    <!-- TOP HEADER -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:id="@+id/topHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center_vertical">
 
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/baseline_arrow_back_ios_24"
+            android:contentDescription="Back"/>
 
-        <!-- NAME + VEHICLE -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/imgVehicleType"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:contentDescription="Vehicle Type"
-                android:src="@drawable/truck" />
-
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
 
             <TextView
-                android:id="@+id/driverName"
+                android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Driver Name"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:text="On the way"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#000" />
 
 
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/btnRefreshRoute"
+            android:id="@+id/btnHelp"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:background="@android:color/transparent"
-            android:contentDescription="Refresh Route"
-            android:src="@drawable/ic_refresh" />
+            android:src="@drawable/user"
+            />
+    </LinearLayout>
 
-        <!-- PHONE + CALL -->
+    <!-- DRIVER INFO CARD -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <TextView
-                android:id="@+id/driverPhone"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="9999999999"
-                android:textSize="16sp" />
-
-            <ImageButton
-                android:id="@+id/btnCallDriver"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@android:color/transparent"
-                android:src="@android:drawable/ic_menu_call" />
-        </LinearLayout>
-
-        <!-- ACTION BUTTONS -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/btnCancelRide"
+            <!-- DRIVER INFO ROW -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Cancel Ride"
-                android:visibility="gone"
-                android:backgroundTint="@android:color/holo_red_dark"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
+                <ImageView
+                    android:id="@+id/imgVehicleType"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerCrop"
+                    android:layout_marginEnd="12dp"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/driverName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Robert Fox"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#000"/>
+
+                    <TextView
+                        android:id="@+id/driverPhone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="9999999999"
+                        android:textSize="14sp"
+                        android:textColor="#6B6B6B"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_star"/>
+
+                        <TextView
+                            android:id="@+id/driverRating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4.8"
+                            android:textSize="12sp"
+                            android:textColor="#6B6B6B"
+                            android:layout_marginStart="4dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btnCallDriver"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/img_1"
+                    android:contentDescription="Call Driver"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"/>
+            </LinearLayout>
+
+            <!-- PAY BUTTON -->
             <Button
                 android:id="@+id/btnPay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Pay Now"
-                android:visibility="gone"
-                android:layout_marginStart="8dp"
-                android:backgroundTint="@android:color/holo_green_dark"/>
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:text="Pay Now "
+                android:textColor="#fff"
+                android:textStyle="bold"
+                android:backgroundTint="#F2B934"
+                android:drawablePadding="8dp"
+                android:visibility="gone"/>
+
+            <!-- CANCEL BUTTON -->
+            <Button
+                android:id="@+id/btnCancelRide"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:text="Cancel Ride"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:backgroundTint="#EEEEEE"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:id="@+id/btnRefreshRoute"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_refresh"
+            android:contentDescription="Refresh"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_marginStart="8dp"/>
         </LinearLayout>
-
-
-    </LinearLayout>
-
-</LinearLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

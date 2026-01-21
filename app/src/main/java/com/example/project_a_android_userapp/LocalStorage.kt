@@ -15,6 +15,7 @@ object LocalStorage {
     private const val KEY_ACTIVE_RIDE_ID = "active_ride_id"
     private const val KEY_ACTIVE_DRIVER_ID = "active_driver_id"
 
+
     // 🔹 Common prefs method
     private fun prefs(context: Context): SharedPreferences =
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)

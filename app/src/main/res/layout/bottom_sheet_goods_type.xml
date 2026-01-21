@@ -1,0 +1,103 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Goods Type"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingBottom="12dp"/>
+
+    <TextView
+        android:id="@+id/optionGeneral"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="General • Loose"
+        android:textSize="16sp"
+        android:padding="12dp"/>
+
+    <TextView
+        android:id="@+id/optionFragile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fragile • Glass"
+        android:textSize="16sp"
+        android:padding="12dp"/>
+
+    <TextView
+        android:id="@+id/optionElectronics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Electronics"
+        android:textSize="16sp"
+        android:padding="12dp"/>
+
+    <TextView
+        android:id="@+id/optionLogistics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logistics Service Providers"
+        android:textSize="16sp"
+        android:padding="12dp"/>
+
+    <TextView
+        android:id="@+id/optionMachines"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Machines / Equipments / Spare Parts"
+        android:textSize="16sp"
+        android:padding="12dp"/>
+
+    <TextView
+        android:id="@+id/optionPharma"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pharmaceutical / Healthcare Products"
+        android:textSize="16sp"
+        android:padding="12dp"/>
+
+    <TextView
+        android:id="@+id/optionPlastic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Plastic Products"
+        android:textSize="16sp"
+        android:padding="12dp"/>
+
+    <TextView
+        android:id="@+id/optionRubber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rubber Products"
+        android:textSize="16sp"
+        android:padding="12dp"/>
+
+    <TextView
+        android:id="@+id/optionTextile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Textiles / Garments / Fashion / Accessories"
+        android:textSize="16sp"
+        android:padding="12dp"/>
+
+    <TextView
+        android:id="@+id/optionTimber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Timbers / Plywoods / Papers"
+        android:textSize="16sp"
+        android:padding="12dp"/>
+
+    <TextView
+        android:id="@+id/optionBooks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Books / Stationary / Gifts / Toys"
+        android:textSize="16sp"
+        android:padding="12dp"/>
+
+</LinearLayout>

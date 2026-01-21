@@ -4,16 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4F7FA"
-    android:padding="24dp">
+    android:background="#F4F7FA">
 
     <ImageView
         android:id="@+id/iv_scooter_bg"
         android:layout_width="140dp"
         android:layout_height="140dp"
-        android:layout_marginTop="40dp"
-        android:padding="30dp"
-        android:src="@drawable/flat_illustration_two_wheeler"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/zarkit_bgremove"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -195,6 +193,7 @@
                     app:layout_constraintTop_toTopOf="@id/iv_payment" />
 
                 <TextView
+                    android:id="@+id/cash"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="₹249"
@@ -234,8 +233,7 @@
         <ImageView
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:src="@drawable/user"
-            app:tint="#6C757D" />
+            android:src="@drawable/support"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -246,15 +244,17 @@
             android:textSize="14sp" />
     </LinearLayout>
 
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@id/cancelTrip"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/cancelTrip" />
-
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/cancelTrip"

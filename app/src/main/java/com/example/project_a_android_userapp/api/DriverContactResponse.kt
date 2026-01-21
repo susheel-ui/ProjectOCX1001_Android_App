@@ -5,6 +5,6 @@ data class DriverContactResponse(
     val driverName: String,
     val driverPhone: String,
     val vehicleType: String,
-    val rideStatus: String
+    val rideStatus: String?
 
 )

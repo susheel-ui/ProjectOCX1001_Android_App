@@ -1,0 +1,28 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/yellow_card"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Restricted Items"
+            android:textColor="#111"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingBottom="12dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Pornographic materials\n• Human body parts\n• Firearms\n• Livestock\n• Dangerous goods\n• Illegal goods\n• Precious jewelleries, stones and gems\n• Lottery tickets\n• Cigarettes and alcohols\n• Dry ice\n• Explosives\n• Flammables\n• Pets and animals\n• Hazardous goods\n• Radioactive materials\n• Currencies and coins\n• Gambling devices\n• Fire extinguishers\n• Narcotics and illegal drugs"
+            android:textSize="16sp"
+            android:textColor="#000"
+            android:lineSpacingExtra="4dp"/>
+    </LinearLayout>
+</ScrollView>

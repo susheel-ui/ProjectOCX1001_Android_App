@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragements.HistoryFragment">
+    tools:context=".Fragments.HistoryFragment">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/backgroundColorLightGrey"
-        tools:context=".NoOrdersActivity">
+        android:background="@color/backgroundColorLightGrey">
+
+        <!-- ================= HEADER ================= -->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/header_layout"
@@ -18,34 +20,34 @@
             android:background="@drawable/bg_bottom_rounded_40dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-
-            >
+            app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
+                android:id="@+id/titleOrders"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="My Orders"
                 android:textColor="@android:color/white"
                 android:textSize="32sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- ================= TABS ================= -->
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/tabs_card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="-24dp"
             android:layout_marginEnd="24dp"
-            app:cardCornerRadius="8dp"
+            android:layout_marginTop="-24dp"
             android:backgroundTint="@color/white"
+            app:cardCornerRadius="8dp"
             app:cardElevation="4dp"
             app:strokeWidth="0dp"
             app:layout_constraintTop_toBottomOf="@id/header_layout"
@@ -53,6 +55,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <LinearLayout
+                android:id="@+id/linearLayoutTabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -60,6 +63,7 @@
                 android:weightSum="2">
 
                 <TextView
+                    android:id="@+id/tabOngoing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -67,29 +71,52 @@
                     android:gravity="center"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="Ongoing"
+                    android:text="@string/completed"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
+                    android:id="@+id/tabCompleted"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/completed"
-                    android:textColor="@color/textColorPrimary" />
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="Ongoing"
+                    android:textColor="@color/textColorPrimary"/>
+
             </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
+
+        <!-- ================= RECYCLER VIEW ================= -->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBookings"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:paddingTop="12dp"
+            android:paddingBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@id/tabs_card"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- ================= EMPTY STATE ================= -->
 
         <ImageView
             android:id="@+id/illustration_image"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:contentDescription="@string/no_orders_illustration"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:src="@drawable/flate_no_history_illustration"
+            android:visibility="gone"
+            android:contentDescription="@string/no_orders_illustration"
+            app:layout_constraintTop_toBottomOf="@id/tabs_card"
             app:layout_constraintBottom_toTopOf="@id/text_no_history"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/text_no_history"
@@ -99,10 +126,10 @@
             android:textColor="@color/textColorPrimary"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/illustration_image"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/text_sub_message"
@@ -112,28 +139,10 @@
             android:text="@string/your_past_ongoing_orders_will_appear_right_here"
             android:textColor="@color/textColorSecondary"
             android:textSize="14sp"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/text_no_history"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_book_delivery"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="32dp"
-            android:backgroundTint="@color/primary"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:text="@string/book_your_first_delivery"
-            android:textAllCaps="false"
-            android:textSize="16sp"
-            app:cornerRadius="24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

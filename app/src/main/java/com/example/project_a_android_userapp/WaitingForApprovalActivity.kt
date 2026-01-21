@@ -18,6 +18,7 @@ class WaitingForApprovalActivity : AppCompatActivity() {
     private lateinit var vehicleInfo: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var cancelTrip: TextView
+    private lateinit var cash: TextView
 
     private var rideId: Long = -1L
     private var pollingJob: Job? = null
@@ -26,7 +27,7 @@ class WaitingForApprovalActivity : AppCompatActivity() {
 
     companion object {
         private const val POLLING_INTERVAL = 4_000L
-        private const val AUTO_CANCEL_TIME = 180_000L // 3 minute
+        private const val AUTO_CANCEL_TIME = 180_000L // 3 minutes
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +39,7 @@ class WaitingForApprovalActivity : AppCompatActivity() {
         vehicleInfo = findViewById(R.id.vehicleInfo)
         progressBar = findViewById(R.id.progressBar)
         cancelTrip = findViewById(R.id.cancelTrip)
+        cash = findViewById(R.id.cash)
 
         rideId = LocalStorage.getActiveRideId(this)
 
@@ -47,9 +49,17 @@ class WaitingForApprovalActivity : AppCompatActivity() {
             return
         }
 
-        pickupInfo.text = "Searching nearby driver..."
-        dropInfo.text = "Please wait"
-        vehicleInfo.text = "Matching driver"
+        // ===================== SHOW DATA FROM VM =====================
+        val vm = (application as MyApp).vm
+
+        val pickupShort = vm.pickupAddress.trim().split(" ").take(3).joinToString(" ")
+        val dropShort = vm.dropAddress.trim().split(" ").take(3).joinToString(" ")
+
+        pickupInfo.text = pickupShort
+        dropInfo.text = dropShort
+        vehicleInfo.text = vm.selectedVehicle
+        cash.text = "₹${String.format("%.2f", vm.finalFare)}"
+        // ===============================================================
 
         startPolling()
 

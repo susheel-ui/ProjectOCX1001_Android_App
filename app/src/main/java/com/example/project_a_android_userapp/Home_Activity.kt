@@ -9,10 +9,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
-import com.example.project_a_android_userapp.Fragements.HistoryFragment
 import com.example.project_a_android_userapp.Fragements.HomeFragment
 import com.example.project_a_android_userapp.Fragements.PaymentFragment
 import com.example.project_a_android_userapp.Fragements.UserFragment
+import com.example.project_a_android_userapp.Fragments.HistoryFragment
 import com.example.project_a_android_userapp.databinding.ActivityHomeBinding
 
 class Home_Activity : AppCompatActivity() {

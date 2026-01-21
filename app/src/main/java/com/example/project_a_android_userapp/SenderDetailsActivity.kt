@@ -11,6 +11,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.example.project_a_android_userapp.LocalStorage
+
 
 class SenderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -42,18 +44,40 @@ class SenderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         typeRadioGroup = findViewById(R.id.typeRadioGroup)
         confirmButton = findViewById(R.id.confirmButton)
 
+        // Back button
         findViewById<ImageButton>(R.id.BackButton).setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // show pickup from vm (may be empty)
-        addressShort.text = if (vm.pickupAddress.isNotEmpty()) vm.pickupAddress.split(" ").take(2).joinToString(" ") else "Pickup"
-        addressFull.text = if (vm.pickupAddress.isNotEmpty()) vm.pickupAddress else "Pickup Address"
+        // Auto-fill phone from LocalStorage
+        val savedPhone = LocalStorage.getPhone(this)
+        if (!savedPhone.isNullOrEmpty()) {
+            phoneEdit.setText(savedPhone)
+        }
 
+        // Default radio button = Home
+        findViewById<RadioButton>(R.id.homeRadio).isChecked = true
+
+        // Auto-fill address from VM
+        if (vm.pickupAddress.isNotEmpty()) {
+            addressShort.text = vm.pickupAddress.split(",").firstOrNull() ?: "Pickup"
+            addressFull.text = vm.pickupAddress
+        } else {
+            addressShort.text = "Pickup"
+            addressFull.text = "Pickup Address"
+        }
+
+        // Change Address button → go back
+        findViewById<Button>(R.id.changeAddressButton).setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        // Initialize map
         val mapFragment =
             supportFragmentManager.findFragmentById(R.id.miniMapFragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        // Confirm button click
         confirmButton.setOnClickListener {
             val house = houseEdit.text.toString().trim()
             val name = nameEdit.text.toString().trim()
@@ -65,13 +89,13 @@ class SenderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                 return@setOnClickListener
             }
 
-            // save sender details into vm
+            // Save sender details into VM
             vm.senderHouse = house
             vm.senderName = name
             vm.senderPhone = phone
             vm.senderType = findViewById<RadioButton>(typeId).text.toString()
 
-            // go to receiver screen (no extras)
+            // Go to receiver screen
             startActivity(android.content.Intent(this, ReceiverDetailsActivity::class.java))
         }
     }
@@ -79,7 +103,7 @@ class SenderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(map: GoogleMap) {
         gMap = map
 
-        // If vm has pickup coordinates, show marker there; otherwise default
+        // If VM has pickup coordinates, show marker there; otherwise default
         val lat = if (vm.pickupLat != 0.0) vm.pickupLat else 25.4489
         val lon = if (vm.pickupLon != 0.0) vm.pickupLon else 78.5683
         val loc = LatLng(lat, lon)

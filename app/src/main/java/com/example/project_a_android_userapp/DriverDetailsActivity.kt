@@ -181,7 +181,7 @@ class DriverDetailsActivity : AppCompatActivity(), OnMapReadyCallback,PaymentRes
                     driverId = driver.driverId
                     vehicleType = driver.vehicleType
 
-                    handleRideStatus(driver.rideStatus)
+                    handleRideStatus(driver.rideStatus ?: "PENDING")
 
                     imgVehicleType.setImageResource(
                         when (vehicleType) {
@@ -214,6 +214,7 @@ class DriverDetailsActivity : AppCompatActivity(), OnMapReadyCallback,PaymentRes
 
             "STARTED" -> {
                 btnPay.visibility = View.VISIBLE
+                btnCancelRide.visibility = View.GONE
 
                 if (!startedHandled) {
                     isRideStarted = true
@@ -370,7 +371,7 @@ class DriverDetailsActivity : AppCompatActivity(), OnMapReadyCallback,PaymentRes
                     val data = response.body() ?: return
 
                     // ✅ Update buttons / popup automatically
-                    handleRideStatus(data.rideStatus)
+                    handleRideStatus(data.rideStatus ?: "PENDING")
                 }
 
                 override fun onFailure(call: Call<DriverContactResponse>, t: Throwable) {

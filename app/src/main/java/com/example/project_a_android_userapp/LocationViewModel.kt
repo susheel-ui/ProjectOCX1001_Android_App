@@ -47,4 +47,6 @@ class LocationViewModel {
     // ---------------------------
     var selectedVehicle: String = ""
     var finalFare: Double = 0.0
+
+    var goodsType: String = ""
 }

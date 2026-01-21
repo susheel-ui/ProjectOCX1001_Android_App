@@ -1,60 +1,101 @@
-package com.example.project_a_android_userapp.Fragements
+package com.example.project_a_android_userapp.Fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.project_a_android_userapp.R
+import com.example.project_a_android_userapp.adapter.BookingAdapter
+import com.example.project_a_android_userapp.api.ApiClient
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HistoryFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HistoryFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var rvBookings: RecyclerView
+    private lateinit var illustrationImage: ImageView
+    private lateinit var textNoHistory: TextView
+    private lateinit var textSubMessage: TextView
+
+    private lateinit var bookingAdapter: BookingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_history, container, false)
+    ): View {
+
+        val view = inflater.inflate(R.layout.fragment_history, container, false)
+
+        // Initialize Views
+        rvBookings = view.findViewById(R.id.rvBookings)
+        illustrationImage = view.findViewById(R.id.illustration_image)
+        textNoHistory = view.findViewById(R.id.text_no_history)
+        textSubMessage = view.findViewById(R.id.text_sub_message)
+
+        rvBookings.layoutManager = LinearLayoutManager(requireContext())
+
+        fetchBookingHistory()
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Fragment_history.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HistoryFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun fetchBookingHistory() {
+
+        lifecycleScope.launch {
+
+            try {
+
+                val userId = 1 // 🔥 Replace with logged-in user's ID
+
+                val response = ApiClient.api.getAllBookings(userId)
+
+                if (response.isSuccessful && response.body() != null) {
+
+                    val bookingList = response.body()!!
+
+                    if (bookingList.isNotEmpty()) {
+
+                        // Show RecyclerView
+                        rvBookings.visibility = View.VISIBLE
+
+                        // Hide Empty UI
+                        illustrationImage.visibility = View.GONE
+                        textNoHistory.visibility = View.GONE
+                        textSubMessage.visibility = View.GONE
+
+                        bookingAdapter = BookingAdapter(bookingList)
+                        rvBookings.adapter = bookingAdapter
+
+                    } else {
+                        showEmptyState()
+                    }
+
+                } else {
+
+                    Log.e("HistoryFragment", "API Error: ${response.code()} - ${response.message()}")
+                    showEmptyState()
                 }
+
+            } catch (e: Exception) {
+
+                Log.e("HistoryFragment", "Exception: ${e.localizedMessage}")
+                showEmptyState()
             }
+        }
+    }
+
+    private fun showEmptyState() {
+
+        rvBookings.visibility = View.GONE
+
+        illustrationImage.visibility = View.VISIBLE
+        textNoHistory.visibility = View.VISIBLE
+        textSubMessage.visibility = View.VISIBLE
     }
 }

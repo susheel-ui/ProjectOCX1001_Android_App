@@ -1,8 +1,11 @@
 package com.example.project_a_android_userapp.api
 
+import com.example.project_a_android_userapp.model.Booking
+import com.example.project_a_android_userapp.model.UserResponse
 import com.google.gson.JsonObject
 import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -62,6 +65,16 @@ interface ApiService {
     fun register(
         @Body body: RegisterBody
     ): Call<ResponseBody>
+
+    @GET("user/{id}")
+    fun getUserById(
+        @Path("id") userId: Int
+    ): Call<UserResponse>
+
+    @GET("user/all-booking/{userId}")
+    suspend fun getAllBookings(
+        @Path("userId") userId: Int
+    ): Response<List<Booking>>
 
 
 
