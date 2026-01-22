@@ -202,16 +202,11 @@
                    >
 
                     <LinearLayout
+                        android:id="@+id/viewtwowheeler"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         android:orientation="vertical"
                         android:padding="12dp">
-                        <!--                        <ImageView-->
-                        <!--                            android:layout_width="18dp"-->
-                        <!--                            android:layout_height="18dp"-->
-                        <!--                            android:src="@drawable/"-->
-                        <!--                            android:layout_alignParentEnd="true"-->
-                        <!--                            app:tint="#BDBDBD"/>-->
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
@@ -260,16 +255,11 @@
                     app:strokeColor="@color/primary">
 
                     <LinearLayout
+                        android:id="@+id/viewthreewheeler"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         android:orientation="vertical"
                         android:padding="12dp">
-                        <!--                        <ImageView-->
-                        <!--                            android:layout_width="18dp"-->
-                        <!--                            android:layout_height="18dp"-->
-                        <!--                            android:src="@drawable/"-->
-                        <!--                            android:layout_alignParentEnd="true"-->
-                        <!--                            app:tint="#BDBDBD"/>-->
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
@@ -318,6 +308,7 @@
                     >
 
                     <LinearLayout
+                        android:id="@+id/viewfourwheeler"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         android:orientation="vertical"

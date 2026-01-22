@@ -65,7 +65,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- SHORT ADDRESS -->
+                <!-- SHORT ADDRESS ROW -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -87,6 +87,16 @@
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/black"/>
+
+                    <!-- ✅ CHANGE BUTTON (ADDED) -->
+                    <Button
+                        android:id="@+id/changeAddressButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="Change"
+                        android:textSize="14sp"
+                        android:backgroundTint="@android:color/white"
+                        android:textColor="#1A73E8"/>
                 </LinearLayout>
 
                 <!-- FULL ADDRESS -->

@@ -23,7 +23,7 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="google_maps_key">YOUR_API_KEY_HERE</string>
+    <string name="google_maps_key">AIzaSyBO2XTkgKOQ0ItAjGyxi_g406jnvFeg4zo</string>
     <string name="appname">AppName</string>
     <string name="book_your_first_delivery">Book Your First Delivery</string>
     <string name="your_past_ongoing_orders_will_appear_right_here">Your past ongoing orders will appear right here.</string>

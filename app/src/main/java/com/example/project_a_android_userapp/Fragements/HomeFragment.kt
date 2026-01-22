@@ -54,11 +54,29 @@ class HomeFragment : Fragment() {
 
         checkLocationPermission()
 
+        // ✅ EXISTING PICKUP CARD (UNCHANGED)
         binding.pickupCard.setOnClickListener {
-            startActivity(
-                Intent(requireContext(), Pickup_Drop_Selector_Activity::class.java)
-            )
+            openPickupDrop()
         }
+
+        // ✅ ADDED: ALL VEHICLE VIEWS REDIRECT TO PICKUP/DROP
+        binding.viewtwowheeler.setOnClickListener {
+            openPickupDrop()
+        }
+
+        binding.viewthreewheeler.setOnClickListener {
+            openPickupDrop()
+        }
+
+        binding.viewfourwheeler.setOnClickListener {
+            openPickupDrop()
+        }
+    }
+
+    private fun openPickupDrop() {
+        startActivity(
+            Intent(requireContext(), Pickup_Drop_Selector_Activity::class.java)
+        )
     }
 
     private fun checkLocationPermission() {
@@ -79,6 +97,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchCurrentLocation() {
+        if (
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location ->
                 if (location != null) {

@@ -21,8 +21,6 @@ class FareActivity : AppCompatActivity() {
     // ================= TEXT =================
     private lateinit var pickupText: TextView
     private lateinit var dropText: TextView
-    private lateinit var distanceText: TextView
-    private lateinit var timeText: TextView
 
     // ================= VEHICLE CARDS =================
     private lateinit var bikeEvCard: CardView
@@ -52,6 +50,9 @@ class FareActivity : AppCompatActivity() {
     private var finalKm = 0.0
     private val fareMap = HashMap<String, Double>()
 
+    // 🔥 TRACK SELECTED CARD (PORTER STYLE)
+    private var selectedCard: CardView? = null
+
     // ================= LIFECYCLE =================
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,8 +72,6 @@ class FareActivity : AppCompatActivity() {
 
         pickupText = findViewById(R.id.pickupText)
         dropText = findViewById(R.id.dropText)
-        distanceText = findViewById(R.id.distanceText)
-        timeText = findViewById(R.id.timeText)
 
         bikeEvCard = findViewById(R.id.vehicleBikeEv)
         bikePetrolCard = findViewById(R.id.vehicleBikePetrol)
@@ -101,13 +100,10 @@ class FareActivity : AppCompatActivity() {
     private fun setLocationInfo() {
         pickupText.text = vm.pickupAddress
         dropText.text = vm.dropAddress
-
         finalKm = ceil(vm.distanceValue / 1000.0)
-        distanceText.text = "Distance: $finalKm km"
-        timeText.text = "Time: ${vm.durationText}"
     }
 
-    // ================= API CALL (JSONOBJECT) =================
+    // ================= API CALL =================
     private fun fetchFareFromApi() {
 
         val body = JsonObject().apply {
@@ -124,18 +120,8 @@ class FareActivity : AppCompatActivity() {
                     call: Call<List<JsonObject>>,
                     response: Response<List<JsonObject>>
                 ) {
-                    if (!response.isSuccessful) {
-                        Log.e("FARE_API", "Error ${response.code()}")
-                        return
-                    }
-
-                    val list = response.body()
-                    if (list.isNullOrEmpty()) {
-                        Log.e("FARE_API", "Empty response")
-                        return
-                    }
-
-                    applyApiResponse(list)
+                    if (!response.isSuccessful) return
+                    applyApiResponse(response.body() ?: return)
                 }
 
                 override fun onFailure(call: Call<List<JsonObject>>, t: Throwable) {
@@ -159,22 +145,14 @@ class FareActivity : AppCompatActivity() {
         )
 
         list.forEach { obj ->
-
-            val vehicle = obj.get("vehicleInfo")?.asString ?: return@forEach
-            val fare = obj.get("totalFare")?.asDouble ?: return@forEach
+            val vehicle = obj["vehicleInfo"]?.asString ?: return@forEach
+            val fare = obj["totalFare"]?.asDouble ?: return@forEach
 
             fareMap[vehicle] = fare
-
             cardMap[vehicle]?.let {
                 it.first.visibility = View.VISIBLE
                 it.second.text = "₹${fare.toInt()}"
             }
-        }
-
-        if (fareMap.isNotEmpty()) {
-            selectedVehicle = fareMap.keys.first()
-            proceedBtn.text = "Proceed with $selectedVehicle"
-            proceedBtn.isEnabled = true
         }
     }
 
@@ -198,26 +176,36 @@ class FareActivity : AppCompatActivity() {
         }
     }
 
-    // ================= UI SELECTION =================
+    // ================= PORTER STYLE SELECTION =================
     private fun selectVehicle(card: CardView, type: String) {
 
+        selectedCard?.let { resetCard(it) }
+
+        card.animate()
+            .scaleX(1.08f)
+            .scaleY(1.08f)
+            .setDuration(200)
+            .start()
+
+        card.cardElevation = 18f
+        card.setCardBackgroundColor(Color.parseColor("#E6F0FF"))
+
+        selectedCard = card
         selectedVehicle = type
 
-        val allCards = listOf(
-            bikeEvCard, bikePetrolCard,
-            loaderEvCard, loaderPetrolCard, loaderCngCard,
-            truckEvCard, truckPetrolCard, truckCngCard
-        )
-
-        allCards.forEach {
-            it.setCardBackgroundColor(Color.WHITE)
-            it.animate().scaleX(1f).scaleY(1f).duration = 150
-        }
-
-        card.setCardBackgroundColor(Color.parseColor("#E0ECFF"))
-        card.animate().scaleX(1.05f).scaleY(1.05f).duration = 180
-
+        proceedBtn.isEnabled = true
         proceedBtn.text = "Proceed with $type"
+    }
+
+    private fun resetCard(card: CardView) {
+        card.animate()
+            .scaleX(1f)
+            .scaleY(1f)
+            .setDuration(200)
+            .start()
+
+        card.cardElevation = 4f
+        card.setCardBackgroundColor(Color.WHITE)
     }
 
     // ================= UTIL =================

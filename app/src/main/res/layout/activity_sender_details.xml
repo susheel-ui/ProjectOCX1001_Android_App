@@ -112,7 +112,7 @@
                     android:layout_height="48dp"
                     android:layout_marginTop="14dp"
                     android:background="@android:color/white"
-                    android:hint="House / Apartment / Shop (optional)"
+                    android:hint="House / Apartment / Shop "
                     android:padding="12dp"/>
 
                 <!-- Name -->

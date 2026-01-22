@@ -61,7 +61,7 @@
                 android:id="@+id/userNameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Alex"
+                android:text="Name"
                 android:textColor="#1C1C1C"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -130,7 +130,7 @@
                     android:id="@+id/firstNameValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Alex"
+                    android:text="Name"
                     android:textColor="#1C1C1C"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif" />
@@ -177,7 +177,7 @@
                     android:id="@+id/lastNameValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Morgan"
+                    android:text="Last Name"
                     android:textColor="#1C1C1C"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif" />
@@ -235,7 +235,7 @@
                     android:id="@+id/emailText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="alex.morgan@email.com"
+                    android:text="Zarkit@email.com"
                     android:textColor="#1C1C1C"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif" />

@@ -2,13 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permissions -->
+    <!-- ================= PERMISSIONS ================= -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-
 
     <application
         android:name=".MyApp"
@@ -22,61 +20,79 @@
         android:theme="@style/Theme.Project_A_Android_UserApp"
         android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config"
+        android:forceDarkAllowed="false"
         tools:targetApi="31">
 
+        <!-- ================= GOOGLE MAPS KEY ================= -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCG4YVvKPVB_nruoVtL8RqS0ek8kxp69Xw"/>
+            android:value="@string/google_maps_key" />
 
-        <!-- Main Activities -->
+        <!-- ================= FLOW ACTIVITIES (LOCKED) ================= -->
+
         <activity
             android:name=".Pickup_Drop_Selector_Activity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".SenderDetailsActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ReceiverDetailsActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".FareActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".FinalFareActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".WaitingForApprovalActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".DriverDetailsActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ResistrationActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".Home_Activity"
-            android:exported="true">
-        </activity>
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <!-- ================= AUTH ================= -->
 
         <activity
             android:name=".OTP_verifyActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".Login_Page"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- ================= SPLASH ================= -->
 
         <activity
             android:name=".MainActivity_FlashScreen"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
