@@ -1,28 +1,92 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:background="@drawable/yellow_card"
-        android:orientation="vertical">
+        android:padding="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Restricted Items"
-            android:textColor="#111"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingBottom="12dp"/>
-
-        <TextView
+        <!-- HEADER -->
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="• Pornographic materials\n• Human body parts\n• Firearms\n• Livestock\n• Dangerous goods\n• Illegal goods\n• Precious jewelleries, stones and gems\n• Lottery tickets\n• Cigarettes and alcohols\n• Dry ice\n• Explosives\n• Flammables\n• Pets and animals\n• Hazardous goods\n• Radioactive materials\n• Currencies and coins\n• Gambling devices\n• Fire extinguishers\n• Narcotics and illegal drugs"
-            android:textSize="16sp"
-            android:textColor="#000"
-            android:lineSpacingExtra="4dp"/>
+            android:paddingBottom="12dp">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Restricted Items"
+                android:textColor="#111"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:textColor="#E53935"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+
+        <!-- FULL WIDTH IMAGE -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:src="@drawable/unrestricteditems"
+            android:layout_marginBottom="16dp" />
+
+        <!-- TWO COLUMN LIST -->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:useDefaultMargins="true">
+
+            <TextView  android:text="• Pornographic materials"/>
+            <TextView  android:text="• Human body parts"/>
+
+            <TextView android:text="• Firearms"/>
+            <TextView  android:text="• Livestock"/>
+
+            <TextView  android:text="• Dangerous goods"/>
+            <TextView  android:text="• Illegal goods"/>
+
+            <TextView  android:text="• Precious jewellery"/>
+            <TextView  android:text="• Lottery tickets"/>
+
+            <TextView  android:text="• Cigarettes and alcohol"/>
+            <TextView  android:text="• Explosives"/>
+
+            <TextView  android:text="• Flammable items"/>
+            <TextView  android:text="• Pets and animals"/>
+
+            <TextView  android:text="• Hazardous goods"/>
+            <TextView  android:text="• Radioactive materials"/>
+
+            <TextView  android:text="• Narcotics and drugs"/>
+            <TextView  android:text="• Gambling devices"/>
+
+        </GridLayout>
+
+        <!-- OK UNDERSTOOD BUTTON -->
+        <Button
+            android:id="@+id/btnOkUnderstood"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="OK, Understood"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:backgroundTint="@color/color_primary"
+            android:layout_marginTop="20dp" />
+
     </LinearLayout>
 </ScrollView>

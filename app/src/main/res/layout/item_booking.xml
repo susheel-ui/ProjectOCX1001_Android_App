@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:elevation="4dp"
+    android:elevation="3dp"
     android:padding="12dp"
     android:background="@color/white">
 
@@ -12,85 +12,167 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvPickup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pickup Address"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvDrop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Drop Address"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"/>
-
+        <!-- 🔝 TOP ROW : VEHICLE IMAGE + NAME + DATE -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="6dp"
-            android:weightSum="2">
+            android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/tvDistance"
+            <ImageView
+                android:id="@+id/imgVehicle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="7dp"
+                android:src="@drawable/zarkitgroup"
+                android:scaleType="centerCrop" />
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Distance"
-                android:textSize="14sp"/>
+                android:layout_marginStart="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvVehicle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Two Wheeler"
+                    android:textStyle="bold"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="05 Feb, 4:46 PM"
+                    android:textSize="12sp"
+                    android:textColor="#777" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvFare"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="₹Fare"
-                android:textSize="14sp"
-                android:textAlignment="viewEnd"/>
+                android:text="₹82"
+                android:layout_marginEnd="7dp"
+                android:textStyle="bold"
+                android:textSize="14sp"/>
         </LinearLayout>
 
-        <!-- Very small Rebook & Invoice buttons -->
+        <!-- 📍 PICKUP -->
         <LinearLayout
-            android:id="@+id/layoutButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="7dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_location_on_green"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/tvPickup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pickup Address"
+                android:textSize="14sp"
+                android:textColor="#444"/>
+        </LinearLayout>
+
+        <!-- 📍 DROP -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="7dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_location_on_red"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/tvDrop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Drop Address"
+                android:textSize="13sp"
+                android:textColor="#444"/>
+        </LinearLayout>
+
+
+        <!-- 📏 DISTANCE (OPTIONAL) -->
+        <TextView
+            android:id="@+id/tvDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Distance"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"
+            android:textColor="#666"
+            android:visibility="gone"/>
+
+        <!-- 🔻 BOTTOM ROW : STATUS + BUTTON -->
+        <!-- 🔻 BOTTOM ROW : STATUS LEFT + BUTTONS RIGHT -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="end"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="2dp"
-            android:weightSum="2">
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical">
 
-            <Button
-                android:id="@+id/btnRebook"
-                android:layout_width="60dp"
-                android:layout_height="30dp"
-                android:backgroundTint="@color/primary"
-                android:paddingLeft="6dp"
-                android:paddingTop="2dp"
-                android:paddingRight="6dp"
-                android:paddingBottom="2dp"
-                android:text="Rebook"
-                android:textColor="@android:color/white"
-                android:textSize="10sp" />
+            <!-- STATUS LEFT (TEXT ONLY) -->
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_marginStart="7dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CANCELLED"
+                android:textSize="12sp"
+                android:textStyle="bold"/>
+
+            <!-- SPACER -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
 
             <Button
                 android:id="@+id/btnInvoice"
-                android:layout_width="60dp"
-                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="33dp"
+                android:layout_marginBottom="1dp"
+                android:backgroundTint="#2563EB"
                 android:text="Invoice"
-                android:textSize="10sp"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:layout_marginStart="8dp"
-                android:backgroundTint="#111"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:textSize="9sp" />
+
+            <!-- BUTTONS RIGHT -->
+            <Button
+                android:id="@+id/btnRebook"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginStart="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="1dp"
+                android:text="Book Again"
+                android:textSize="9sp"
+                android:backgroundTint="@color/color_primary"
+                android:textColor="@android:color/black"/>
         </LinearLayout>
+
+
 
     </LinearLayout>
 

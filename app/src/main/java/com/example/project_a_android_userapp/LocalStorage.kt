@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 object LocalStorage {
 
     private const val PREF_NAME = "zarkit_prefs"
-
     private const val KEY_PHONE = "phone"
     private const val KEY_TOKEN = "jwt_token"
     private const val KEY_ROLE = "user_role"
@@ -14,6 +13,41 @@ object LocalStorage {
 
     private const val KEY_ACTIVE_RIDE_ID = "active_ride_id"
     private const val KEY_ACTIVE_DRIVER_ID = "active_driver_id"
+
+    private const val KEY_PICKUP_LAT = "pickup_lat"
+    private const val KEY_PICKUP_LNG = "pickup_lng"
+    private const val KEY_DROP_LAT = "drop_lat"
+    private const val KEY_DROP_LNG = "drop_lng"
+
+
+    // ---------------- PICKUP LOCATION ----------------
+    fun savePickupLocation(context: Context, lat: Double, lng: Double) {
+        prefs(context).edit()
+            .putFloat(KEY_PICKUP_LAT, lat.toFloat())
+            .putFloat(KEY_PICKUP_LNG, lng.toFloat())
+            .apply()
+    }
+
+    fun getPickupLat(context: Context): Double =
+        prefs(context).getFloat(KEY_PICKUP_LAT, 0f).toDouble()
+
+    fun getPickupLng(context: Context): Double =
+        prefs(context).getFloat(KEY_PICKUP_LNG, 0f).toDouble()
+
+    // ---------------- DROP LOCATION ----------------
+    fun saveDropLocation(context: Context, lat: Double, lng: Double) {
+        prefs(context).edit()
+            .putFloat(KEY_DROP_LAT, lat.toFloat())
+            .putFloat(KEY_DROP_LNG, lng.toFloat())
+            .apply()
+    }
+
+    fun getDropLat(context: Context): Double =
+        prefs(context).getFloat(KEY_DROP_LAT, 0f).toDouble()
+
+    fun getDropLng(context: Context): Double =
+        prefs(context).getFloat(KEY_DROP_LNG, 0f).toDouble()
+
 
 
     // 🔹 Common prefs method
@@ -67,6 +101,19 @@ object LocalStorage {
 
     fun getActiveDriverId(context: Context): Long =
         prefs(context).getLong(KEY_ACTIVE_DRIVER_ID, -1L)
+
+    // ---------------- CLEAR ACTIVE RIDE DATA ----------------
+    fun clearActiveRide(context: Context) {
+        prefs(context).edit()
+            .remove(KEY_ACTIVE_RIDE_ID)
+            .remove(KEY_ACTIVE_DRIVER_ID)
+            .remove(KEY_PICKUP_LAT)
+            .remove(KEY_PICKUP_LNG)
+            .remove(KEY_DROP_LAT)
+            .remove(KEY_DROP_LNG)
+            .apply()
+    }
+
 
     // ---------------- CLEAR ----------------
     fun clear(context: Context) {

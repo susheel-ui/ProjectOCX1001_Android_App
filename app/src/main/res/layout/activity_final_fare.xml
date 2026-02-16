@@ -4,15 +4,53 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="#F5F6FA">
 
-    <!-- SCROLLABLE CONTENT -->
+    <!-- ================= TOP HEADER ================= -->
+    <LinearLayout
+        android:id="@+id/topHeader"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:background="@color/white"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/baseline_arrow_back_ios_24"
+            android:contentDescription="Back"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Review Booking"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#111"/>
+
+        <!-- Spacer for centering -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
+    </LinearLayout>
+
+    <!-- ================= SCROLLABLE CONTENT ================= -->
     <ScrollView
         android:id="@+id/scrollContent"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/bottomSection"
+        app:layout_constraintTop_toBottomOf="@id/topHeader"
+        app:layout_constraintBottom_toTopOf="@id/bottomSection"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -20,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:padding="16dp">
 
             <!-- Vehicle Card -->
             <LinearLayout
@@ -29,31 +67,32 @@
                 android:orientation="horizontal"
                 android:padding="16dp"
                 android:background="@drawable/white_card"
+                android:elevation="2dp"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="12dp">
 
                 <ImageView
                     android:id="@+id/vehicleImage"
-                    android:layout_width="55dp"
-                    android:layout_height="55dp"
-                    android:src="@drawable/mini_3w" />
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/zarkitgroup"
+                    android:scaleType="centerCrop"/>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:layout_marginStart="12dp">
 
                     <TextView
                         android:id="@+id/vehicleName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Scooter"
                         android:textStyle="bold"
-                        android:textSize="18sp"
-                        android:textColor="#000" />
-
-
+                        android:textSize="17sp"
+                        android:textColor="#111"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
 
                     <TextView
                         android:id="@+id/addressDetails"
@@ -61,9 +100,11 @@
                         android:layout_height="wrap_content"
                         android:text="View Address Details"
                         android:textColor="#2E64FE"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"/>
                 </LinearLayout>
-
             </LinearLayout>
 
             <!-- GOODS TYPE CARD -->
@@ -73,104 +114,94 @@
                 android:orientation="horizontal"
                 android:padding="16dp"
                 android:background="@drawable/white_card"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="10dp">
+                android:elevation="2dp"
+                android:layout_marginBottom="12dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Goods Type"
-                    android:textSize="16sp"
-                    android:textColor="#444" />
-
-                <TextView
-                    android:id="@+id/goodsType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="General • Loose"
-                    android:textSize="16sp"
-                    android:textColor="#000"
-                    android:textStyle="bold"/>
-
-                <!-- Spacer pushes Change button to right -->
-                <View
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <!-- Change Button -->
+                    <TextView
+                        android:text="Goods Type"
+                        android:textSize="14sp"
+                        android:textColor="#777"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/goodsType"
+                        android:text="General • Loose"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="#111"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/btnChange"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="Change"
                     android:textColor="#2E64FE"
-                    android:textSize="16sp"
-                    android:clickable="true"
-                    android:focusable="true"
+                    android:textSize="15sp"
                     android:padding="6dp"
-                    android:foreground="?attr/selectableItemBackground" />
-
+                    android:clickable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
 
-
-
-            <!-- WARNING -->
             <!-- WARNING -->
             <LinearLayout
                 android:id="@+id/restrictedItemsCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:padding="16dp"
                 android:background="@drawable/yellow_card"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="10dp">
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Do not send restricted items"
-                    android:textSize="16sp"
-                    android:textColor="#000" />
+                    android:textSize="15sp"
+                    android:textColor="#111"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
 
                 <TextView
                     android:id="@+id/btnViewList"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="View List"
-                    android:textSize="16sp"
                     android:textColor="#2E64FE"
+                    android:textSize="15sp"
                     android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
 
-
-            <!-- FINAL FARE AMOUNT -->
+            <!-- FINAL FARE -->
             <TextView
                 android:id="@+id/finalFareText"
+                android:text="₹0"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="#111"
+                android:padding="18dp"
+                android:background="@drawable/white_card"
+                android:elevation="3dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="₹0"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="#000"
-                android:padding="16dp"
-                android:background="@drawable/white_card"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="16dp"/>
 
             <!-- RULES -->
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="Read Before Booking"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="#000"
-                android:layout_marginBottom="6dp" />
+                android:textColor="#111"
+                android:layout_marginBottom="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <LinearLayout
                 android:id="@+id/rulesCard"
@@ -180,19 +211,67 @@
                 android:padding="16dp"
                 android:orientation="vertical">
 
-                <TextView android:id="@+id/rule1" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                <TextView android:id="@+id/rule2" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                <TextView android:id="@+id/rule3" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                <TextView android:id="@+id/rule4" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                <TextView android:id="@+id/rule5" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                <TextView android:id="@+id/rule6" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                <TextView android:id="@+id/rule7" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/rule1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#555"
+                    android:layout_marginBottom="6dp"/>
+
+                <TextView
+                    android:id="@+id/rule2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#555"
+                    android:layout_marginBottom="6dp"/>
+
+                <TextView
+                    android:id="@+id/rule3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#555"
+                    android:layout_marginBottom="6dp"/>
+
+                <TextView
+                    android:id="@+id/rule4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#555"
+                    android:layout_marginBottom="6dp"/>
+
+                <TextView
+                    android:id="@+id/rule5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#555"
+                    android:layout_marginBottom="6dp"/>
+
+                <TextView
+                    android:id="@+id/rule6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#555"
+                    android:layout_marginBottom="6dp"/>
+
+                <TextView
+                    android:id="@+id/rule7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#555"/>
+
             </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 
-    <!-- BOTTOM SECTION: GST + PAYMENT + BOOK BUTTON -->
+    <!-- ================= BOTTOM SECTION ================= -->
     <LinearLayout
         android:id="@+id/bottomSection"
         android:layout_width="0dp"
@@ -206,18 +285,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="#0039A6"
-            android:padding="16dp"
-            android:gravity="center_vertical">
+            android:padding="14dp">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="18% GST included in final fare"
-                android:textColor="#FFF"
-                android:textSize="16sp" />
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <!-- PAYMENT -->
@@ -225,50 +301,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/white_card"
+            android:elevation="4dp"
             android:padding="16dp"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="6dp">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="Choose Payment Method"
-                android:textColor="#000"
-                android:textSize="17sp" />
+                android:textSize="16sp"
+                android:textColor="#111"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/paymentMethod"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="Cash"
-                android:textColor="#000"
-                android:textSize="17sp"
-                android:layout_marginEnd="10dp" />
+                android:textSize="16sp"
+                android:textColor="#111"
+                android:layout_marginEnd="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/paymentFare"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="₹99"
-                android:textColor="#000"
-                android:textSize="17sp" />
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#111"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
-
-<!--         Bottom confirm button -->
         <Button
             android:id="@+id/bookNowButton"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="56dp"
+            android:textColor="@color/black"
             android:text="Confirm and Proceed"
-            android:textColor="@android:color/black"
             android:textStyle="bold"
+            android:textSize="16sp"
             android:backgroundTint="@color/color_primary"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:elevation="6dp"
+            android:layout_margin="16dp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

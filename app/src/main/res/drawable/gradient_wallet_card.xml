@@ -3,7 +3,7 @@
     android:shape="rectangle">
     <gradient
         android:angle="45"
-        android:startColor="@color/wallet_card_gradient_start"
+        android:startColor="@color/color_primary"
         android:endColor="@color/wallet_card_gradient_end"
         android:type="linear" />
 </shape>

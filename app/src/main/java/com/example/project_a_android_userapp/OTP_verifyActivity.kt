@@ -111,6 +111,18 @@ class OTP_verifyActivity : AppCompatActivity() {
 
                 if (code == "LOGIN_SUCCESS") {
 
+                    val safeRole = role.trim().uppercase()
+
+                    if (safeRole != "USER") {
+                        Toast.makeText(
+                            this@OTP_verifyActivity,
+                            "Only users are allowed to login",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        return
+                    }
+
                     // ✅ Save login data
                     LocalStorage.saveToken(this@OTP_verifyActivity, token)
                     LocalStorage.saveRole(this@OTP_verifyActivity, role)

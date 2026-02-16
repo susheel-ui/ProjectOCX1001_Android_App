@@ -50,7 +50,6 @@ class FareActivity : AppCompatActivity() {
     private var finalKm = 0.0
     private val fareMap = HashMap<String, Double>()
 
-    // 🔥 TRACK SELECTED CARD (PORTER STYLE)
     private var selectedCard: CardView? = null
 
     // ================= LIFECYCLE =================
@@ -100,7 +99,20 @@ class FareActivity : AppCompatActivity() {
     private fun setLocationInfo() {
         pickupText.text = vm.pickupAddress
         dropText.text = vm.dropAddress
-        finalKm = ceil(vm.distanceValue / 1000.0)
+
+        finalKm = if (vm.distanceValue > 0) {
+            ceil(vm.distanceValue / 1000.0)
+        } else {
+            extractKmFromText(vm.distanceText)
+        }
+    }
+
+    private fun extractKmFromText(text: String): Double {
+        return try {
+            text.replace("km", "", true).trim().toDouble()
+        } catch (e: Exception) {
+            1.0
+        }
     }
 
     // ================= API CALL =================
@@ -156,17 +168,17 @@ class FareActivity : AppCompatActivity() {
         }
     }
 
-    // ================= CLICK LISTENERS =================
+    // ================= PORTER STYLE CLICK =================
     private fun setupClickListeners() {
 
-        bikeEvCard.setOnClickListener { selectVehicle(bikeEvCard, "TWO_WHEELER_EV") }
-        bikePetrolCard.setOnClickListener { selectVehicle(bikePetrolCard, "TWO_WHEELER_PETROL") }
-        loaderEvCard.setOnClickListener { selectVehicle(loaderEvCard, "THREE_WHEELER_EV") }
-        loaderPetrolCard.setOnClickListener { selectVehicle(loaderPetrolCard, "THREE_WHEELER_PETROL") }
-        loaderCngCard.setOnClickListener { selectVehicle(loaderCngCard, "THREE_WHEELER_CNG") }
-        truckEvCard.setOnClickListener { selectVehicle(truckEvCard, "FOUR_WHEELER_EV") }
-        truckPetrolCard.setOnClickListener { selectVehicle(truckPetrolCard, "FOUR_WHEELER_PETROL") }
-        truckCngCard.setOnClickListener { selectVehicle(truckCngCard, "FOUR_WHEELER_CNG") }
+        setPorterClick(bikeEvCard, "TWO_WHEELER_EV")
+        setPorterClick(bikePetrolCard, "TWO_WHEELER_PETROL")
+        setPorterClick(loaderEvCard, "THREE_WHEELER_EV")
+        setPorterClick(loaderPetrolCard, "THREE_WHEELER_PETROL")
+        setPorterClick(loaderCngCard, "THREE_WHEELER_CNG")
+        setPorterClick(truckEvCard, "FOUR_WHEELER_EV")
+        setPorterClick(truckPetrolCard, "FOUR_WHEELER_PETROL")
+        setPorterClick(truckCngCard, "FOUR_WHEELER_CNG")
 
         proceedBtn.setOnClickListener {
             if (selectedVehicle.isEmpty()) return@setOnClickListener
@@ -176,7 +188,21 @@ class FareActivity : AppCompatActivity() {
         }
     }
 
-    // ================= PORTER STYLE SELECTION =================
+    private fun setPorterClick(card: CardView, type: String) {
+        card.setOnClickListener {
+            if (selectedVehicle == type) {
+                VehicleInfoDialog.show(
+                    context = this,
+                    vehicleType = type,
+                    fare = fareMap[type] ?: 0.0
+                )
+            } else {
+                selectVehicle(card, type)
+            }
+        }
+    }
+
+    // ================= SELECTION UI =================
     private fun selectVehicle(card: CardView, type: String) {
 
         selectedCard?.let { resetCard(it) }
@@ -194,7 +220,7 @@ class FareActivity : AppCompatActivity() {
         selectedVehicle = type
 
         proceedBtn.isEnabled = true
-        proceedBtn.text = "Proceed with $type"
+        proceedBtn.text = "Proceed with ${formatVehicleText(type)}"
     }
 
     private fun resetCard(card: CardView) {
@@ -216,4 +242,19 @@ class FareActivity : AppCompatActivity() {
             truckEvCard, truckPetrolCard, truckCngCard
         ).forEach { it.visibility = View.GONE }
     }
+
+    private fun formatVehicleText(type: String): String {
+        return when (type) {
+            "TWO_WHEELER_EV" -> "2 Wheeler (EV)"
+            "TWO_WHEELER_PETROL" -> "2 Wheeler (Petrol)"
+            "THREE_WHEELER_EV" -> "3 Wheeler (EV)"
+            "THREE_WHEELER_PETROL" -> "3 Wheeler (Petrol)"
+            "THREE_WHEELER_CNG" -> "3 Wheeler (CNG)"
+            "FOUR_WHEELER_EV" -> "4 Wheeler (EV)"
+            "FOUR_WHEELER_PETROL" -> "4 Wheeler (Petrol)"
+            "FOUR_WHEELER_CNG" -> "4 Wheeler (CNG)"
+            else -> type
+        }
+    }
+
 }

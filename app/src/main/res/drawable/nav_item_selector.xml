@@ -5,6 +5,6 @@
     <item android:color="@color/color_primary" android:state_checked="true" />
 
     <!-- Unselected item -->
-    <item android:color="#7D7D7D" />
+    <item android:color="@color/black" />
 
 </selector>

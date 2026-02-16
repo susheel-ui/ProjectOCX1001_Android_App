@@ -1,10 +1,43 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Project_A_Android_UserApp" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-<!--        <item name="fontFamily">@font/oswald_variable_font_wght</item>-->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme -->
+    <style name="Base.Theme.Project_A_Android_UserApp"
+        parent="Theme.Material3.Light.NoActionBar">
+
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+
     </style>
 
-    <style name="Theme.Project_A_Android_UserApp" parent="Base.Theme.Project_A_Android_UserApp" />
+    <style name="Theme.Project_A_Android_UserApp"
+        parent="Base.Theme.Project_A_Android_UserApp" />
+
+    <!-- GLOBAL RIPPLE STYLE -->
+    <style name="AppRippleStyle">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <!--  GOOGLE PLACES AUTOCOMPLETE WHITE HEADER THEME -->
+    <style name="PlacesWhiteTheme"
+        parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <!-- Toolbar -->
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorPrimaryVariant">@android:color/white</item>
+        <item name="colorOnPrimary">@android:color/black</item>
+
+        <!-- Background -->
+        <item name="android:windowBackground">@android:color/white</item>
+
+        <!-- Text -->
+        <item name="android:textColorPrimary">@android:color/black</item>
+    </style>
+
 </resources>

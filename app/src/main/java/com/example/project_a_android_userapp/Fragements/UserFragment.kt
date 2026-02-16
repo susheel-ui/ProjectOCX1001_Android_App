@@ -56,7 +56,6 @@ class UserFragment : Fragment() {
 
         emailText = view.findViewById(R.id.emailText)
         mobileText = view.findViewById(R.id.mobileText)
-        profileImage = view.findViewById(R.id.profileImage)
         logoutButton = view.findViewById(R.id.logoutButton)
 
         fetchUserData()

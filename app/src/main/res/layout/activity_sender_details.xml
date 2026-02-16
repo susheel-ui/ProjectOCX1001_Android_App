@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F2F2F2">
 
-    <!-- Back Button -->
     <ImageButton
         android:id="@+id/BackButton"
         android:layout_width="40dp"
@@ -14,34 +14,37 @@
         android:layout_margin="12dp"
         android:background="@android:color/transparent"
         android:src="@drawable/baseline_arrow_back_ios_24"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:elevation="10dp"/>
+
 
     <!-- Map -->
+
     <fragment
         android:id="@+id/miniMapFragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
-        android:layout_height="260dp"
-        app:layout_constraintTop_toBottomOf="@id/BackButton"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/addressCard"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Address Bottom Card -->
+
+
+
     <androidx.cardview.widget.CardView
         android:id="@+id/addressCard"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="-24dp"
-        android:layout_marginBottom="80dp"
+        android:layout_width="362dp"
+        android:layout_height="388dp"
+        android:layout_margin="10dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="12dp"
-        app:layout_constraintTop_toBottomOf="@id/miniMapFragment"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/confirmButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/miniMapFragment">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -60,39 +63,39 @@
                     android:layout_height="4dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="16dp"
-                    android:background="#D0D0D0"/>
+                    android:background="#D0D0D0" />
 
                 <!-- Address Row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_location_on_green"/>
+                        android:src="@drawable/ic_location_on_green" />
 
                     <TextView
                         android:id="@+id/addressShort"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_marginStart="10dp"
+                        android:layout_weight="1"
                         android:text="Loading..."
+                        android:textColor="@android:color/black"
                         android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black"/>
+                        android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/changeAddressButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:text="Change"
-                        android:textSize="14sp"
+                        android:layout_height="46dp"
                         android:backgroundTint="@android:color/white"
-                        android:textColor="#1A73E8"/>
+                        android:text="Change"
+                        android:textColor="#1A73E8"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <!-- Full Address -->
@@ -102,8 +105,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Loading full address..."
-                    android:textSize="14sp"
-                    android:textColor="#666666"/>
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
 
                 <!-- House -->
                 <EditText
@@ -111,9 +114,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="14dp"
-                    android:background="@android:color/white"
-                    android:hint="House / Apartment / Shop "
-                    android:padding="12dp"/>
+                    android:background="@drawable/edittext_border"
+                    android:hint="Pickup : House / Apartment / Shop "
+                    android:padding="12dp" />
 
                 <!-- Name -->
                 <EditText
@@ -121,9 +124,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="10dp"
-                    android:background="@android:color/white"
-                    android:hint="Sender's Name"
-                    android:padding="12dp"/>
+                    android:background="@drawable/edittext_border"
+                    android:hint="Pickup : Person Name"
+                    android:padding="12dp" />
 
                 <!-- Phone -->
                 <EditText
@@ -131,10 +134,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="10dp"
-                    android:background="@android:color/white"
-                    android:hint="Sender's Mobile number"
+                    android:background="@drawable/edittext_border"
+                    android:hint="Pickup : Person Mobile number"
                     android:inputType="phone"
-                    android:padding="12dp"/>
+                    android:padding="12dp" />
 
                 <!-- Save As -->
                 <TextView
@@ -142,8 +145,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
                     android:text="Save as (optional)"
-                    android:textSize="14sp"
-                    android:textColor="#333"/>
+                    android:textColor="#333"
+                    android:textSize="14sp" />
 
                 <RadioGroup
                     android:id="@+id/typeRadioGroup"
@@ -156,21 +159,21 @@
                         android:id="@+id/homeRadio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Home"/>
+                        android:text="Home" />
 
                     <RadioButton
                         android:id="@+id/shopRadio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:text="Shop"/>
+                        android:text="Shop" />
 
                     <RadioButton
                         android:id="@+id/otherRadio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:text="Other"/>
+                        android:text="Other" />
                 </RadioGroup>
 
             </LinearLayout>
@@ -182,13 +185,13 @@
         android:id="@+id/confirmButton"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:layout_margin="12dp"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/color_primary"
         android:text="Confirm and Proceed"
+        android:textColor="@android:color/black"
         android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:backgroundTint="#F7C640"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

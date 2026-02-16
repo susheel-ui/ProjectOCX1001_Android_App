@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/bg_bottom_sheet_rounded">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vehicle Details"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#111"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Vehicle Image -->
+    <ImageView
+        android:id="@+id/vehicleImage"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/bikeinfo" />
+
+    <!-- Vehicle Title -->
+    <TextView
+        android:id="@+id/vehicleTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2 Wheeler EV"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#111"
+        android:gravity="center"
+        android:layout_marginBottom="6dp"/>
+
+    <!-- Vehicle Description -->
+    <TextView
+        android:id="@+id/vehicleDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Capacity: 20 kg | Dimensions: 40 cm × 40 cm × 40 cm"
+        android:textSize="14sp"
+        android:textColor="#444"
+        android:gravity="center"
+        android:layout_marginBottom="6dp"/>
+
+    <!-- Vehicle Fare -->
+    <TextView
+        android:id="@+id/vehicleFare"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Estimated Fare: ₹0"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#2563EB"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Done Button -->
+    <Button
+        android:id="@+id/doneBtn"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Done"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:backgroundTint="@color/color_primary"/>
+
+</LinearLayout>

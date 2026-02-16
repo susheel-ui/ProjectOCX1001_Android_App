@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Need Help?"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#111"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Feel free to contact our support team. We’re happy to help you with any questions or issues."
+        android:textSize="14sp"
+        android:textColor="#555"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email us at"
+        android:textSize="13sp"
+        android:textColor="#777"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvSupportEmail"
+        android:text="support@zarkit.com"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="#2E64FE"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnCloseSupport"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Close"
+        android:textStyle="bold"
+        android:backgroundTint="@color/color_primary"
+        android:textColor="@android:color/black"/>
+</LinearLayout>

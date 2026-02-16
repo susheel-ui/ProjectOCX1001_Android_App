@@ -21,19 +21,20 @@
         android:padding="16dp"
         android:background="@android:color/white"
         android:elevation="4dp"
+        android:gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center_vertical">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageButton
             android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="41dp"
+            android:layout_height="62dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/baseline_arrow_back_ios_24"
-            android:contentDescription="Back"/>
+            android:contentDescription="Back"
+            android:src="@drawable/baseline_arrow_back_ios_24" />
 
+        <!-- CENTER : RIDE ID -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -42,23 +43,20 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/tvStatus"
+                android:id="@+id/tvRideId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="On the way"
-                android:textSize="18sp"
+                android:text="Ride ID: #A12345"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="#000" />
-
-
+                android:textColor="#000"/>
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/btnHelp"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/user"
-            />
+            android:src="@drawable/user"/>
     </LinearLayout>
 
     <!-- DRIVER INFO CARD -->
@@ -85,10 +83,10 @@
 
                 <ImageView
                     android:id="@+id/imgVehicleType"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:scaleType="centerCrop"
-                    android:layout_marginEnd="12dp"/>
+                    android:layout_width="76dp"
+                    android:layout_height="116dp"
+                    android:layout_marginEnd="12dp"
+                    android:scaleType="centerCrop" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -98,53 +96,88 @@
 
                     <TextView
                         android:id="@+id/driverName"
-                        android:layout_width="wrap_content"
+                        android:layout_width="149dp"
                         android:layout_height="wrap_content"
                         android:text="Robert Fox"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="#000"/>
+                        android:textColor="#000"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/driverPhone"
+                        android:id="@+id/tvRideStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="9999999999"
+                        android:text="Status : Status"
+
+                        android:layout_marginTop="2dp"
+                        android:textColor="#000"
                         android:textSize="14sp"
-                        android:textColor="#6B6B6B"/>
+                        android:textStyle="bold" />
+
+                    <!-- VEHICLE NUMBER -->
+                    <TextView
+                        android:id="@+id/tvVehicleNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Vehicle No: MH12 AB 1234"
+                        android:textColor="#333333"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvFare"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Fare: ₹0"
+                        android:textColor="#333333"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="4dp"
-                        android:gravity="center_vertical">
+                        android:layout_marginTop="2dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/ic_star"/>
+                            android:src="@drawable/ic_star" />
 
                         <TextView
                             android:id="@+id/driverRating"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
                             android:text="4.8"
-                            android:textSize="12sp"
                             android:textColor="#6B6B6B"
-                            android:layout_marginStart="4dp"/>
+                            android:textSize="12sp" />
+
                     </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvPaymentStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Payment Done ✅"
+                        android:textColor="#4CAF50"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:visibility="visible" />
                 </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/btnCallDriver"
                     android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/img_1"
-                    android:contentDescription="Call Driver"
+                    android:layout_height="95dp"
+                    android:adjustViewBounds="true"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Call Driver"
                     android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"/>
+                    android:src="@drawable/img_1" />
             </LinearLayout>
 
             <!-- PAY BUTTON -->
@@ -153,11 +186,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
-                android:text="Pay Now "
+                android:text="Pay Now"
                 android:textColor="#fff"
                 android:textStyle="bold"
                 android:backgroundTint="#F2B934"
-                android:drawablePadding="8dp"
                 android:visibility="gone"/>
 
             <!-- CANCEL BUTTON -->
@@ -171,17 +203,7 @@
                 android:textStyle="bold"
                 android:backgroundTint="#EEEEEE"
                 android:visibility="gone"/>
-
-            <ImageButton
-                android:id="@+id/btnRefreshRoute"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/ic_refresh"
-            android:contentDescription="Refresh"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            android:layout_marginStart="8dp"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

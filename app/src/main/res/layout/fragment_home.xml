@@ -40,7 +40,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="35dp"
         android:text="Zarkit"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,8 +50,8 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delivering happiness fast"
-        android:textColor="#CCFFFFFF"
+        android:text="Time Pe Delivery, Har Baar"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="@id/logoText"
         app:layout_constraintTop_toBottomOf="@id/logoText" />
 
@@ -68,6 +68,7 @@
         app:layout_constraintBottom_toBottomOf="@id/headerBackground">
 
         <LinearLayout
+            style="@style/AppRippleStyle"
             android:id="@+id/pickup_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,7 +80,6 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:padding="8dp"
-                android:background="@drawable/rounded_orange_tint"
                 android:src="@drawable/mappin"
 
                 />
@@ -108,14 +108,18 @@
                     android:ellipsize="end"/>
             </LinearLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnChangeAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="CHANGE"
-                android:backgroundTint="@color/Orrange_400"
-                android:textColor="@color/primary"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:backgroundTint="#f3f4f6"
+                app:rippleColor="#33000000"
+                app:cornerRadius="16dp"
+                android:clickable="true"
+                android:focusable="true"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -141,7 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="Select Vehicle"
+                android:text="Choose your vehicle"
                 android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -199,9 +203,10 @@
                     app:cardCornerRadius="12dp"
                     app:strokeWidth="1dp"
                     app:strokeColor="@color/primary"
-                   >
+                    >
 
                     <LinearLayout
+                        style="@style/AppRippleStyle"
                         android:id="@+id/viewtwowheeler"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
@@ -222,7 +227,7 @@
                                 android:layout_below="@+id/twoWheelertext"
                                 android:layout_alignParentBottom="true"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/ic_three_wheeler"
+                                android:src="@drawable/v3w"
                                 />
                         </com.google.android.material.card.MaterialCardView>
 
@@ -255,6 +260,7 @@
                     app:strokeColor="@color/primary">
 
                     <LinearLayout
+                        style="@style/AppRippleStyle"
                         android:id="@+id/viewthreewheeler"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
@@ -274,7 +280,7 @@
                                 android:layout_below="@+id/twoWheelertext"
                                 android:layout_alignParentBottom="true"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/flat_illustration_two_wheeler"
+                                android:src="@drawable/v2w"
                                 />
                         </com.google.android.material.card.MaterialCardView>
 
@@ -308,6 +314,7 @@
                     >
 
                     <LinearLayout
+                        style="@style/AppRippleStyle"
                         android:id="@+id/viewfourwheeler"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
@@ -333,7 +340,7 @@
                                 android:layout_below="@+id/twoWheelertext"
                                 android:layout_alignParentBottom="true"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/flat_icon_for_trucks"
+                                android:src="@drawable/v4w"
                                 />
                         </com.google.android.material.card.MaterialCardView>
 
@@ -342,7 +349,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:text="3 Wheeler"
+                            android:text="4 Wheeler"
                             android:textColor="@android:color/black"
                             android:textStyle="bold" />
 
@@ -366,6 +373,7 @@
                     app:strokeColor="@color/primary"
                     >
                     <LinearLayout
+                        style="@style/AppRippleStyle"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         android:orientation="vertical"
@@ -390,7 +398,7 @@
                                 android:layout_below="@+id/twoWheelertext"
                                 android:layout_alignParentBottom="true"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/flat_illustration_moover_and_packers"
+                                android:src="@drawable/bulkorder"
                                 />
                         </com.google.android.material.card.MaterialCardView>
 
@@ -416,11 +424,11 @@
 
             <!--            </GridLayout>-->
 
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                app:cardBackgroundColor="@color/primary"
+                app:cardBackgroundColor="@color/color_primary"
                 app:cardCornerRadius="24dp">
 
                 <LinearLayout
@@ -433,7 +441,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Business Bulk Offer"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -442,20 +450,53 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Save up to 30% on corporate bookings."
-                        android:textColor="#E6FFFFFF" />
+                        android:textColor="@color/black" />
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnExploreNow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:backgroundTint="@color/white"
                         android:text="Explore Now"
-                        android:textColor="@color/primary"
-                        app:cornerRadius="20dp" />
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:backgroundTint="@color/black"
+                        app:cornerRadius="20dp"
+                        app:rippleColor="@color/white"
+                        android:clickable="true"
+                        android:focusable="true"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
     </ScrollView>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnLiveTrip"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="Live Ride"
+        android:visibility="visible"
+        app:backgroundTint="@color/red"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
+
+
+    <TextView
+        android:id="@+id/tvLiveText"
+        android:layout_width="58dp"
+        android:layout_height="59dp"
+        android:elevation="8dp"
+        android:gravity="center"
+        android:text="LIVE Status"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/btnLiveTrip"
+        app:layout_constraintEnd_toEndOf="@id/btnLiveTrip"
+        app:layout_constraintStart_toStartOf="@id/btnLiveTrip"
+        app:layout_constraintTop_toTopOf="@id/btnLiveTrip" />
 </androidx.constraintlayout.widget.ConstraintLayout>

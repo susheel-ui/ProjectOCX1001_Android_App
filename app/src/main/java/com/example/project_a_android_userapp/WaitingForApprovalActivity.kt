@@ -2,12 +2,15 @@ package com.example.project_a_android_userapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.project_a_android_userapp.api.ApiClient
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.*
 import retrofit2.awaitResponse
 
@@ -19,6 +22,8 @@ class WaitingForApprovalActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var cancelTrip: TextView
     private lateinit var cash: TextView
+
+    private lateinit var vm: LocationViewModel
 
     private var rideId: Long = -1L
     private var pollingJob: Job? = null
@@ -43,10 +48,24 @@ class WaitingForApprovalActivity : AppCompatActivity() {
 
         rideId = LocalStorage.getActiveRideId(this)
 
+        vm = (application as MyApp).vm
+
         if (rideId == -1L) {
             Toast.makeText(this, "Invalid ride", Toast.LENGTH_SHORT).show()
             finish()
             return
+        }
+
+        val btnSupport = findViewById<LinearLayout>(R.id.btn_support)
+
+        btnSupport.setOnClickListener {
+            openSupportPopup()
+        }
+
+        val btnViewDetails = findViewById<TextView>(R.id.btn_view_details)
+
+        btnViewDetails.setOnClickListener {
+            openBookingDetailsPopup()
         }
 
         // ===================== SHOW DATA FROM VM =====================
@@ -119,12 +138,61 @@ class WaitingForApprovalActivity : AppCompatActivity() {
         }
     }
 
+    private fun openBookingDetailsPopup() {
+
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(
+            R.layout.bottom_sheet_booking_details,
+            null
+        )
+
+        view.findViewById<TextView>(R.id.tvPickup).text = vm.pickupAddress
+        view.findViewById<TextView>(R.id.tvDrop).text = vm.dropAddress
+
+        view.findViewById<TextView>(R.id.tvGoods).text =
+            if (vm.goodsType.isNotBlank()) vm.goodsType else "—"
+
+        view.findViewById<TextView>(R.id.tvSender).text =
+            "${vm.senderName} (${vm.senderType})\n${vm.senderHouse}\n${vm.senderPhone}"
+
+        view.findViewById<TextView>(R.id.tvReceiver).text =
+            "${vm.receiverName} (${vm.receiverType})\n${vm.receiverHouse}\n${vm.receiverPhone}"
+
+        view.findViewById<Button>(R.id.btnClose).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setContentView(view)
+        dialog.show()
+    }
+
+
+    private fun openSupportPopup() {
+
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(
+            R.layout.bottom_sheet_support,
+            null
+        )
+
+        val btnClose = view.findViewById<Button>(R.id.btnCloseSupport)
+
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setContentView(view)
+        dialog.show()
+    }
+
+
     // =====================================================
-    // ❌ MANUAL CANCEL
+    //  MANUAL CANCEL
     // =====================================================
     private fun manualCancel() {
         pollingJob?.cancel()
         cancelRide {
+            LocalStorage.saveActiveRideId(this, 0L)
             redirectHome()
         }
     }
@@ -200,7 +268,7 @@ class WaitingForApprovalActivity : AppCompatActivity() {
     // 🧹 CLEAR LOCAL STATE
     // =====================================================
     private fun clearRideData() {
-        LocalStorage.saveActiveRideId(this, -1L)
+        LocalStorage.saveActiveRideId(this, 0L)
         LocalStorage.saveActiveDriverId(this, -1L)
     }
 

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -20,6 +21,7 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import org.json.JSONObject
 import java.net.URL
 import java.util.Locale
+import kotlin.math.*
 
 class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -32,8 +34,15 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var pickupPin: ImageView
     private lateinit var dropPin: ImageView
 
+    private lateinit var btnBack: ImageView
+
     private var isSelectingPickup = false
     private var isSelectingDrop = false
+
+    // 📍 JHANSI ELITE CENTER (REFERENCE POINT ONLY)
+    private val JHANSI_LAT = 25.4484
+    private val JHANSI_LNG = 78.5685
+    private val MAX_RADIUS_KM = 40.0
 
     // ================= ACTIVITY RESULT =================
 
@@ -62,10 +71,16 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
         pickupPin.visibility = View.GONE
         dropPin.visibility = View.GONE
 
+        // KEEP EXISTING AUTO PICKUP FROM CURRENT LOCATION
         if (vm.pickupAddress.isNotEmpty()) {
             pickupEdit.setText(vm.pickupAddress)
             pickupPin.visibility = View.VISIBLE
             isSelectingPickup = true
+        }
+        btnBack = findViewById(R.id.btnBack)
+
+        btnBack.setOnClickListener {
+            goToHome()
         }
 
         val mapFragment =
@@ -89,26 +104,24 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         btnNext.setOnClickListener {
-            if (vm.pickupAddress.isEmpty()) {
-                toast("Select Pickup Address")
-                return@setOnClickListener
-            }
-            if (vm.dropAddress.isEmpty()) {
-                toast("Select Drop Address")
-                return@setOnClickListener
-            }
-
-            fetchDistanceAndTime {
-                startActivity(Intent(this, SenderDetailsActivity::class.java))
-            }
+            validateAndProceed()
         }
     }
+
+    private fun goToHome() {
+        val intent = Intent(this, Home_Activity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+        finish()
+    }
+
 
     // ================= MAP =================
 
     override fun onMapReady(map: GoogleMap) {
         gMap = map
 
+        // ✅ KEEP EXISTING CAMERA BEHAVIOR
         if (vm.pickupLat != 0.0 && vm.pickupLon != 0.0) {
             val pickup = LatLng(vm.pickupLat, vm.pickupLon)
             gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pickup, 17f))
@@ -126,6 +139,13 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
     // ================= MAP DRAG =================
 
     private fun updateLocationFromMap(latLng: LatLng) {
+
+        //  BLOCK OUTSIDE 40 KM FROM JHANSI ELITE
+        if (!isWithinJhansi(latLng.latitude, latLng.longitude)) {
+            showOutOfRangeDialog()
+            return
+        }
+
         try {
             val geocoder = Geocoder(this, Locale.getDefault())
             val list = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
@@ -161,31 +181,27 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
             Place.Field.LAT_LNG
         )
 
-        // ✅ Jhansi bounding box (approx)
         val jhansiBounds = RectangularBounds.newInstance(
-            LatLng(25.40, 78.45), // SW
-            LatLng(25.55, 78.65)  // NE
+            LatLng(25.40, 78.45),
+            LatLng(25.55, 78.65)
         )
 
         val intent = Autocomplete.IntentBuilder(
             AutocompleteActivityMode.FULLSCREEN,
             fields
         )
-            // 🔥 BIAS RESULTS TO JHANSI
             .setLocationBias(jhansiBounds)
-
-            // 🔥 INDIA ONLY
             .setCountries(listOf("IN"))
-
             .build(this)
 
-        if (isPickup) {
-            pickupLauncher.launch(intent)
-        } else {
-            dropLauncher.launch(intent)
-        }
-    }
+        intent.putExtra(
+            "theme",
+            R.style.PlacesWhiteTheme
+        )
 
+        if (isPickup) pickupLauncher.launch(intent)
+        else dropLauncher.launch(intent)
+    }
 
     private fun handleAutocompleteResult(
         result: ActivityResult,
@@ -195,6 +211,13 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
 
         val place = Autocomplete.getPlaceFromIntent(result.data!!)
         val latLng = place.latLng ?: return
+
+        //  BLOCK OUTSIDE 40 KM
+        if (!isWithinJhansi(latLng.latitude, latLng.longitude)) {
+            showOutOfRangeDialog()
+            return
+        }
+
         val address = makeShortAddress(place.address ?: "")
 
         if (isPickup) {
@@ -216,7 +239,53 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f))
     }
 
+    // ================= FINAL VALIDATION =================
+
+    private fun validateAndProceed() {
+
+        if (vm.pickupAddress.isEmpty()) {
+            toast("Select Pickup Address")
+            return
+        }
+
+        if (vm.dropAddress.isEmpty()) {
+            toast("Select Drop Address")
+            return
+        }
+
+        if (!isWithinJhansi(vm.pickupLat, vm.pickupLon)
+            || !isWithinJhansi(vm.dropLat, vm.dropLon)
+        ) {
+            showOutOfRangeDialog()
+            return
+        }
+
+        fetchDistanceAndTime {
+            startActivity(Intent(this, SenderDetailsActivity::class.java))
+        }
+    }
+
     // ================= DISTANCE =================
+
+    private fun isWithinJhansi(lat: Double, lng: Double): Boolean {
+        return distanceFromJhansi(lat, lng) <= MAX_RADIUS_KM
+    }
+
+    private fun distanceFromJhansi(lat: Double, lng: Double): Double {
+        val earthRadius = 6371.0
+        val dLat = Math.toRadians(lat - JHANSI_LAT)
+        val dLng = Math.toRadians(lng - JHANSI_LNG)
+
+        val a = sin(dLat / 2).pow(2.0) +
+                cos(Math.toRadians(JHANSI_LAT)) *
+                cos(Math.toRadians(lat)) *
+                sin(dLng / 2).pow(2.0)
+
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        return earthRadius * c
+    }
+
+    // ================= API =================
 
     private fun fetchDistanceAndTime(onComplete: () -> Unit) {
 
@@ -244,6 +313,16 @@ class Pickup_Drop_Selector_Activity : AppCompatActivity(), OnMapReadyCallback {
 
             runOnUiThread { onComplete() }
         }.start()
+    }
+
+    // ================= UI =================
+
+    private fun showOutOfRangeDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Out of Service Area")
+            .setMessage("Please select pickup and drop locations within Jhansi (40 KM).")
+            .setPositiveButton("OK", null)
+            .show()
     }
 
     private fun makeShortAddress(full: String): String {

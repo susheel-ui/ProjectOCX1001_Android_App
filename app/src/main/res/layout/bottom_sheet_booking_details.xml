@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- TITLE -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Booking Details"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#111"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- PICKUP -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pickup Address"
+            android:textStyle="bold"
+            android:textColor="#2563EB"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvPickup"
+            android:textColor="#444"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- DROP -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Drop Address"
+            android:textStyle="bold"
+            android:textColor="#DC2626"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvDrop"
+            android:textColor="#444"
+            android:layout_marginBottom="16dp"/>
+
+
+
+        <!-- GOODS -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Goods Type"
+            android:textStyle="bold"
+            android:textColor="#111"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvGoods"
+            android:textColor="#444"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- SENDER -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sender Details"
+            android:textStyle="bold"
+            android:textColor="#111"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvSender"
+            android:textColor="#444"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- RECEIVER -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Receiver Details"
+            android:textStyle="bold"
+            android:textColor="#111"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvReceiver"
+            android:textColor="#444"
+            android:layout_marginBottom="24dp"/>
+
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Close"
+            android:textStyle="bold"
+            android:backgroundTint="@color/color_primary"
+            android:textColor="@android:color/black"/>
+    </LinearLayout>
+</ScrollView>

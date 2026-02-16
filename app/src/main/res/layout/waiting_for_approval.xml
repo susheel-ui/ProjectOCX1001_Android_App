@@ -1,35 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F4F7FA">
 
-    <ImageView
-        android:id="@+id/iv_scooter_bg"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/zarkit_bgremove"
-        app:layout_constraintEnd_toEndOf="parent"
+    <!-- Scooter Image Container (FIXED) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/iv_scooter_container"
+        android:layout_width="145dp"
+        android:layout_height="72dp"
+        android:layout_marginTop="64dp"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/color_primary"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <ImageView
+            android:id="@+id/iv_scooter_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/zarkit_bgyellow"/>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Title -->
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="Searching for the best\ndriver..."
         android:textColor="#1A1C1E"
         android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_scooter_container"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_scooter_bg" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Subtitle -->
     <TextView
         android:id="@+id/tv_subtitle"
         android:layout_width="wrap_content"
@@ -38,31 +52,32 @@
         android:text="Connecting you with nearby partners"
         android:textColor="#6C757D"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-
+    <!-- Vehicle Info -->
     <TextView
         android:id="@+id/vehicleInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:text="Matching driver"
-        android:textColor="#6C757D"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
+        android:textColor="#495057"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_subtitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="24dp"
         app:cardCornerRadius="20dp"
-        app:cardElevation="0dp"
+        app:cardElevation="6dp"
+        app:cardBackgroundColor="@android:color/white"
         app:layout_constraintTop_toBottomOf="@id/tv_subtitle">
 
         <LinearLayout
@@ -71,15 +86,18 @@
             android:orientation="vertical"
             android:padding="20dp">
 
+            <!-- Pickup -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <View
                     android:id="@+id/dot_pickup"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
                     android:layout_marginTop="6dp"
-                    android:background="@drawable/ic_location_on_green" />
+                    android:background="@drawable/ic_location_on_green"/>
+
                 <TextView
                     android:id="@+id/lbl_pickup"
                     android:layout_width="wrap_content"
@@ -89,7 +107,8 @@
                     android:text="PICKUP"
                     android:textColor="#A0AABF"
                     android:textSize="11sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
+
                 <TextView
                     android:id="@+id/pickupInfo"
                     android:layout_width="wrap_content"
@@ -100,24 +119,28 @@
                     android:text="123 Silicon Valley, Tech Hub"
                     android:textColor="#1A1C1E"
                     android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
             </RelativeLayout>
 
+            <!-- Vertical Connector -->
             <View
                 android:layout_width="1dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="4.5dp"
-                android:background="#E0E0E0" />
+                android:background="#E5E7EB"/>
 
+            <!-- Drop -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <View
                     android:id="@+id/dot_dropoff"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
                     android:layout_marginTop="6dp"
-                    android:background="@drawable/ic_location_on_red" />
+                    android:background="@drawable/ic_location_on_red"/>
+
                 <TextView
                     android:id="@+id/lbl_dropoff"
                     android:layout_width="wrap_content"
@@ -127,7 +150,8 @@
                     android:text="DROP-OFF"
                     android:textColor="#A0AABF"
                     android:textSize="11sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
+
                 <TextView
                     android:id="@+id/dropInfo"
                     android:layout_width="wrap_content"
@@ -138,15 +162,17 @@
                     android:text="789 Innovation Park, Design City"
                     android:textColor="#1A1C1E"
                     android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
             </RelativeLayout>
 
+            <!-- Divider -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginVertical="20dp"
-                android:background="#F0F0F0" />
+                android:background="#F1F5F9"/>
 
+            <!-- Payment & Fare -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -155,11 +181,10 @@
                     android:id="@+id/iv_payment"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_wallet"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/wlt"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
                     android:id="@+id/lbl_payment"
@@ -170,7 +195,7 @@
                     android:textColor="#A0AABF"
                     android:textSize="12sp"
                     app:layout_constraintStart_toEndOf="@id/iv_payment"
-                    app:layout_constraintTop_toTopOf="@id/iv_payment" />
+                    app:layout_constraintTop_toTopOf="@id/iv_payment"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -180,7 +205,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="@id/lbl_payment"
-                    app:layout_constraintTop_toBottomOf="@id/lbl_payment" />
+                    app:layout_constraintTop_toBottomOf="@id/lbl_payment"/>
 
                 <TextView
                     android:id="@+id/lbl_fare"
@@ -190,7 +215,7 @@
                     android:textColor="#A0AABF"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/iv_payment" />
+                    app:layout_constraintTop_toTopOf="@id/iv_payment"/>
 
                 <TextView
                     android:id="@+id/cash"
@@ -201,24 +226,29 @@
                     android:textSize="22sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lbl_fare" />
-
+                    app:layout_constraintTop_toBottomOf="@id/lbl_fare"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <!-- View Details -->
     <TextView
         android:id="@+id/btn_view_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:layout_marginTop="20dp"
-        android:drawablePadding="4dp"
         android:text="View Details"
         android:textColor="#3B82F6"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cv_details" />
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintTop_toBottomOf="@id/cv_details"
+        app:layout_constraintStart_toStartOf="parent"/>
 
+    <!-- Support -->
     <LinearLayout
         android:id="@+id/btn_support"
         android:layout_width="wrap_content"
@@ -226,9 +256,13 @@
         android:gravity="center"
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintTop_toTopOf="@id/btn_view_details"
         app:layout_constraintBottom_toBottomOf="@id/btn_view_details"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btn_view_details">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:layout_width="16dp"
@@ -241,32 +275,34 @@
             android:layout_marginStart="6dp"
             android:text="Support"
             android:textColor="#495057"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
     </LinearLayout>
 
 
+    <!-- Loader -->
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="24dp"
+        android:indeterminateDrawable="@drawable/progress_colors"
         app:layout_constraintBottom_toTopOf="@id/cancelTrip"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Cancel -->
     <TextView
         android:id="@+id/cancelTrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="76dp"
         android:text="Cancel Trip"
         android:textColor="#EF4444"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

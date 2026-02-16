@@ -1,5 +1,6 @@
 package com.example.project_a_android_userapp.api
 
+import com.example.project_a_android_userapp.model.BookAgainResponse
 import com.example.project_a_android_userapp.model.Booking
 import com.example.project_a_android_userapp.model.UserResponse
 import com.google.gson.JsonObject
@@ -43,6 +44,16 @@ interface ApiService {
         @Query("rideId") rideId: Long
     ): Call<DriverContactResponse>
 
+    @GET("user/ride/status/{rideId}")
+    fun getRideStatus(
+        @Path("rideId") rideId: Long
+    ): Call<RideStatusResponse>
+
+    @GET("images/{fileName}")
+    fun getDriverImage(
+        @Path("fileName") fileName: String
+    ): Call<ResponseBody>
+
     @GET("user/driver-location")
     fun getDriverLiveLocation(
         @Query("driverId") driverId: Long
@@ -51,7 +62,7 @@ interface ApiService {
     @POST("/api/call/ride/connect")
     fun callDriver(
         @Header("Authorization") auth: String,
-        @Body body: Map<String, Long>   // ✅ FIXED
+        @Body body: Map<String, Long>
     ): Call<String>
 
     @POST("user/{rideId}/cancel")
@@ -76,6 +87,22 @@ interface ApiService {
         @Path("userId") userId: Int
     ): Response<List<Booking>>
 
+    @GET("user/book-again/{rideId}")
+    suspend fun bookAgain(
+        @Header("Authorization") token: String,
+        @Path("rideId") rideId: Long
+    ): Response<BookAgainResponse>
 
+    @POST("user/create-order/{rideId}")
+    fun createOrder(
+        @Path("rideId") rideId: Long,
+        @Header("Authorization") token: String
+    ): Call<CreateOrderResponse>
+
+    @POST("user/verify")
+    fun verifyPayment(
+        @Header("Authorization") token: String,
+        @Body request: VerifyPaymentRequest
+    ): Call<ResponseBody>
 
 }

@@ -109,13 +109,32 @@ class SenderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         val loc = LatLng(lat, lon)
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 16f))
 
-        gMap.addMarker(
-            MarkerOptions()
-                .position(loc)
-                .title("Pickup Location")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+        // ------------------- GOOGLE-STYLE BLUE PICKUP MARKER -------------------
+
+        // Add pulsing circle at pickup point
+        val circle = gMap.addCircle(
+            com.google.android.gms.maps.model.CircleOptions()
+                .center(loc)
+                .radius(0.0) // start radius
+                .strokeColor(android.graphics.Color.parseColor("#4285F4")) // Google Blue
+                .strokeWidth(3f)
+                .fillColor(android.graphics.Color.parseColor("#334285F4")) // semi-transparent Google Blue
         )
+
+        // Animate the circle radius to pulse like Google Maps
+        val animator = android.animation.ValueAnimator.ofFloat(0f, 60f) // radius in meters
+        animator.duration = 1000
+        animator.repeatMode = android.animation.ValueAnimator.RESTART
+        animator.repeatCount = android.animation.ValueAnimator.INFINITE
+        animator.addUpdateListener { valueAnimator ->
+            val animatedRadius = valueAnimator.animatedValue as Float
+            circle.radius = animatedRadius.toDouble()
+        }
+        animator.start()
+        // ------------------- PULSING ANIMATION END -------------------
 
         gMap.uiSettings.setAllGesturesEnabled(false)
     }
+
+
 }

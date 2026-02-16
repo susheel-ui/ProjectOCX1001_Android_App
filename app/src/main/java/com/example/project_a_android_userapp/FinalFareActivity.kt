@@ -43,8 +43,23 @@ class FinalFareActivity : AppCompatActivity() {
         rule6.text = "\u2022 Payment must be made before pickup"
         rule7.text = "\u2022 Follow all traffic rules"
 
+        val addressDetails = findViewById<TextView>(R.id.addressDetails)
+
+        addressDetails.setOnClickListener {
+            openAddressDetailsPopup()
+        }
+
+
+        val btnBack = findViewById<ImageView>(R.id.btnBack)
+
+        btnBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+
 
         val vehicleImage = findViewById<ImageView>(R.id.vehicleImage)
+        val vehicleName = findViewById<TextView>(R.id.vehicleName)
         val finalFareText = findViewById<TextView>(R.id.finalFareText)
         val paymentFare = findViewById<TextView>(R.id.paymentFare)
         val bookButton = findViewById<Button>(R.id.bookNowButton)
@@ -52,13 +67,28 @@ class FinalFareActivity : AppCompatActivity() {
         val btnViewList = findViewById<TextView>(R.id.btnViewList)
 
         btnViewList.setOnClickListener {
+            val dialog = BottomSheetDialog(this)
+            val sheetView = layoutInflater.inflate(
+                R.layout.bottom_sheet_restricted_items,
+                null
+            )
 
-            val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(this)
-            val sheetView = layoutInflater.inflate(R.layout.bottom_sheet_restricted_items, null)
+            // ===== CANCEL BUTTON =====
+            sheetView.findViewById<TextView>(R.id.btnCancel)
+                .setOnClickListener {
+                    dialog.dismiss()
+                }
+
+            // ===== OK UNDERSTOOD BUTTON =====
+            sheetView.findViewById<Button>(R.id.btnOkUnderstood)
+                .setOnClickListener {
+                    dialog.dismiss()
+                }
 
             dialog.setContentView(sheetView)
             dialog.show()
         }
+
 
 
         // ===== Goods Type Views =====
@@ -86,14 +116,54 @@ class FinalFareActivity : AppCompatActivity() {
         finalFareText.text = "₹${String.format("%.2f", originalFare)}"
 
         when (vm.selectedVehicle) {
-            "Bike" -> vehicleImage.setImageResource(R.drawable.mini_3w)
-            "Loader" -> vehicleImage.setImageResource(R.drawable.loader)
-            "Truck" -> vehicleImage.setImageResource(R.drawable.truck)
+
+            // ================= 2 WHEELER =================
+            "TWO_WHEELER_EV", "TWO_WHEELER_PETROL" -> {
+                vehicleImage.setImageResource(R.drawable.v2w)
+                vehicleName.text = "2 Wheeler"
+            }
+
+            // ================= 3 WHEELER =================
+            "THREE_WHEELER_EV",
+            "THREE_WHEELER_PETROL",
+            "THREE_WHEELER_CNG" -> {
+                vehicleImage.setImageResource(R.drawable.v3w)
+                vehicleName.text = "3 Wheeler"
+            }
+
+            // ================= 4 WHEELER =================
+            "FOUR_WHEELER_CNG",
+            "FOUR_WHEELER_EV",
+            "FOUR_WHEELER_PETROL" -> {
+                vehicleImage.setImageResource(R.drawable.v4w)
+                vehicleName.text = "Truck"
+            }
+
+            // ================= FALLBACK =================
+            else -> {
+                vehicleImage.setImageResource(R.drawable.zarkitgroup)
+                vehicleName.text = "Vehicle"
+            }
         }
+
+
 
         // ================= BOOK NOW =================
 
         bookButton.setOnClickListener {
+
+            val activeRideId = LocalStorage.getActiveRideId(this)
+
+            if (activeRideId > 0L) {
+                androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle("Active Ride Found")
+                    .setMessage("Please complete your current ride first before booking a new one.")
+                    .setPositiveButton("OK") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+                return@setOnClickListener
+            }
 
             bookButton.isEnabled = false
 
@@ -138,16 +208,29 @@ class FinalFareActivity : AppCompatActivity() {
 
                             val ride = response.body()!!
 
-                            // ✅ STORE rideId locally
+                            //  STORE rideId locally
                             LocalStorage.saveActiveRideId(
                                 this@FinalFareActivity,
                                 ride.rideId
                             )
+                            // SAVE PICKUP & DROP LOCATIONS (for active ride restore)
+                            LocalStorage.savePickupLocation(
+                                this@FinalFareActivity,
+                                vm.pickupLat,
+                                vm.pickupLon
+                            )
 
-                            // ✅ SEND NOTIFICATION
+                            LocalStorage.saveDropLocation(
+                                this@FinalFareActivity,
+                                vm.dropLat,
+                                vm.dropLon
+                            )
+
+
+                            //  SEND NOTIFICATION
                             sendNotification(ride.rideId)
 
-                            // ✅ MOVE TO WAITING SCREEN
+                            //  MOVE TO WAITING SCREEN
                             startActivity(
                                 Intent(
                                     this@FinalFareActivity,
@@ -177,6 +260,31 @@ class FinalFareActivity : AppCompatActivity() {
                 })
         }
     }
+
+    private fun openAddressDetailsPopup() {
+
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(
+            R.layout.bottom_sheet_location_details,
+            null
+        )
+
+        val pickupText = view.findViewById<TextView>(R.id.tvPickupAddress)
+        val dropText = view.findViewById<TextView>(R.id.tvDropAddress)
+        val btnClose = view.findViewById<Button>(R.id.btnClose)
+
+        // DATA FROM VIEWMODEL
+        pickupText.text = vm.pickupAddress
+        dropText.text = vm.dropAddress
+
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setContentView(view)
+        dialog.show()
+    }
+
 
     // ================= GOODS TYPE BOTTOM SHEET =================
 

@@ -18,7 +18,11 @@
         android:layout_height="wrap_content"
         android:text="General • Loose"
         android:textSize="16sp"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edittext_border"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <TextView
         android:id="@+id/optionFragile"
@@ -26,7 +30,11 @@
         android:layout_height="wrap_content"
         android:text="Fragile • Glass"
         android:textSize="16sp"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edittext_border"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <TextView
         android:id="@+id/optionElectronics"
@@ -34,7 +42,11 @@
         android:layout_height="wrap_content"
         android:text="Electronics"
         android:textSize="16sp"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edittext_border"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <TextView
         android:id="@+id/optionLogistics"
@@ -42,7 +54,11 @@
         android:layout_height="wrap_content"
         android:text="Logistics Service Providers"
         android:textSize="16sp"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edittext_border"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <TextView
         android:id="@+id/optionMachines"
@@ -50,7 +66,11 @@
         android:layout_height="wrap_content"
         android:text="Machines / Equipments / Spare Parts"
         android:textSize="16sp"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edittext_border"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <TextView
         android:id="@+id/optionPharma"
@@ -58,7 +78,11 @@
         android:layout_height="wrap_content"
         android:text="Pharmaceutical / Healthcare Products"
         android:textSize="16sp"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edittext_border"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <TextView
         android:id="@+id/optionPlastic"
@@ -66,7 +90,11 @@
         android:layout_height="wrap_content"
         android:text="Plastic Products"
         android:textSize="16sp"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edittext_border"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <TextView
         android:id="@+id/optionRubber"
@@ -74,7 +102,11 @@
         android:layout_height="wrap_content"
         android:text="Rubber Products"
         android:textSize="16sp"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edittext_border"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <TextView
         android:id="@+id/optionTextile"
@@ -82,7 +114,11 @@
         android:layout_height="wrap_content"
         android:text="Textiles / Garments / Fashion / Accessories"
         android:textSize="16sp"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edittext_border"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <TextView
         android:id="@+id/optionTimber"
@@ -90,7 +126,11 @@
         android:layout_height="wrap_content"
         android:text="Timbers / Plywoods / Papers"
         android:textSize="16sp"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edittext_border"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <TextView
         android:id="@+id/optionBooks"
@@ -98,6 +138,9 @@
         android:layout_height="wrap_content"
         android:text="Books / Stationary / Gifts / Toys"
         android:textSize="16sp"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:background="@drawable/edittext_border"
+        android:clickable="true"
+        android:focusable="true"/>
 
 </LinearLayout>
