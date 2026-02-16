@@ -27,6 +27,7 @@ class Home_Activity : AppCompatActivity() {
             v.setPadding(systemBars.left,0, systemBars.right, 0)
             insets
         }
+
         try {
             changeFragment(HomeFragment())
             binding.bottomNavigation.selectedItemId = R.id.nav_home
