@@ -45,4 +45,11 @@
     <string name="scooter">Scooter</string>
 
     <string name="view_address_details"><![CDATA[View Address Details >]]></string>
+
+    <!-- ✅ No Internet Bottom Sheet -->
+    <string name="no_internet_title">No Internet Connection</string>
+    <string name="no_internet_message">Please check your Wi-Fi or mobile data.\nWe\'ll reconnect automatically.</string>
+    <string name="no_internet_waiting">⏳  Waiting for connection…</string>
+    <string name="no_internet_connected">✅  Connected! Continuing…</string>
+
 </resources>

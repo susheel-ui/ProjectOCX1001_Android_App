@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:paddingBottom="40dp"
+    android:background="@drawable/bg_bottom_sheet_rounded">
+
+    <!-- Icon -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="📡"
+        android:textSize="48sp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_internet_title"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#1A1A1A"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Message -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_internet_message"
+        android:textSize="14sp"
+        android:textColor="#757575"
+        android:gravity="center" />
+
+</LinearLayout>

@@ -4,16 +4,15 @@ plugins {
 }
 
 android {
-    namespace = "com.example.project_a_android_userapp"
+    namespace = "com.zarkit.zarkit_user"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.project_a_android_userapp"
+        applicationId = "com.zarkit.zarkit_user"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0"
-
+        versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Profile"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#111111"/>
+
+    <EditText
+        android:id="@+id/editFirstName"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:hint="First Name"
+        android:background="@drawable/edittext_border"
+        android:padding="12dp"/>
+
+    <EditText
+        android:id="@+id/editLastName"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:hint="Last Name"
+        android:background="@drawable/edittext_border"
+        android:padding="12dp"/>
+
+    <EditText
+        android:id="@+id/editEmail"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:background="@drawable/edittext_border"
+        android:padding="12dp"/>
+
+    <Button
+        android:id="@+id/btnSubmitProfile"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:text="Submit"
+        android:backgroundTint="@color/color_primary"
+        android:textColor="@android:color/black"/>
+</LinearLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Main Base (Pure Yellow to Lighter Shade) -->
+    <item>
+        <shape>
+            <gradient
+                android:startColor="#FFD500"
+            android:centerColor="#FFE066"
+            android:endColor="#FFF59D"
+            android:angle="15"/>
+
+        </shape>
+    </item>
+
+    <!-- Light Glass Shine -->
+    <item>
+        <shape>
+            <gradient
+                android:startColor="#30FFD500"
+                android:centerColor="#90FFD500"
+                android:endColor="#30FFFFFF"
+                android:angle="45"/>
+
+            <corners
+                android:topLeftRadius="0dp"
+                android:topRightRadius="0dp"
+                android:bottomLeftRadius="24dp"
+                android:bottomRightRadius="24dp"/>
+        </shape>
+    </item>
+
+    <!-- Subtle Depth Shadow -->
+    <item>
+        <shape>
+            <solid android:color="#08000000"/>
+            <corners
+                android:topLeftRadius="0dp"
+                android:topRightRadius="0dp"
+                android:bottomLeftRadius="24dp"
+                android:bottomRightRadius="24dp"/>
+        </shape>
+    </item>
+
+</layer-list>

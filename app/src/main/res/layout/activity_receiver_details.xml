@@ -29,16 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- CENTER PIN -->
-    <ImageView
-        android:id="@+id/centerPin"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:src="@drawable/ic_location_on_red"
-        app:layout_constraintTop_toTopOf="@id/miniMapFragment"
-        app:layout_constraintBottom_toBottomOf="@id/miniMapFragment"
-        app:layout_constraintStart_toStartOf="@id/miniMapFragment"
-        app:layout_constraintEnd_toEndOf="@id/miniMapFragment"/>
+
 
     <!-- ADDRESS CARD -->
     <androidx.cardview.widget.CardView

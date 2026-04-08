@@ -1,151 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OTP_verifyActivity"
-    android:padding="44dp"
-    >
+    android:background="@drawable/bg_wallet_card"
+    tools:context=".OTP_verifyActivity">
 
-
+    <!-- Top Logo -->
     <ImageView
-        android:id="@+id/app_title"
-        android:layout_width="291dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="true"
-        android:contentDescription="App Logo"
-        android:scaleType="centerCrop"
-        android:src="@drawable/zarkit_nobgyellow"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/phone_display_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_title">
-
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="🇮🇳 +91"
-           />
-
-        <TextView
-            android:id="@+id/phone_number_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="9XXXXXXXX7"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/change_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="CHANGE"
-            android:textColor="#007BFF"
-            android:textSize="14sp"
-            android:textStyle="bold"/>
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/otp_sent_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="One Time Password (OTP) has been sent to this number"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/phone_display_layout" />
-
-    <TextView
-        android:id="@+id/auto_verify_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Waiting to auto verify OTP"
-        android:textColor="@android:color/black"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/otp_sent_message" />
-
-
-    <EditText
-        android:id="@+id/otp_edit_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/bottom_line"
-        android:hint="Enter OTP manually"
-        android:inputType="numberPassword"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        android:layout_margin="24dp"
-        android:paddingBottom="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/auto_verify_message" />
-
-    <Button
-        android:id="@+id/verify_button"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="@color/color_Primary"
-        android:text="Verify"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        app:cornerRadius="28dp"
-        android:layout_margin="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/otp_edit_text" />
-
-    <TextView
-        android:id="@+id/resend_timer_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Resend OTP in 00:06 seconds"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/verify_button" />
-
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/whatsapp_button"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/delivery_image"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:layout_marginTop="48dp"
-        android:text="Resend OTP via SMS"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:layout_marginStart="54dp"
-        android:layout_marginEnd="54dp"
-        android:background="@drawable/light_grey_button_bg"
-        android:textColor="@android:color/black"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/zarkit_nobgblacklogo"
+        android:scaleType="fitCenter"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/resend_timer_text" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Bottom Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardViewOtp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:cardElevation="8dp"
+        app:cardCornerRadius="24dp"
+        app:layout_constraintTop_toBottomOf="@id/delivery_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="485dp"
+            android:background="@color/white"
+            android:padding="24dp">
+
+            <!-- OTP Title -->
+            <TextView
+                android:id="@+id/otp_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Verify OTP 🔐"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
 
+            <!-- Subtitle -->
+            <TextView
+                android:id="@+id/otp_subtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Enter the OTP sent to your mobile number"
+                android:textColor="#595959"
+                android:textSize="16sp"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/otp_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+
+            <!-- Phone Number Row -->
+            <LinearLayout
+                android:id="@+id/phone_display_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/otp_subtitle">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+91"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/phone_number_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="9XXXXXXXX7"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/change_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="CHANGE"
+                    android:textColor="@color/color_Primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- OTP Input Box -->
+            <LinearLayout
+                android:id="@+id/otp_input_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/rounded_edittext_bg"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/phone_display_layout">
+
+                <EditText
+                    android:id="@+id/otp_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter OTP"
+                    android:inputType="numberPassword"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <!-- Verify Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/verify_button"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@color/color_Primary"
+                android:text="Verify OTP"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:cornerRadius="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/otp_input_container" />
+
+            <!-- Resend OTP -->
+            <TextView
+                android:id="@+id/resend_sms_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Resend OTP"
+                android:textColor="@color/color_Primary"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/verify_button" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

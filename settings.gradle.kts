@@ -15,5 +15,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Project_A_Android_UserApp"
+rootProject.name = "Zarkit"
 include(":app")

@@ -75,12 +75,23 @@
             android:exported="true"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".BulkOrderActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
         <!-- ================= AUTH ================= -->
 
         <activity
             android:name=".OTP_verifyActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".PoliciesActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
 
         <activity
             android:name=".Login_Page"

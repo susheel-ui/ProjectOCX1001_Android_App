@@ -18,7 +18,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="12dp"
         android:background="@android:color/white"
         android:elevation="4dp"
         android:gravity="center_vertical"
@@ -28,8 +28,8 @@
 
         <ImageButton
             android:id="@+id/btnBack"
-            android:layout_width="41dp"
-            android:layout_height="62dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:contentDescription="Back"
             android:src="@drawable/baseline_arrow_back_ios_24" />
@@ -63,7 +63,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
