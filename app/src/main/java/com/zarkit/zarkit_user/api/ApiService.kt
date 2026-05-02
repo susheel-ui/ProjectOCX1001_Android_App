@@ -88,6 +88,12 @@ interface ApiService {
         @Path("userId") userId: Int
     ): Response<List<Booking>>
 
+    @POST("api/ride/connect")
+    fun callRideConnect(
+        @Header("Authorization") token: String,
+        @Body request: CallRideRequest
+    ): Call<String>
+
     @GET("user/book-again/{rideId}")
     suspend fun bookAgain(
         @Header("Authorization") token: String,

@@ -65,6 +65,9 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
 
     private lateinit var txtRideId: TextView
     private lateinit var txtVehicleNumber: TextView
+    private var isCallButtonCoolingDown = false
+    private val CALL_COOLDOWN_MS = 40_000L
+    private lateinit var tvCallStatus: TextView
 
     // DATA
     private lateinit var vm: LocationViewModel
@@ -115,6 +118,7 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
 
     // ✅ FIX 2: Flag to prevent multiple tracking loops
     private var isTrackingStarted = false
+
 
 
     // ================= LIFECYCLE =================
@@ -173,10 +177,21 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
         txtVehicleNumber = findViewById(R.id.tvVehicleNumber)
         txtFare = findViewById(R.id.tvFare)
         txtPaymentStatus = findViewById(R.id.tvPaymentStatus)
+        tvCallStatus = findViewById(R.id.tvCallStatus)
+
+        btnCall.setOnClickListener {
+            if (tvCallStatus.visibility == View.VISIBLE) return@setOnClickListener
+            callUserViaBackend()
+        }
+
 
         // ✅ FIX 3: Set click listeners ONCE here in onCreate, not inside handleRideStatus
         btnCancelRide.setOnClickListener {
             showCancelConfirmationPopup()
+        }
+
+        btnCall.setOnClickListener {
+            callUserViaBackend()
         }
 
         btnPay.setOnClickListener {
@@ -419,6 +434,51 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
                     toast("Order creation failed")
                 }
             })
+    }
+
+    private fun callUserViaBackend() {
+        val token = "Bearer ${LocalStorage.getToken(this)}"
+
+        // Immediately hide button, show connecting text
+        btnCall.visibility = View.GONE
+        tvCallStatus.visibility = View.VISIBLE
+
+        ApiClient.api.callRideConnect(token, CallRideRequest(rideId))
+            .enqueue(object : Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    if (response.isSuccessful) {
+                        startCallCooldown()
+                    } else {
+                        // If failed, restore button immediately
+                        runOnUiThread {
+                            btnCall.visibility = View.VISIBLE
+                            tvCallStatus.visibility = View.GONE
+                        }
+                        toast("Call failed: ${response.code()}")
+                    }
+                }
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    // If failed, restore button immediately
+                    runOnUiThread {
+                        btnCall.visibility = View.VISIBLE
+                        tvCallStatus.visibility = View.GONE
+                    }
+                    toast("Network error")
+                }
+            })
+    }
+
+    private val callHandler = Handler(Looper.getMainLooper()) // separate handler
+
+    private fun startCallCooldown() {
+        callHandler.removeCallbacksAndMessages(null) // clear any previous
+        callHandler.postDelayed({
+            if (isFinishing || isDestroyed) return@postDelayed
+            runOnUiThread {
+                btnCall.visibility = View.VISIBLE
+                tvCallStatus.visibility = View.GONE
+            }
+        }, CALL_COOLDOWN_MS)
     }
 
 
@@ -839,6 +899,7 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
     // ================= CLEANUP =================
 
     override fun onDestroy() {
+        callHandler.removeCallbacksAndMessages(null)
         rideDialog?.dismiss()
         rideDialog = null
         handler.removeCallbacksAndMessages(null)
@@ -848,5 +909,5 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
 
     private fun toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-    }
+ 6   }
 }

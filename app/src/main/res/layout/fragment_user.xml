@@ -218,6 +218,77 @@
             </com.google.android.material.card.MaterialCardView>
 
 
+            <!-- ================= Address ================= -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="14dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@android:color/white">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Address"
+                        android:textSize="11sp"
+                        android:textColor="#888888"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/addressText"
+                        android:text=""
+                        android:textSize="16sp"
+                        android:textColor="#111111"/>
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ================= GST  ================= -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="14dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@android:color/white">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="GST"
+                        android:textSize="11sp"
+                        android:textColor="#888888"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/gstText"
+                        android:text=""
+                        android:textSize="16sp"
+                        android:textColor="#111111"/>
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+
 
 
 

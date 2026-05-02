@@ -15,6 +15,7 @@
         android:textStyle="bold"
         android:textColor="#111111"/>
 
+    <!-- FIRST NAME -->
     <EditText
         android:id="@+id/editFirstName"
         android:layout_width="match_parent"
@@ -24,6 +25,7 @@
         android:background="@drawable/edittext_border"
         android:padding="12dp"/>
 
+    <!-- LAST NAME -->
     <EditText
         android:id="@+id/editLastName"
         android:layout_width="match_parent"
@@ -33,6 +35,7 @@
         android:background="@drawable/edittext_border"
         android:padding="12dp"/>
 
+    <!-- EMAIL -->
     <EditText
         android:id="@+id/editEmail"
         android:layout_width="match_parent"
@@ -43,6 +46,30 @@
         android:background="@drawable/edittext_border"
         android:padding="12dp"/>
 
+    <!-- ADDRESS (NEW) -->
+    <EditText
+        android:id="@+id/editAddress"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="12dp"
+        android:hint="Full Address"
+        android:inputType="textMultiLine"
+        android:gravity="top|start"
+        android:background="@drawable/edittext_border"
+        android:padding="12dp"/>
+
+    <!-- GST (NEW) -->
+    <EditText
+        android:id="@+id/editGst"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:hint="GST Number (Optional)"
+        android:inputType="textCapCharacters"
+        android:background="@drawable/edittext_border"
+        android:padding="12dp"/>
+
+    <!-- SUBMIT BUTTON -->
     <Button
         android:id="@+id/btnSubmitProfile"
         android:layout_width="match_parent"
@@ -51,4 +78,5 @@
         android:text="Submit"
         android:backgroundTint="@color/color_primary"
         android:textColor="@android:color/black"/>
+
 </LinearLayout>

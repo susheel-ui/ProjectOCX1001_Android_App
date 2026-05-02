@@ -171,15 +171,36 @@
                         android:visibility="visible" />
                 </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/btnCallDriver"
-                    android:layout_width="48dp"
-                    android:layout_height="95dp"
-                    android:adjustViewBounds="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Call Driver"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/img_1" />
+                <!-- REPLACE the ImageButton with this block -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <ImageButton
+                        android:id="@+id/btnCallDriver"
+                        android:layout_width="48dp"
+                        android:layout_height="95dp"
+                        android:adjustViewBounds="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Call Driver"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/img_1" />
+
+                    <TextView
+                        android:id="@+id/tvCallStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Connecting..."
+                        android:textSize="10sp"
+                        android:textColor="#E65100"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:maxWidth="60dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
             </LinearLayout>
 
             <!-- PAY BUTTON -->
