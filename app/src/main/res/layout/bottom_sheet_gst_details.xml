@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/white_card">
+
+    <View
+        android:layout_width="42dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="18dp"
+        android:background="#DDDDDD" />
+
+    <TextView
+        android:text="Add GST Details"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#111111"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="Optional. GST details will be used for invoice."
+        android:textSize="13sp"
+        android:textColor="#777777"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/etGstNumber"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:hint="Enter GST Number"
+        android:padding="14dp"
+        android:textSize="15sp"
+        android:singleLine="true"
+        android:inputType="textCapCharacters"
+        android:background="@drawable/white_card" />
+
+    <Button
+        android:id="@+id/btnSaveGst"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="Save GST Details"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/color_primary"
+        android:layout_marginTop="14dp" />
+
+    <Button
+        android:id="@+id/btnCloseGst"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Cancel"
+        android:textColor="#111111"
+        android:backgroundTint="#EEEEEE"
+        android:layout_marginTop="10dp" />
+
+</LinearLayout>

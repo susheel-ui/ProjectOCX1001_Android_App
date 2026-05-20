@@ -155,7 +155,7 @@ class Login_Page : BaseActivity() {
                         }
 
                         200 -> {   // OTP SENT
-                            if (code == "OTP_SENT") {
+                            if (code == "OTP_SENT" || code == "DUMMY_OTP_SENT") {
                                 startActivity(Intent(this@Login_Page, OTP_verifyActivity::class.java))
                             } else {
                                 Toast.makeText(this@Login_Page, "Unexpected Response", Toast.LENGTH_SHORT).show()

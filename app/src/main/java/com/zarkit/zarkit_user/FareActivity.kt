@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -181,18 +182,58 @@ class FareActivity : BaseActivity() {
             "FOUR_WHEELER_CNG" to Pair(truckCngCard, truckCngFare)
         )
 
-        list.forEach { obj ->
-            val vehicle = obj["vehicleInfo"]?.asString ?: return@forEach
-            val fare = obj["totalFare"]?.asDouble ?: return@forEach
+        // ✅ SORT AVAILABLE FIRST
+        val sortedList = list.sortedByDescending {
+            it["availability"]?.asBoolean ?: false
+        }
 
-            fareMap[vehicle] = fare
-            cardMap[vehicle]?.let {
-                it.first.visibility = View.VISIBLE
-                it.second.text = "₹${fare.toInt()}"
+        sortedList.forEach { obj ->
+
+            val vehicle = obj["vehicleInfo"]?.asString ?: return@forEach
+            val fare = obj["totalFare"]?.asDouble ?: 0.0
+            val availability = obj["availability"]?.asBoolean ?: false
+
+            cardMap[vehicle]?.let { pair ->
+
+                val card = pair.first
+                val fareText = pair.second
+
+                // ✅ REMOVE CARD FROM OLD POSITION
+                val parent = card.parent as LinearLayout
+                parent.removeView(card)
+
+                // ✅ ADD AGAIN -> AVAILABLE WILL COME FIRST
+                parent.addView(card)
+
+                card.visibility = View.VISIBLE
+
+                if (availability) {
+
+                    fareMap[vehicle] = fare
+
+                    fareText.text = "₹${fare.toInt()}"
+                    fareText.setTextColor(Color.BLACK)
+
+                    card.alpha = 1f
+                    card.isEnabled = true
+                    card.isClickable = true
+                    card.setCardBackgroundColor(Color.WHITE)
+
+                } else {
+
+                    fareMap.remove(vehicle)
+
+                    fareText.text = "Not Available"
+                    fareText.setTextColor(Color.BLACK)
+
+                    card.alpha = 0.45f
+                    card.isEnabled = false
+                    card.isClickable = false
+                    card.setCardBackgroundColor(Color.parseColor("#E0E0E0"))
+                }
             }
         }
     }
-
     // ================= PORTER STYLE CLICK =================
     private fun setupClickListeners() {
 
@@ -215,6 +256,9 @@ class FareActivity : BaseActivity() {
 
     private fun setPorterClick(card: CardView, type: String) {
         card.setOnClickListener {
+            if (!fareMap.containsKey(type)) {
+                return@setOnClickListener
+            }
             if (selectedVehicle == type) {
                 VehicleInfoDialog.show(
                     context = this,

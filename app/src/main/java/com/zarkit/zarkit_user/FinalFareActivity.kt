@@ -3,15 +3,17 @@ package com.zarkit.zarkit_user
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.zarkit.zarkit_user.api.*
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,23 +22,18 @@ class FinalFareActivity : BaseActivity() {
 
     private lateinit var vm: LocationViewModel
 
-    // ===== Goods Type UI =====
     private lateinit var btnChange: TextView
     private lateinit var goodsTypeText: TextView
+    private var savedGstNumber: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_final_fare)
-        // ✅ HANDLE SYSTEM BARS (STATUS + NAVIGATION)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.setPadding(
-                systemBars.left,
-                systemBars.top,
-                systemBars.right,
-                systemBars.bottom
-            )
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
@@ -64,20 +61,25 @@ class FinalFareActivity : BaseActivity() {
             openAddressDetailsPopup()
         }
 
-
         val btnBack = findViewById<ImageView>(R.id.btnBack)
 
         btnBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-
-
         val vehicleImage = findViewById<ImageView>(R.id.vehicleImage)
         val vehicleName = findViewById<TextView>(R.id.vehicleName)
         val finalFareText = findViewById<TextView>(R.id.finalFareText)
         val paymentFare = findViewById<TextView>(R.id.paymentFare)
+        val fareDetailsLayout = findViewById<LinearLayout>(R.id.fareDetailsLayout)
         val bookButton = findViewById<Button>(R.id.bookNowButton)
+
+        // ✅ ADD GST TOP BUTTON
+        val btnAddGstTop = findViewById<TextView>(R.id.btnAddGstTop)
+
+        btnAddGstTop.setOnClickListener {
+            openGstDetailsBottomSheet(btnAddGstTop)
+        }
 
         val btnViewList = findViewById<TextView>(R.id.btnViewList)
 
@@ -88,13 +90,11 @@ class FinalFareActivity : BaseActivity() {
                 null
             )
 
-            // ===== CANCEL BUTTON =====
             sheetView.findViewById<TextView>(R.id.btnCancel)
                 .setOnClickListener {
                     dialog.dismiss()
                 }
 
-            // ===== OK UNDERSTOOD BUTTON =====
             sheetView.findViewById<Button>(R.id.btnOkUnderstood)
                 .setOnClickListener {
                     dialog.dismiss()
@@ -104,13 +104,9 @@ class FinalFareActivity : BaseActivity() {
             dialog.show()
         }
 
-
-
-        // ===== Goods Type Views =====
         goodsTypeText = findViewById(R.id.goodsType)
         btnChange = findViewById(R.id.btnChange)
 
-        // Default Goods Type
         if (vm.goodsType.isEmpty()) {
             vm.goodsType = "General • Loose"
         }
@@ -121,25 +117,46 @@ class FinalFareActivity : BaseActivity() {
             openGoodsTypeBottomSheet()
         }
 
-        // ================= UI =================
+        val totalFare = vm.finalFare
 
-        val originalFare = vm.finalFare
-//        val gst = originalFare * 0.18
+        val baseFare = totalFare / 1.18
+        val gstAmount = totalFare - baseFare
 
-        val finalFareWithGST = originalFare
+        paymentFare.text = "₹${String.format("%.2f", totalFare)}"
+        finalFareText.text = "₹${String.format("%.2f", totalFare)}"
 
-        paymentFare.text = "₹${String.format("%.2f", finalFareWithGST)}"
-        finalFareText.text = "₹${String.format("%.2f", originalFare)}"
+        fareDetailsLayout.setOnClickListener {
+
+            val dialog = BottomSheetDialog(this)
+            val view = layoutInflater.inflate(
+                R.layout.bottom_sheet_price_breakdown,
+                null
+            )
+
+            val tvBaseFare = view.findViewById<TextView>(R.id.tvBaseFare)
+            val tvGstAmount = view.findViewById<TextView>(R.id.tvGstAmount)
+            val tvTotalFare = view.findViewById<TextView>(R.id.tvTotalFare)
+            val btnClose = view.findViewById<Button>(R.id.btnClosePriceBreakdown)
+
+            tvBaseFare.text = "₹${String.format("%.2f", baseFare)}"
+            tvGstAmount.text = "₹${String.format("%.2f", gstAmount)}"
+            tvTotalFare.text = "₹${String.format("%.2f", totalFare)}"
+
+            btnClose.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.setContentView(view)
+            dialog.show()
+        }
 
         when (vm.selectedVehicle) {
 
-            // ================= 2 WHEELER =================
             "TWO_WHEELER_EV", "TWO_WHEELER_PETROL" -> {
                 vehicleImage.setImageResource(R.drawable.v2w)
                 vehicleName.text = "2 Wheeler"
             }
 
-            // ================= 3 WHEELER =================
             "THREE_WHEELER_EV",
             "THREE_WHEELER_PETROL",
             "THREE_WHEELER_CNG" -> {
@@ -147,7 +164,6 @@ class FinalFareActivity : BaseActivity() {
                 vehicleName.text = "3 Wheeler"
             }
 
-            // ================= 4 WHEELER =================
             "FOUR_WHEELER_CNG",
             "FOUR_WHEELER_EV",
             "FOUR_WHEELER_PETROL" -> {
@@ -155,16 +171,11 @@ class FinalFareActivity : BaseActivity() {
                 vehicleName.text = "Truck"
             }
 
-            // ================= FALLBACK =================
             else -> {
                 vehicleImage.setImageResource(R.drawable.zarkitgroup)
                 vehicleName.text = "Vehicle"
             }
         }
-
-
-
-        // ================= BOOK NOW =================
 
         bookButton.setOnClickListener {
 
@@ -224,12 +235,11 @@ class FinalFareActivity : BaseActivity() {
 
                             val ride = response.body()!!
 
-                            //  STORE rideId locally
                             LocalStorage.saveActiveRideId(
                                 this@FinalFareActivity,
                                 ride.rideId
                             )
-                            // SAVE PICKUP & DROP LOCATIONS (for active ride restore)
+
                             LocalStorage.savePickupLocation(
                                 this@FinalFareActivity,
                                 vm.pickupLat,
@@ -242,11 +252,8 @@ class FinalFareActivity : BaseActivity() {
                                 vm.dropLon
                             )
 
-
-                            //  SEND NOTIFICATION
                             sendNotification(ride.rideId)
 
-                            //  MOVE TO WAITING SCREEN
                             startActivity(
                                 Intent(
                                     this@FinalFareActivity,
@@ -277,6 +284,105 @@ class FinalFareActivity : BaseActivity() {
         }
     }
 
+    private fun openGstDetailsBottomSheet(btnAddGstTop: TextView) {
+
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(
+            R.layout.bottom_sheet_gst_details,
+            null
+        )
+
+        val etGstNumber = view.findViewById<EditText>(R.id.etGstNumber)
+        val btnSaveGst = view.findViewById<Button>(R.id.btnSaveGst)
+        val btnCloseGst = view.findViewById<Button>(R.id.btnCloseGst)
+
+        if (savedGstNumber.isNotEmpty()) {
+            etGstNumber.setText(savedGstNumber)
+            btnSaveGst.text = "Update GST"
+        } else {
+            btnSaveGst.text = "Save GST"
+        }
+
+        btnSaveGst.setOnClickListener {
+
+            val gst = etGstNumber.text.toString().trim().uppercase()
+
+            if (gst.isEmpty()) {
+                etGstNumber.error = "Enter GST number"
+                return@setOnClickListener
+            }
+
+            val userId = LocalStorage.getUserId(this)
+
+            if (userId == -1) {
+                Toast.makeText(
+                    this,
+                    "User not found. Please login again.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+            val body = mapOf(
+                "gstin" to gst
+            )
+
+            btnSaveGst.isEnabled = false
+
+            ApiClient.api.updateUserPartial(userId, body)
+                .enqueue(object : Callback<ResponseBody> {
+
+                    override fun onResponse(
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
+                    ) {
+                        btnSaveGst.isEnabled = true
+
+                        if (response.isSuccessful) {
+
+                            savedGstNumber = gst
+
+                            btnAddGstTop.text = "✓ GST Added"
+                            btnAddGstTop.setBackgroundResource(R.drawable.bg_gst_added)
+                            btnAddGstTop.setTextColor(android.graphics.Color.WHITE)
+
+                            Toast.makeText(
+                                this@FinalFareActivity,
+                                "GST saved successfully",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            dialog.dismiss()
+
+                        } else {
+                            Toast.makeText(
+                                this@FinalFareActivity,
+                                "Failed: ${response.code()}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        btnSaveGst.isEnabled = true
+
+                        Toast.makeText(
+                            this@FinalFareActivity,
+                            "Error: ${t.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                })
+        }
+
+        btnCloseGst.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setContentView(view)
+        dialog.show()
+    }
+
     private fun openAddressDetailsPopup() {
 
         val dialog = BottomSheetDialog(this)
@@ -289,7 +395,6 @@ class FinalFareActivity : BaseActivity() {
         val dropText = view.findViewById<TextView>(R.id.tvDropAddress)
         val btnClose = view.findViewById<Button>(R.id.btnClose)
 
-        // DATA FROM VIEWMODEL
         pickupText.text = vm.pickupAddress
         dropText.text = vm.dropAddress
 
@@ -300,9 +405,6 @@ class FinalFareActivity : BaseActivity() {
         dialog.setContentView(view)
         dialog.show()
     }
-
-
-    // ================= GOODS TYPE BOTTOM SHEET =================
 
     private fun openGoodsTypeBottomSheet() {
 
@@ -338,18 +440,13 @@ class FinalFareActivity : BaseActivity() {
     }
 
     private fun updateGoods(value: String, dialog: BottomSheetDialog) {
-        // Store full value for backend/API
         vm.goodsType = value
 
-        // Display only the first word on screen
         val firstWord = value.trim().split(" ")[0]
         goodsTypeText.text = firstWord
 
         dialog.dismiss()
     }
-
-
-    // ================= SEND NOTIFICATION =================
 
     private fun sendNotification(rideId: Long) {
 
@@ -369,8 +466,6 @@ class FinalFareActivity : BaseActivity() {
                 override fun onFailure(call: Call<String>, t: Throwable) {}
             })
     }
-
-    // ================= VEHICLE MAPPING =================
 
     private fun mapVehicleForBackend(vehicle: String): String {
         return when (vehicle) {

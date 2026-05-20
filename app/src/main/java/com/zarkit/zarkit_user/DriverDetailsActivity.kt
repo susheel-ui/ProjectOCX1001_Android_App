@@ -47,7 +47,7 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
         private const val DIRECTIONS_API_KEY = "AIzaSyAk5HjRT_tihvIZ7Y0ZQbcvpzn0yOSM8ac"
     }
 
-    // MAP
+    //MAP
     private lateinit var googleMap: GoogleMap
     private var mapReady = false
 

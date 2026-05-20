@@ -119,4 +119,21 @@ interface ApiService {
         @Body request: UpdateUserRequest
     ): Call<Void>
 
+    @PUT("user/update/{id}")
+    fun updateUserPartial(
+        @Path("id") userId: Int,
+        @Body body: Map<String, String>
+    ): Call<ResponseBody>
+
+    @GET("user/invoice/{rideId}/pdf")
+    suspend fun downloadInvoicePdf(
+        @Header("Authorization") token: String,
+        @Path("rideId") rideId: Long
+    ): Response<ResponseBody>
+
+    @GET("user/ride/onlystatus/{rideId}")
+    fun getOnlyRideStatus(
+        @Path("rideId") rideId: Long
+    ): Call<String>
+
 }

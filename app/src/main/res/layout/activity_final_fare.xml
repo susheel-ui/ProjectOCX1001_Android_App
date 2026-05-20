@@ -287,14 +287,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#0039A6"
-            android:padding="14dp">
+            android:padding="14dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
+            <!-- GST Text -->
             <TextView
                 android:text="18% GST included in final fare"
                 android:textColor="#FFFFFF"
-                android:textSize="15sp"
-                android:layout_width="wrap_content"
+                android:textSize="14sp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
+
+            <!-- Add GST Button -->
+            <TextView
+                android:id="@+id/btnAddGstTop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add GST"
+                android:textColor="#0039A6"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="8dp"
+                android:background="@drawable/bg_gst_button"
+                android:clickable="true"
+                android:focusable="true"/>
         </LinearLayout>
 
         <!-- PAYMENT -->
@@ -305,6 +324,7 @@
             android:elevation="4dp"
             android:padding="16dp"
             android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:layout_marginTop="6dp">
 
             <TextView
@@ -324,14 +344,35 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <TextView
-                android:id="@+id/paymentFare"
-                android:text="₹99"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#111"
+            <LinearLayout
+                android:id="@+id/fareDetailsLayout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless">
+
+                <TextView
+                    android:id="@+id/paymentFare"
+                    android:text="₹99"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#111"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/priceInfoIcon"
+                    android:text=" ⓘ"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#2E64FE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
         </LinearLayout>
 
         <Button

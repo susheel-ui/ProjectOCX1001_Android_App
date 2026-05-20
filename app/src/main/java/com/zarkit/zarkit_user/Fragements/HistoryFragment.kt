@@ -96,7 +96,9 @@ class HistoryFragment : Fragment() {
                             onRebookClick = { rideId ->
                                 rebookRide(rideId)
                             },
-                            onInvoiceClick = {}
+                            onInvoiceClick = { rideId ->
+                                downloadInvoice(rideId)
+                            }
                         )
 
                         rvBookings?.adapter = bookingAdapter
@@ -157,6 +159,63 @@ class HistoryFragment : Fragment() {
 
                 if (isAdded) {
                     Toast.makeText(ctx, "Something went wrong.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun downloadInvoice(rideId: Long) {
+
+        viewLifecycleOwner.lifecycleScope.launch {
+
+            val ctx = context ?: return@launch
+
+            try {
+                val token = withContext(Dispatchers.IO) {
+                    LocalStorage.getToken(ctx)
+                } ?: run {
+                    if (isAdded) {
+                        Toast.makeText(ctx, "Session expired. Please login again.", Toast.LENGTH_SHORT).show()
+                    }
+                    return@launch
+                }
+
+                val response = withContext(Dispatchers.IO) {
+                    ApiClient.api.downloadInvoicePdf("Bearer $token", rideId)
+                }
+
+                if (!isAdded || view == null) return@launch
+
+                if (response.isSuccessful && response.body() != null) {
+
+                    val pdfBytes = response.body()!!.bytes()
+
+                    val fileName = "invoice_$rideId.pdf"
+
+                    val file = java.io.File(ctx.getExternalFilesDir(null), fileName)
+                    file.writeBytes(pdfBytes)
+
+                    val uri = androidx.core.content.FileProvider.getUriForFile(
+                        ctx,
+                        "${ctx.packageName}.provider",
+                        file
+                    )
+
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.setDataAndType(uri, "application/pdf")
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+                    startActivity(intent)
+
+                } else {
+                    Toast.makeText(ctx, "Invoice not found", Toast.LENGTH_SHORT).show()
+                }
+
+            } catch (e: Exception) {
+                Log.e("INVOICE", "Invoice download failed", e)
+
+                if (isAdded) {
+                    Toast.makeText(ctx, "Unable to open invoice", Toast.LENGTH_SHORT).show()
                 }
             }
         }
