@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/backBtn"
             android:layout_width="26dp"
             android:layout_height="26dp"
             android:src="@drawable/baseline_arrow_back_ios_24"/>
@@ -265,7 +266,7 @@
                     <ImageView
                         android:layout_width="70dp"
                         android:layout_height="70dp"
-                        android:src="@drawable/v3w"
+                        android:src="@drawable/auto"
                         android:scaleType="centerCrop"/>
 
                     <LinearLayout
@@ -278,7 +279,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3 Wheeler EV"
+                            android:text="AUTO"
                             android:textStyle="bold"
                             android:textSize="16sp"/>
 
@@ -332,7 +333,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3 Wheeler Petrol"
+                            android:text="3 Wheeler Petrol/Diesel"
                             android:textStyle="bold"
                             android:textSize="16sp"/>
 
@@ -442,7 +443,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Truck EV"
+                            android:text="Truck 8ft"
                             android:textStyle="bold"
                             android:textSize="16sp"/>
 
@@ -496,7 +497,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Truck Petrol"
+                            android:text="Truck 10ft"
                             android:textStyle="bold"
                             android:textSize="16sp"/>
 
@@ -550,7 +551,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Truck CNG"
+                            android:text="Truck 12ft"
                             android:textStyle="bold"
                             android:textSize="16sp"/>
 

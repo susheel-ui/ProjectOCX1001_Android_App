@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -75,6 +76,9 @@ class FareActivity : BaseActivity() {
 
 
         bindViews()
+        findViewById<ImageView>(R.id.backBtn).setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
         setLocationInfo()
         setupClickListeners()
 
@@ -313,15 +317,39 @@ class FareActivity : BaseActivity() {
     }
 
     private fun formatVehicleText(type: String): String {
+
         return when (type) {
-            "TWO_WHEELER_EV" -> "2 Wheeler (EV)"
-            "TWO_WHEELER_PETROL" -> "2 Wheeler (Petrol)"
-            "THREE_WHEELER_EV" -> "3 Wheeler (EV)"
-            "THREE_WHEELER_PETROL" -> "3 Wheeler (Petrol)"
-            "THREE_WHEELER_CNG" -> "3 Wheeler (CNG)"
-            "FOUR_WHEELER_EV" -> "4 Wheeler (EV)"
-            "FOUR_WHEELER_PETROL" -> "4 Wheeler (Petrol)"
-            "FOUR_WHEELER_CNG" -> "4 Wheeler (CNG)"
+
+            // ================= 2W =================
+
+            "TWO_WHEELER_EV" ->
+                "2 Wheeler EV"
+
+            "TWO_WHEELER_PETROL" ->
+                "2 Wheeler Petrol/Diesel"
+
+            // ================= 3W =================
+
+            "THREE_WHEELER_EV" ->
+                "AUTO"
+
+            "THREE_WHEELER_PETROL" ->
+                "3 Wheeler Petrol/Diesel"
+
+            "THREE_WHEELER_CNG" ->
+                "3 Wheeler CNG"
+
+            // ================= TRUCK =================
+
+            "FOUR_WHEELER_EV" ->
+                "Truck 8ft"
+
+            "FOUR_WHEELER_PETROL" ->
+                "Truck 10ft"
+
+            "FOUR_WHEELER_CNG" ->
+                "Truck 12ft"
+
             else -> type
         }
     }
