@@ -89,21 +89,16 @@ class FareActivity : BaseActivity() {
 
     // ================= VIEW BINDING =================
     private fun bindViews() {
-
         pickupText = findViewById(R.id.pickupText)
         dropText = findViewById(R.id.dropText)
-
         bikeEvCard = findViewById(R.id.vehicleBikeEv)
         bikePetrolCard = findViewById(R.id.vehicleBikePetrol)
-
         loaderEvCard = findViewById(R.id.vehicleLoaderEv)
         loaderPetrolCard = findViewById(R.id.vehicleLoaderPetrol)
         loaderCngCard = findViewById(R.id.vehicleLoaderCng)
-
         truckEvCard = findViewById(R.id.vehicleTruckEv)
         truckPetrolCard = findViewById(R.id.vehicleTruckPetrol)
         truckCngCard = findViewById(R.id.vehicleTruckCng)
-
         bikeEvFare = findViewById(R.id.bikeEvFareText)
         bikePetrolFare = findViewById(R.id.bikePetrolFareText)
         loaderEvFare = findViewById(R.id.loaderEvFareText)
@@ -112,7 +107,6 @@ class FareActivity : BaseActivity() {
         truckEvFare = findViewById(R.id.truckEvFareText)
         truckPetrolFare = findViewById(R.id.truckPetrolFareText)
         truckCngFare = findViewById(R.id.truckCngFareText)
-
         proceedBtn = findViewById(R.id.proceedBtn)
     }
 

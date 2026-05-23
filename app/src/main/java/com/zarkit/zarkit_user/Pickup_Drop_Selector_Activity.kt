@@ -3,6 +3,7 @@ package com.zarkit.zarkit_user
 import android.content.Intent
 import android.location.Geocoder
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -40,6 +41,15 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
 
     private lateinit var btnBack: ImageView
 
+    private lateinit var btnCloseTooltip : ImageView
+
+    private lateinit var btnHelp: ImageView
+
+    private lateinit var btnClearPickup: ImageView
+    private lateinit var btnClearDrop: ImageView
+
+    private lateinit var tooltipCard: androidx.cardview.widget.CardView
+
     private var isSelectingPickup = false
     private var isSelectingDrop = false
 
@@ -65,6 +75,12 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
         enableEdgeToEdge()
         setContentView(R.layout.activity_pickup_drop_selector)
 
+        findViewById<TextView>(R.id.helpText).text =
+            Html.fromHtml(
+                "💡<b> ऊपर <font color='#27AE60'>हरे रंग</font> में जहाँ से सामान उठाना है और <font color='#E53935'>लाल रंग</font> में जहाँ सामान पहुँचाना है, वह जगह चुनें।</b>",
+                Html.FROM_HTML_MODE_LEGACY
+            )
+
         val root = findViewById<View>(android.R.id.content)
 
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
@@ -82,6 +98,29 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
         }
 
         vm = (application as MyApp).vm
+        btnClearPickup = findViewById(R.id.btnClearPickup)
+        btnClearDrop = findViewById(R.id.btnClearDrop)
+        btnClearPickup.setOnClickListener {
+
+            pickupEdit.setText("")
+
+            vm.pickupAddress = ""
+            vm.pickupLat = 0.0
+            vm.pickupLon = 0.0
+
+            pickupPin.visibility = View.GONE
+        }
+
+        btnClearDrop.setOnClickListener {
+
+            dropEdit.setText("")
+
+            vm.dropAddress = ""
+            vm.dropLat = 0.0
+            vm.dropLon = 0.0
+
+            dropPin.visibility = View.GONE
+        }
 
         pickupEdit = findViewById(R.id.pickupEdit)
         dropEdit = findViewById(R.id.dropEdit)
@@ -102,6 +141,17 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
 
         btnBack.setOnClickListener {
             goToHome()
+        }
+
+        btnCloseTooltip = findViewById(R.id.btnCloseTooltip)
+        tooltipCard = findViewById(R.id.tooltipCard)
+        btnHelp = findViewById(R.id.btnHelp)
+
+        btnCloseTooltip.setOnClickListener {
+            tooltipCard.visibility = View.GONE
+        }
+        btnHelp.setOnClickListener {
+            tooltipCard.visibility = View.VISIBLE
         }
 
         val mapFragment =
@@ -378,4 +428,5 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
     private fun toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
+
 }
