@@ -9,7 +9,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.zarkit.zarkit_user.api.ApiClient
@@ -26,8 +25,6 @@ class WaitingForApprovalActivity : BaseActivity() {
     private lateinit var cancelTrip: TextView
     private lateinit var cash: TextView
 
-    private lateinit var vm: LocationViewModel
-
     private var rideId: Long = -1L
     private var pollingJob: Job? = null
 
@@ -42,28 +39,21 @@ class WaitingForApprovalActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.waiting_for_approval)
-        // ✅ HANDLE STATUS + NAVIGATION BAR PADDING
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.setPadding(
-                systemBars.left,
-                systemBars.top,
-                systemBars.right,
-                systemBars.bottom
-            )
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        pickupInfo = findViewById(R.id.pickupInfo)
-        dropInfo = findViewById(R.id.dropInfo)
+        pickupInfo  = findViewById(R.id.pickupInfo)
+        dropInfo    = findViewById(R.id.dropInfo)
         vehicleInfo = findViewById(R.id.vehicleInfo)
         progressBar = findViewById(R.id.progressBar)
-        cancelTrip = findViewById(R.id.cancelTrip)
-        cash = findViewById(R.id.cash)
+        cancelTrip  = findViewById(R.id.cancelTrip)
+        cash        = findViewById(R.id.cash)
 
         rideId = LocalStorage.getActiveRideId(this)
-
-        vm = (application as MyApp).vm
 
         if (rideId == -1L) {
             Toast.makeText(this, "Invalid ride", Toast.LENGTH_SHORT).show()
@@ -71,40 +61,32 @@ class WaitingForApprovalActivity : BaseActivity() {
             return
         }
 
-        val btnSupport = findViewById<LinearLayout>(R.id.btn_support)
-
-        btnSupport.setOnClickListener {
+        findViewById<LinearLayout>(R.id.btn_support).setOnClickListener {
             openSupportPopup()
         }
 
-        val btnViewDetails = findViewById<TextView>(R.id.btn_view_details)
-
-        btnViewDetails.setOnClickListener {
+        findViewById<TextView>(R.id.btn_view_details).setOnClickListener {
             openBookingDetailsPopup()
         }
 
-        // ===================== SHOW DATA FROM VM =====================
-        val vm = (application as MyApp).vm
+        // ── Show data from LocalStorage ──
+        val pickupAddress = LocalStorage.getPickupAddress(this)
+        val dropAddress   = LocalStorage.getDropAddress(this)
 
-        val pickupShort = vm.pickupAddress.trim().split(" ").take(3).joinToString(" ")
-        val dropShort = vm.dropAddress.trim().split(" ").take(3).joinToString(" ")
-
-        pickupInfo.text = pickupShort
-        dropInfo.text = dropShort
-        vehicleInfo.text = vm.selectedVehicle
-        cash.text = "₹${String.format("%.2f", vm.finalFare)}"
-        // ===============================================================
+        pickupInfo.text  = pickupAddress.trim().split(" ").take(3).joinToString(" ")
+        dropInfo.text    = dropAddress.trim().split(" ").take(3).joinToString(" ")
+        vehicleInfo.text = LocalStorage.getSelectedVehicle(this)
+        cash.text        = "₹${String.format("%.2f", LocalStorage.getFinalFare(this))}"
 
         startPolling()
 
-        cancelTrip.setOnClickListener {
-            manualCancel()
-        }
+        cancelTrip.setOnClickListener { manualCancel() }
     }
 
     // =====================================================
-    // 🔄 POLLING WITH 1-MIN TIMEOUT
+    // POLLING WITH AUTO-CANCEL TIMEOUT
     // =====================================================
+
     private fun startPolling() {
 
         pollingJob = activityScope.launch {
@@ -129,16 +111,10 @@ class WaitingForApprovalActivity : BaseActivity() {
 
                         val driver = response.body()!!
 
-                        LocalStorage.saveActiveDriverId(
-                            this@WaitingForApprovalActivity,
-                            driver.driverId
-                        )
+                        LocalStorage.saveActiveDriverId(this@WaitingForApprovalActivity, driver.driverId)
 
                         startActivity(
-                            Intent(
-                                this@WaitingForApprovalActivity,
-                                DriverDetailsActivity::class.java
-                            )
+                            Intent(this@WaitingForApprovalActivity, DriverDetailsActivity::class.java)
                         )
                         finish()
                         break
@@ -153,57 +129,56 @@ class WaitingForApprovalActivity : BaseActivity() {
         }
     }
 
+    // =====================================================
+    // BOOKING DETAILS POPUP
+    // =====================================================
+
     private fun openBookingDetailsPopup() {
 
         val dialog = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(
-            R.layout.bottom_sheet_booking_details,
-            null
-        )
+        val view   = layoutInflater.inflate(R.layout.bottom_sheet_booking_details, null)
 
-        view.findViewById<TextView>(R.id.tvPickup).text = vm.pickupAddress
-        view.findViewById<TextView>(R.id.tvDrop).text = vm.dropAddress
+        view.findViewById<TextView>(R.id.tvPickup).text = LocalStorage.getPickupAddress(this)
+        view.findViewById<TextView>(R.id.tvDrop).text   = LocalStorage.getDropAddress(this)
 
         view.findViewById<TextView>(R.id.tvGoods).text =
-            if (vm.goodsType.isNotBlank()) vm.goodsType else "—"
+            LocalStorage.getGoodsType(this).ifBlank { "—" }
 
         view.findViewById<TextView>(R.id.tvSender).text =
-            "${vm.senderName} (${vm.senderType})\n${vm.senderHouse}\n${vm.senderPhone}"
+            "${LocalStorage.getSenderName(this)} (${LocalStorage.getSenderType(this)})\n" +
+                    "${LocalStorage.getSenderHouse(this)}\n" +
+                    LocalStorage.getSenderPhone(this)
 
         view.findViewById<TextView>(R.id.tvReceiver).text =
-            "${vm.receiverName} (${vm.receiverType})\n${vm.receiverHouse}\n${vm.receiverPhone}"
+            "${LocalStorage.getReceiverName(this)} (${LocalStorage.getReceiverType(this)})\n" +
+                    "${LocalStorage.getReceiverHouse(this)}\n" +
+                    LocalStorage.getReceiverPhone(this)
 
-        view.findViewById<Button>(R.id.btnClose).setOnClickListener {
-            dialog.dismiss()
-        }
+        view.findViewById<Button>(R.id.btnClose).setOnClickListener { dialog.dismiss() }
 
         dialog.setContentView(view)
         dialog.show()
     }
 
+    // =====================================================
+    // SUPPORT POPUP
+    // =====================================================
 
     private fun openSupportPopup() {
 
         val dialog = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(
-            R.layout.bottom_sheet_support,
-            null
-        )
+        val view   = layoutInflater.inflate(R.layout.bottom_sheet_support, null)
 
-        val btnClose = view.findViewById<Button>(R.id.btnCloseSupport)
-
-        btnClose.setOnClickListener {
-            dialog.dismiss()
-        }
+        view.findViewById<Button>(R.id.btnCloseSupport).setOnClickListener { dialog.dismiss() }
 
         dialog.setContentView(view)
         dialog.show()
     }
 
+    // =====================================================
+    // MANUAL CANCEL
+    // =====================================================
 
-    // =====================================================
-    //  MANUAL CANCEL
-    // =====================================================
     private fun manualCancel() {
         pollingJob?.cancel()
         cancelRide {
@@ -213,30 +188,30 @@ class WaitingForApprovalActivity : BaseActivity() {
     }
 
     // =====================================================
-    // ⏰ AUTO CANCEL + RETRY OPTION
+    // AUTO CANCEL + RETRY OPTION
     // =====================================================
+
     private fun autoCancelWithRetry() {
         pollingJob?.cancel()
-        cancelRide {
-            showRetryDialog()
-        }
+        cancelRide { showRetryDialog() }
     }
 
     // =====================================================
-    // 🚫 CANCEL API
+    // CANCEL API
     // =====================================================
+
     private fun cancelRide(onDone: () -> Unit) {
 
         val rideId = LocalStorage.getActiveRideId(this)
         val userId = LocalStorage.getUserId(this)
-        val token = LocalStorage.getToken(this)
+        val token  = LocalStorage.getToken(this)
 
         activityScope.launch(Dispatchers.IO) {
             try {
                 if (rideId != -1L && userId != -1 && !token.isNullOrEmpty()) {
                     ApiClient.api.cancelRide(
-                        rideId = rideId,
-                        userId = userId.toLong(),
+                        rideId     = rideId,
+                        userId     = userId.toLong(),
                         authHeader = "Bearer $token"
                     ).awaitResponse()
                 }
@@ -252,44 +227,41 @@ class WaitingForApprovalActivity : BaseActivity() {
     }
 
     // =====================================================
-    // 🔁 RETRY DIALOG
+    // RETRY DIALOG
     // =====================================================
-    private fun showRetryDialog() {
 
+    private fun showRetryDialog() {
         AlertDialog.Builder(this)
             .setTitle("No driver found")
             .setMessage("No driver accepted your request.\nWould you like to try again?")
             .setCancelable(false)
-            .setPositiveButton("Try Again") { _, _ ->
-                retryRide()
-            }
-            .setNegativeButton("Go Back") { _, _ ->
-                redirectHome()
-            }
+            .setPositiveButton("Try Again") { _, _ -> retryRide() }
+            .setNegativeButton("Go Back")   { _, _ -> redirectHome() }
             .show()
     }
 
     // =====================================================
-    // 🔁 RETRY LOGIC
+    // RETRY LOGIC
     // =====================================================
+
     private fun retryRide() {
-        startActivity(
-            Intent(this, FinalFareActivity::class.java)
-        )
+        startActivity(Intent(this, FinalFareActivity::class.java))
         finish()
     }
 
     // =====================================================
-    // 🧹 CLEAR LOCAL STATE
+    // CLEAR LOCAL STATE
     // =====================================================
+
     private fun clearRideData() {
         LocalStorage.saveActiveRideId(this, 0L)
         LocalStorage.saveActiveDriverId(this, -1L)
     }
 
     // =====================================================
-    // 🏠 HOME
+    // HOME
     // =====================================================
+
     private fun redirectHome() {
         startActivity(
             Intent(this, FinalFareActivity::class.java)

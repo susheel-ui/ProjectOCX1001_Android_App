@@ -1,5 +1,6 @@
 package com.zarkit.zarkit_user
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -17,7 +18,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.zarkit.zarkit_user.api.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -47,7 +47,7 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
         private const val DIRECTIONS_API_KEY = "AIzaSyAk5HjRT_tihvIZ7Y0ZQbcvpzn0yOSM8ac"
     }
 
-    //MAP
+    // MAP
     private lateinit var googleMap: GoogleMap
     private var mapReady = false
 
@@ -70,7 +70,6 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
     private lateinit var tvCallStatus: TextView
 
     // DATA
-    private lateinit var vm: LocationViewModel
     private var driverId: Long = -1L
     private var vehicleType = "TRUCK"
     private var pickupLat = 0.0
@@ -112,17 +111,18 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
     private var isPaymentDone = false
     private lateinit var txtPaymentStatus: TextView
 
-    // ✅ FIX 1: Flags to prevent duplicate dialogs
     private var isCompletedDialogShown = false
     private var isCancelledDialogShown = false
-
-    // ✅ FIX 2: Flag to prevent multiple tracking loops
     private var isTrackingStarted = false
 
-
+    private lateinit var otpDigit1: TextView
+    private lateinit var otpDigit2: TextView
+    private lateinit var otpDigit3: TextView
+    private lateinit var otpDigit4: TextView
 
     // ================= LIFECYCLE =================
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -136,22 +136,11 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
 
         Checkout.preload(applicationContext)
 
-        vm = (application as MyApp).vm
-        pickupLat = vm.pickupLat
-        pickupLng = vm.pickupLon
-        dropLat = vm.dropLat
-        dropLon = vm.dropLon
-
-        // FALLBACK: load from LocalStorage if VM is empty
-        if (pickupLat == 0.0 || pickupLng == 0.0) {
-            pickupLat = LocalStorage.getPickupLat(this)
-            pickupLng = LocalStorage.getPickupLng(this)
-        }
-
-        if (dropLat == 0.0 || dropLon == 0.0) {
-            dropLat = LocalStorage.getDropLat(this)
-            dropLon = LocalStorage.getDropLng(this)
-        }
+        // ── Load locations from LocalStorage ──
+        pickupLat = LocalStorage.getPickupLat(this)
+        pickupLng = LocalStorage.getPickupLng(this)
+        dropLat   = LocalStorage.getDropLat(this)
+        dropLon   = LocalStorage.getDropLng(this)
 
         rideId = LocalStorage.getActiveRideId(this)
 
@@ -159,44 +148,43 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
             checkPendingAndRedirect()
         }
 
-        // ONLY check pickup if NOT coming from active ride
         if (rideId <= 0 && (pickupLat == 0.0 || pickupLng == 0.0)) {
             toast("Pickup location missing")
             finish()
             return
         }
 
-        txtName = findViewById(R.id.driverName)
-        txtStatus = findViewById(R.id.tvRideStatus)
-        btnCall = findViewById(R.id.btnCallDriver)
-        imgVehicleType = findViewById(R.id.imgVehicleType)
-        btnCancelRide = findViewById(R.id.btnCancelRide)
-        btnPay = findViewById(R.id.btnPay)
-        btnBack = findViewById(R.id.btnBack)
-        txtRideId = findViewById(R.id.tvRideId)
-        txtVehicleNumber = findViewById(R.id.tvVehicleNumber)
-        txtFare = findViewById(R.id.tvFare)
-        txtPaymentStatus = findViewById(R.id.tvPaymentStatus)
-        tvCallStatus = findViewById(R.id.tvCallStatus)
+        txtName           = findViewById(R.id.driverName)
+        txtStatus         = findViewById(R.id.tvRideStatus)
+        btnCall           = findViewById(R.id.btnCallDriver)
+        imgVehicleType    = findViewById(R.id.imgVehicleType)
+        btnCancelRide     = findViewById(R.id.btnCancelRide)
+        btnPay            = findViewById(R.id.btnPay)
+        btnBack           = findViewById(R.id.btnBack)
+        txtRideId         = findViewById(R.id.tvRideId)
+        txtVehicleNumber  = findViewById(R.id.tvVehicleNumber)
+        txtFare           = findViewById(R.id.tvFare)
+        txtPaymentStatus  = findViewById(R.id.tvPaymentStatus)
+        tvCallStatus      = findViewById(R.id.tvCallStatus)
+        otpDigit1 = findViewById(R.id.otpDigit1)
+        otpDigit2 = findViewById(R.id.otpDigit2)
+        otpDigit3 = findViewById(R.id.otpDigit3)
+        otpDigit4 = findViewById(R.id.otpDigit4)
+
+        findViewById<TextView>(R.id.tooltipMainText)?.text =
+            android.text.Html.fromHtml(
+                getString(R.string.tooltip_text),
+                android.text.Html.FROM_HTML_MODE_COMPACT
+            )
 
         btnCall.setOnClickListener {
             if (tvCallStatus.visibility == View.VISIBLE) return@setOnClickListener
             callUserViaBackend()
         }
 
+        btnCancelRide.setOnClickListener { showCancelConfirmationPopup() }
 
-        // ✅ FIX 3: Set click listeners ONCE here in onCreate, not inside handleRideStatus
-        btnCancelRide.setOnClickListener {
-            showCancelConfirmationPopup()
-        }
-
-        btnCall.setOnClickListener {
-            callUserViaBackend()
-        }
-
-        btnPay.setOnClickListener {
-            createOrderApiAndStartPayment()
-        }
+        btnPay.setOnClickListener { createOrderApiAndStartPayment() }
 
         btnBack.setOnClickListener {
             val intent = Intent(this, Home_Activity::class.java)
@@ -247,7 +235,6 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
             })
     }
 
-
     // ================= MAP =================
 
     override fun onMapReady(map: GoogleMap) {
@@ -292,18 +279,13 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
-
     // ================= DRIVER =================
 
     private fun refreshDriverMarkerIcon() {
         driverMarker?.let { marker ->
-            val newIcon = bitmapFromDrawable(
-                this,
-                getVehicleIconByType(vehicleType),
-                110,
-                110
+            marker.setIcon(
+                bitmapFromDrawable(this, getVehicleIconByType(vehicleType), 110, 110)
             )
-            marker.setIcon(newIcon)
         }
     }
 
@@ -318,30 +300,35 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
                 ) {
                     val driver = response.body() ?: return
 
-                    txtName.text = driver.driverName
-                    txtStatus.text = "Status: ${driver.rideStatus}"
-                    txtVehicleNumber.text = "Vehicle No: ${driver.vehicleNumber}"
-                    txtFare.text = "Fare: ₹ ${driver.finalFare}"
+                    txtName.text         = driver.driverName
 
-                    driverId = driver.driverId
+                    //hardcode
+                    val otp = "7423"
+                    otpDigit1.text = otp[0].toString()
+                    otpDigit2.text = otp[1].toString()
+                    otpDigit3.text = otp[2].toString()
+                    otpDigit4.text = otp[3].toString()
+
+                    txtStatus.text       = "Status: ${driver.rideStatus}"
+                    txtVehicleNumber.text = "Vehicle No: ${driver.vehicleNumber}"
+                    txtFare.text         = "Fare: ₹ ${driver.finalFare}"
+
+                    driverId    = driver.driverId
                     vehicleType = driver.vehicleType
 
                     refreshDriverMarkerIcon()
                     handleRideStatus(driver.rideStatus ?: "PENDING")
 
-                    driver.driverPhotoUrl?.let {
-                        loadDriverImage(it)
-                    }
+                    driver.driverPhotoUrl?.let { loadDriverImage(it) }
 
                     isPaymentDone = driver.isPaymentDone ?: false
                     if (isPaymentDone) {
-                        btnPay.visibility = View.GONE
+                        btnPay.visibility        = View.GONE
                         txtPaymentStatus.visibility = View.VISIBLE
                     } else {
                         txtPaymentStatus.visibility = View.GONE
                     }
 
-                    // ✅ FIX 2: Only start tracking once
                     startLiveTracking()
                 }
 
@@ -359,9 +346,7 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
                     if (!response.isSuccessful) return
                     val stream = response.body()?.byteStream()
                     val bitmap = BitmapFactory.decodeStream(stream)
-                    runOnUiThread {
-                        imgVehicleType.setImageBitmap(bitmap)
-                    }
+                    runOnUiThread { imgVehicleType.setImageBitmap(bitmap) }
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -370,34 +355,30 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
             })
     }
 
-
     // ================= RIDE STATUS =================
 
     private fun handleRideStatus(status: String) {
 
         btnCancelRide.visibility = View.GONE
-        btnPay.visibility = View.GONE
+        btnPay.visibility        = View.GONE
 
         when (status) {
             "PENDING", "ACCEPTED" -> {
-                isRideStarted = false
+                isRideStarted  = false
                 startedHandled = false
                 btnCancelRide.visibility = View.VISIBLE
             }
 
             "STARTED" -> {
-                // Only show Pay button if payment not done
-                btnPay.visibility = if (isPaymentDone) View.GONE else View.VISIBLE
+                btnPay.visibility     = if (isPaymentDone) View.GONE else View.VISIBLE
                 btnCancelRide.visibility = View.GONE
 
                 if (!startedHandled) {
-                    isRideStarted = true
+                    isRideStarted  = true
                     startedHandled = true
-
                     lastRouteLatLng = null
                     routePolyline?.remove()
                     routePolyline = null
-
                     updateDestinationMarker()
                 }
             }
@@ -412,8 +393,6 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
                 showRideCancelledPopup()
             }
         }
-
-        // ✅ FIX 3: Click listeners are set in onCreate — REMOVED from here
     }
 
     private fun createOrderApiAndStartPayment() {
@@ -439,8 +418,7 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
     private fun callUserViaBackend() {
         val token = "Bearer ${LocalStorage.getToken(this)}"
 
-        // Immediately hide button, show connecting text
-        btnCall.visibility = View.GONE
+        btnCall.visibility   = View.GONE
         tvCallStatus.visibility = View.VISIBLE
 
         ApiClient.api.callRideConnect(token, CallRideRequest(rideId))
@@ -449,18 +427,17 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
                     if (response.isSuccessful) {
                         startCallCooldown()
                     } else {
-                        // If failed, restore button immediately
                         runOnUiThread {
-                            btnCall.visibility = View.VISIBLE
+                            btnCall.visibility   = View.VISIBLE
                             tvCallStatus.visibility = View.GONE
                         }
                         toast("Call failed: ${response.code()}")
                     }
                 }
+
                 override fun onFailure(call: Call<String>, t: Throwable) {
-                    // If failed, restore button immediately
                     runOnUiThread {
-                        btnCall.visibility = View.VISIBLE
+                        btnCall.visibility   = View.VISIBLE
                         tvCallStatus.visibility = View.GONE
                     }
                     toast("Network error")
@@ -468,29 +445,28 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
             })
     }
 
-    private val callHandler = Handler(Looper.getMainLooper()) // separate handler
+    private val callHandler = Handler(Looper.getMainLooper())
 
     private fun startCallCooldown() {
-        callHandler.removeCallbacksAndMessages(null) // clear any previous
+        callHandler.removeCallbacksAndMessages(null)
         callHandler.postDelayed({
             if (isFinishing || isDestroyed) return@postDelayed
             runOnUiThread {
-                btnCall.visibility = View.VISIBLE
+                btnCall.visibility   = View.VISIBLE
                 tvCallStatus.visibility = View.GONE
             }
         }, CALL_COOLDOWN_MS)
     }
 
-
-    // ================= VERIFY PAYMENT API =================
+    // ================= VERIFY PAYMENT =================
 
     private fun verifyPaymentApi() {
         val token = "Bearer ${LocalStorage.getToken(this)}"
 
         val request = VerifyPaymentRequest(
-            rideId = rideId,
+            rideId    = rideId,
             paymentId = razorpayPaymentId,
-            orderId = razorpayOrderId,
+            orderId   = razorpayOrderId,
             signature = razorpaySignature
         )
 
@@ -503,7 +479,7 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
                     if (response.isSuccessful) {
                         toast("Payment Verified ✅")
                         runOnUiThread {
-                            btnPay.visibility = View.GONE
+                            btnPay.visibility        = View.GONE
                             txtPaymentStatus.visibility = View.VISIBLE
                         }
                         fetchDriverContact(rideId)
@@ -531,7 +507,7 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
             options.put("order_id", orderId)
 
             val prefill = JSONObject()
-            prefill.put("contact", vm.senderPhone)
+            prefill.put("contact", LocalStorage.getSenderPhone(this))
             prefill.put("email", "test@email.com")
             options.put("prefill", prefill)
 
@@ -542,7 +518,6 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
         }
     }
 
-
     // ================= PAYMENT CALLBACKS =================
 
     override fun onPaymentSuccess(paymentId: String?, paymentData: PaymentData?) {
@@ -552,7 +527,7 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
         }
 
         razorpayPaymentId = paymentId
-        razorpayOrderId = paymentData.orderId ?: ""
+        razorpayOrderId   = paymentData.orderId ?: ""
         razorpaySignature = paymentData.signature ?: ""
 
         Log.d("RAZORPAY_DEBUG", "PaymentId: $razorpayPaymentId")
@@ -565,7 +540,6 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
     override fun onPaymentError(code: Int, response: String?, paymentData: PaymentData?) {
         Toast.makeText(this, "Payment Failed", Toast.LENGTH_LONG).show()
     }
-
 
     // ================= DESTINATION MARKER =================
 
@@ -590,8 +564,7 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destination, 14f))
     }
 
-
-    // ================= CANCEL CONFIRMATION =================
+    // ================= CANCEL =================
 
     private fun showCancelConfirmationPopup() {
         AlertDialog.Builder(this)
@@ -604,7 +577,7 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
     }
 
     private fun cancelRideApi() {
-        val userId = LocalStorage.getUserId(this).toLong()
+        val userId   = LocalStorage.getUserId(this).toLong()
         val rawToken = LocalStorage.getToken(this)
 
         if (rawToken.isNullOrEmpty()) {
@@ -612,9 +585,7 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
             return
         }
 
-        val token = "Bearer $rawToken"
-
-        ApiClient.api.cancelRide(rideId, userId, token)
+        ApiClient.api.cancelRide(rideId, userId, "Bearer $rawToken")
             .enqueue(object : Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful) {
@@ -634,19 +605,12 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
 
     private fun getVehicleIconByType(vehicleType: String): Int {
         return when {
-            vehicleType.contains("TWO", true) || vehicleType.contains("BIKE", true) ->
-                R.drawable.v2wlive
-
-            vehicleType.contains("THREE", true) || vehicleType.contains("LOADER", true) ->
-                R.drawable.v3wlive
-
-            vehicleType.contains("FOUR", true) || vehicleType.contains("TRUCK", true) ->
-                R.drawable.v4wlive
-
+            vehicleType.contains("TWO", true) || vehicleType.contains("BIKE", true)   -> R.drawable.v2wlive
+            vehicleType.contains("THREE", true) || vehicleType.contains("LOADER", true) -> R.drawable.v3wlive
+            vehicleType.contains("FOUR", true) || vehicleType.contains("TRUCK", true)  -> R.drawable.v4wlive
             else -> R.drawable.v2wlive
         }
     }
-
 
     // ================= REDIRECT HOME =================
 
@@ -660,13 +624,10 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
         finish()
     }
 
-
     // ================= COMPLETED POPUP =================
 
     private fun showRideCompletedPopup() {
         handler.removeCallbacksAndMessages(null)
-
-        // ✅ FIX 1: Prevent showing dialog multiple times or on dead activity
         if (isCompletedDialogShown) return
         if (isFinishing || isDestroyed) return
 
@@ -690,13 +651,10 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
         }
     }
 
-
     // ================= CANCELLED POPUP =================
 
     private fun showRideCancelledPopup() {
         handler.removeCallbacksAndMessages(null)
-
-        // ✅ FIX 1: Prevent showing dialog multiple times or on dead activity
         if (isCancelledDialogShown) return
         if (isFinishing || isDestroyed) return
 
@@ -720,20 +678,16 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
         }
     }
 
-
-    // ================= LIVE TRACK =================
+    // ================= LIVE TRACKING =================
 
     private fun startLiveTracking() {
-        // ✅ FIX 2: Prevent multiple polling loops from starting
         if (isTrackingStarted) return
         isTrackingStarted = true
 
         handler.post(object : Runnable {
             override fun run() {
                 pollRideStatus()
-                if (driverId > 0 && mapReady) {
-                    fetchDriverLocation()
-                }
+                if (driverId > 0 && mapReady) fetchDriverLocation()
                 if (!isFinishing && !isDestroyed) {
                     handler.postDelayed(this, 5000)
                 }
@@ -752,9 +706,7 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
                     handleRideStatus(status)
                 }
 
-                override fun onFailure(call: Call<RideStatusResponse>, t: Throwable) {
-                    // ignore silently
-                }
+                override fun onFailure(call: Call<RideStatusResponse>, t: Throwable) {}
             })
     }
 
@@ -782,11 +734,11 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
 
     private fun getBearing(from: LatLng, to: LatLng): Float {
         val start = Location("start").apply {
-            latitude = from.latitude
+            latitude  = from.latitude
             longitude = from.longitude
         }
         val end = Location("end").apply {
-            latitude = to.latitude
+            latitude  = to.latitude
             longitude = to.longitude
         }
         return start.bearingTo(end)
@@ -794,36 +746,26 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
 
     private fun updateDriverMarker(pos: LatLng) {
         if (driverMarker == null) {
-            val bikeIcon = bitmapFromDrawable(
-                this,
-                getVehicleIconByType(vehicleType),
-                120,
-                140
-            )
-
             driverMarker = googleMap.addMarker(
                 MarkerOptions()
                     .position(pos)
                     .title("Driver")
-                    .icon(bikeIcon)
+                    .icon(bitmapFromDrawable(this, getVehicleIconByType(vehicleType), 120, 140))
                     .anchor(0.5f, 0.5f)
                     .flat(true)
             )
-
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16f))
             lastMarkerLatLng = pos
             return
         }
 
         lastMarkerLatLng?.let { lastPos ->
-            val bearing = getBearing(lastPos, pos)
-            driverMarker?.rotation = bearing
+            driverMarker?.rotation = getBearing(lastPos, pos)
         }
 
         driverMarker?.position = pos
         lastMarkerLatLng = pos
     }
-
 
     // ================= ROUTE =================
 
@@ -846,7 +788,6 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
                 "&mode=driving" +
                 "&key=$DIRECTIONS_API_KEY"
 
-        // ✅ FIX 4: Guard against using shutdown executor
         if (executor.isShutdown) return
 
         executor.execute {
@@ -884,18 +825,6 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
         }
     }
 
-
-    // ================= REFRESH =================
-
-    private fun forceRefreshRoute() {
-        lastRouteLatLng = null
-        routePolyline?.remove()
-        routePolyline = null
-        toast("Refreshing route…")
-        fetchDriverLocation()
-    }
-
-
     // ================= CLEANUP =================
 
     override fun onDestroy() {
@@ -909,5 +838,5 @@ class DriverDetailsActivity : BaseActivity(), OnMapReadyCallback, PaymentResultW
 
     private fun toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
- 6   }
+    }
 }

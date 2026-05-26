@@ -1,103 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Fragments.HistoryFragment">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/backgroundColorLightGrey">
+        android:background="#F5F5F5">
 
         <!-- ================= HEADER ================= -->
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/header_layout"
             android:layout_width="0dp"
-            android:layout_height="160dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/bg_bottom_rounded_40dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="40dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
+                android:layout_marginTop="32dp"
                 android:id="@+id/titleOrders"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="My Orders"
                 android:textColor="@android:color/black"
-                android:textSize="32sp"
+                android:textSize="28sp"
                 android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toStartOf="@id/headerImage"/>
+
+            <TextView
+                android:id="@+id/headerSubtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="View your completed trips here. You can download invoices or quickly book the same order again."
+                android:textColor="#555555"
+                android:textSize="12sp"
+                app:layout_constraintTop_toBottomOf="@id/titleOrders"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/headerImage"/>
+
+            <ImageView
+                android:id="@+id/headerImage"
+                android:layout_marginTop="32dp"
+                android:layout_width="110dp"
+                android:layout_height="90dp"
+                android:src="@drawable/v4w"
+                android:scaleType="centerCrop"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- ================= TABS ================= -->
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/tabs_card"
+        <!-- ================= SEARCH + FILTER + SORT ================= -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/searchFilterLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginTop="-24dp"
-            android:backgroundTint="@color/white"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="-20dp"
             app:layout_constraintTop_toBottomOf="@id/header_layout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <LinearLayout
-                android:id="@+id/infoBanner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="14dp">
 
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- ================= TABS ================= -->
+        <HorizontalScrollView
+            android:id="@+id/tabsScrollView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:scrollbars="none"
+            app:layout_constraintTop_toBottomOf="@id/searchFilterLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:orientation="horizontal"
+                android:background="@drawable/rounded_bg"
+                android:padding="4dp">
+
+                <!-- ALL ORDERS -->
                 <TextView
-                    android:id="@+id/infoSubtitle"
+                    android:id="@+id/tabAll"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="View your completed trips here. You can download invoices or quickly book the same order again."
+                    android:layout_height="match_parent"
+                    android:text="All Orders"
                     android:textSize="13sp"
-                    android:textColor="@color/textColorSecondary"/>
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:paddingStart="22dp"
+                    android:paddingEnd="22dp"
+                    android:background="@drawable/tab_selected_bg"
+                    android:textColor="@android:color/black"/>
+
+                <!-- COMPLETED -->
+                <TextView
+                    android:id="@+id/tabCompleted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Completed"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:paddingStart="22dp"
+                    android:paddingEnd="22dp"
+                    android:textColor="#777777"/>
+
+                <!-- CANCELLED -->
+                <TextView
+                    android:id="@+id/tabCancelled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Cancelled"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:paddingStart="22dp"
+                    android:paddingEnd="22dp"
+                    android:textColor="#777777"/>
 
             </LinearLayout>
 
+        </HorizontalScrollView>
 
-        </com.google.android.material.card.MaterialCardView>
+        <!-- ================= INFO BANNER ================= -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/infoBannerCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="10dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#EEF0FF"
+            app:layout_constraintTop_toBottomOf="@id/tabsScrollView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:text="ℹ️"
+                    android:textSize="14sp"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/infoSubtitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="यहाँ आपके सभी पिछले ऑर्डर दिखाए गए हैं।\nआप इनवॉइस डाउनलोड कर सकते हैं या उसी पते पर दोबारा ऑर्डर कर सकते हैं।"
+                    android:textSize="12sp"
+                    android:textColor="#333399"/>
+
+                <ImageView
+                    android:id="@+id/btnDismissBanner"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    android:padding="2dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <!-- ================= RECYCLER VIEW ================= -->
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvBookings"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:clipToPadding="false"
-            android:paddingTop="12dp"
-            android:paddingBottom="16dp"
-            app:layout_constraintTop_toBottomOf="@id/tabs_card"
+            app:layout_constraintTop_toBottomOf="@id/infoBannerCard"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <!-- ================= EMPTY STATE ================= -->
-
         <ImageView
             android:id="@+id/illustration_image"
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:src="@drawable/flate_no_history_illustration"
             android:visibility="gone"
-            android:contentDescription="@string/no_orders_illustration"
-            app:layout_constraintTop_toBottomOf="@id/tabs_card"
+            android:contentDescription="No orders"
+            app:layout_constraintTop_toBottomOf="@id/infoBannerCard"
             app:layout_constraintBottom_toTopOf="@id/text_no_history"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -106,8 +217,8 @@
             android:id="@+id/text_no_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no_order_history_yet"
-            android:textColor="@color/textColorPrimary"
+            android:text="No Order History Yet"
+            android:textColor="#222222"
             android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="gone"
@@ -120,8 +231,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/your_past_ongoing_orders_will_appear_right_here"
-            android:textColor="@color/textColorSecondary"
+            android:text="Your past &amp; ongoing orders will appear right here"
+            android:textColor="#888888"
             android:textSize="14sp"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/text_no_history"

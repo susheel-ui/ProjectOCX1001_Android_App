@@ -7,13 +7,9 @@ import com.google.android.libraries.places.api.Places
 class MyApp : Application() {
 
     companion object {
-        // Global application context for Retrofit / SharedPreferences
         lateinit var appContext: Application
             private set
     }
-
-    // Global ViewModel instance (your previous code)
-    val vm: LocationViewModel by lazy { LocationViewModel() }
 
     override fun onCreate() {
         super.onCreate()
@@ -24,7 +20,6 @@ class MyApp : Application() {
             AppCompatDelegate.MODE_NIGHT_NO
         )
 
-        // ✅ INITIALIZE GOOGLE PLACES ONCE (FIX)
         if (!Places.isInitialized()) {
             Places.initialize(
                 applicationContext,

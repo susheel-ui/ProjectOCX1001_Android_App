@@ -2,19 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F4F7FA">
 
-    <!-- Scooter Image Container (FIXED) -->
+    <!-- ===== LOGO ===== -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/iv_scooter_container"
-        android:layout_width="145dp"
-        android:layout_height="72dp"
-        android:layout_marginTop="64dp"
-        app:cardCornerRadius="18dp"
-        app:cardElevation="0dp"
+        android:layout_width="130dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="28dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
         app:cardBackgroundColor="@color/color_primary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,281 +27,497 @@
             android:src="@drawable/zarkit_bgyellow"/>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Title -->
+    <!-- ===== TITLE ===== -->
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="Searching for the best\ndriver..."
+        android:text="Searching for the best driver..."
         android:textColor="#1A1C1E"
-        android:textSize="22sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/iv_scooter_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Subtitle -->
+    <!-- ===== SUBTITLE ===== -->
     <TextView
         android:id="@+id/tv_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="3dp"
         android:text="Connecting you with nearby partners"
         android:textColor="#6C757D"
-        android:textSize="14sp"
+        android:textSize="12sp"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Vehicle Info -->
-    <TextView
-        android:id="@+id/vehicleInfo"
-        android:layout_width="wrap_content"
+    <!-- ===== BOTTOM FIXED SECTION ===== -->
+    <LinearLayout
+        android:id="@+id/bottomSection"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Matching driver"
-        android:textColor="#495057"
-        android:textSize="15sp"
-        app:layout_constraintTop_toBottomOf="@id/tv_subtitle"
+        android:orientation="vertical"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_marginTop="24dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="6dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/tv_subtitle">
+        <!-- CREATING RIDE CARD -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/creatingRideCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#FFF8E1">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/color_primary">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/zarkit_bgyellow"
+                        android:scaleType="centerCrop"/>
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/vehicleInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:text="Creating ride..."
+                    android:textColor="#1A1C1E"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:indeterminateTint="#FFB800"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- CANCEL TRIP CARD -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cancelTripCard"
+            android:layout_marginBottom="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@android:color/white">
+
+            <TextView
+                android:id="@+id/cancelTrip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="14dp"
+                android:gravity="center"
+                android:text="✕   Cancel Trip"
+                android:textColor="#EF4444"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"/>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <!-- ===== MIDDLE SECTION (no scroll needed) ===== -->
+    <LinearLayout
+        android:id="@+id/scrollMiddle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/tv_subtitle"
+        app:layout_constraintBottom_toTopOf="@id/bottomSection"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- ===== RADAR ===== -->
+        <FrameLayout
+            android:id="@+id/radarFrame"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp">
+
+            <!-- OUTER RING -->
+            <View
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_radar_ring_outer"/>
+
+            <!-- MIDDLE RING -->
+            <View
+                android:layout_width="124dp"
+                android:layout_height="124dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_radar_ring_middle"/>
+
+            <!-- INNER RING -->
+            <View
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_radar_ring_inner"/>
+
+            <!-- CENTER VEHICLE -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="28dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="#FFD700"
+                app:strokeColor="#F5C000"
+                app:strokeWidth="2dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/zarkitgroup"
+                    android:scaleType="centerCrop"
+                    android:padding="4dp"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- YELLOW DOT LEFT -->
+            <View
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginStart="44dp"
+                android:background="@drawable/bg_yellow_dot"/>
+
+            <!-- YELLOW DOT RIGHT -->
+            <View
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginEnd="44dp"
+                android:background="@drawable/bg_yellow_dot"/>
+
+            <!-- GREEN DOT TOP -->
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_driver_dot"
+                android:src="@android:drawable/ic_menu_myplaces"
+                android:padding="5dp"
+                android:tint="#FFFFFF"/>
+
+            <!-- GREEN DOT LEFT -->
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginStart="2dp"
+                android:background="@drawable/bg_driver_dot"
+                android:src="@android:drawable/ic_menu_myplaces"
+                android:padding="5dp"
+                android:tint="#FFFFFF"/>
+
+            <!-- GREEN DOT RIGHT -->
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/bg_driver_dot"
+                android:src="@android:drawable/ic_menu_myplaces"
+                android:padding="5dp"
+                android:tint="#FFFFFF"/>
+
+            <!-- GREEN DOT BOTTOM LEFT -->
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="bottom|start"
+                android:layout_marginStart="24dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_driver_dot"
+                android:src="@android:drawable/ic_menu_myplaces"
+                android:padding="5dp"
+                android:tint="#FFFFFF"/>
+
+            <!-- GREEN DOT BOTTOM RIGHT -->
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_driver_dot"
+                android:src="@android:drawable/ic_menu_myplaces"
+                android:padding="5dp"
+                android:tint="#FFFFFF"/>
+
+        </FrameLayout>
+
+        <!-- ===== DETAILS CARD ===== -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@android:color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <!-- PICKUP ROW -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_location_on_green"/>
+
+                        <View
+                            android:layout_width="2dp"
+                            android:layout_height="22dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
+                            android:background="@drawable/dashed_line_vertical"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="PICKUP"
+                            android:textColor="#1DB954"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.08"/>
+
+                        <TextView
+                            android:id="@+id/pickupInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:text="FH5G+6J6, Jhokan Bagh"
+                            android:textColor="#1A1C1E"
+                            android:textSize="13sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- DROP ROW -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_location_on_red"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="DROP-OFF"
+                            android:textColor="#FF3B30"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.08"/>
+
+                        <TextView
+                            android:id="@+id/dropInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:text="928, Kabir Nagar"
+                            android:textColor="#1A1C1E"
+                            android:textSize="13sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- DIVIDER -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#F1F5F9"/>
+
+                <!-- PAYMENT + FARE ROW -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_payment"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/wlt"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Payment Method"
+                            android:textColor="#A0AABF"
+                            android:textSize="11sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cash"
+                            android:textColor="#1A1C1E"
+                            android:textSize="14sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="end">
+
+                        <TextView
+                            android:id="@+id/lbl_fare"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Estimated Fare"
+                            android:textColor="#A0AABF"
+                            android:textSize="11sp"/>
+
+                        <TextView
+                            android:id="@+id/cash"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹0.00"
+                            android:textColor="#3B82F6"
+                            android:textSize="18sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- ===== VIEW DETAILS + SUPPORT ===== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:orientation="horizontal"
+            android:layout_marginTop="2dp">
 
-            <!-- Pickup -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/btn_view_details"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingStart="20dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="☰  View Details  ›"
+                android:textColor="#3B82F6"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
 
-                <View
-                    android:id="@+id/dot_pickup"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_marginTop="6dp"
-                    android:background="@drawable/ic_location_on_green"/>
-
-                <TextView
-                    android:id="@+id/lbl_pickup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_toEndOf="@id/dot_pickup"
-                    android:text="PICKUP"
-                    android:textColor="#A0AABF"
-                    android:textSize="11sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/pickupInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/lbl_pickup"
-                    android:layout_marginStart="12dp"
-                    android:layout_toEndOf="@id/dot_pickup"
-                    android:text="123 Silicon Valley, Tech Hub"
-                    android:textColor="#1A1C1E"
-                    android:textSize="15sp"
-                    android:textStyle="bold"/>
-            </RelativeLayout>
-
-            <!-- Vertical Connector -->
-            <View
-                android:layout_width="1dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="4.5dp"
-                android:background="#E5E7EB"/>
-
-            <!-- Drop -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <View
-                    android:id="@+id/dot_dropoff"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_marginTop="6dp"
-                    android:background="@drawable/ic_location_on_red"/>
-
-                <TextView
-                    android:id="@+id/lbl_dropoff"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_toEndOf="@id/dot_dropoff"
-                    android:text="DROP-OFF"
-                    android:textColor="#A0AABF"
-                    android:textSize="11sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/dropInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/lbl_dropoff"
-                    android:layout_marginStart="12dp"
-                    android:layout_toEndOf="@id/dot_dropoff"
-                    android:text="789 Innovation Park, Design City"
-                    android:textColor="#1A1C1E"
-                    android:textSize="15sp"
-                    android:textStyle="bold"/>
-            </RelativeLayout>
-
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="20dp"
-                android:background="#F1F5F9"/>
-
-            <!-- Payment & Fare -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/btn_support"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless">
 
                 <ImageView
-                    android:id="@+id/iv_payment"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/wlt"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <TextView
-                    android:id="@+id/lbl_payment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:text="Payment Method"
-                    android:textColor="#A0AABF"
-                    android:textSize="12sp"
-                    app:layout_constraintStart_toEndOf="@id/iv_payment"
-                    app:layout_constraintTop_toTopOf="@id/iv_payment"/>
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/support"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cash"
-                    android:textColor="#1A1C1E"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@id/lbl_payment"
-                    app:layout_constraintTop_toBottomOf="@id/lbl_payment"/>
-
-                <TextView
-                    android:id="@+id/lbl_fare"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Estimated Fare"
-                    android:textColor="#A0AABF"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/iv_payment"/>
-
-                <TextView
-                    android:id="@+id/cash"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="₹249"
-                    android:textColor="#3B82F6"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lbl_fare"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
+                    android:layout_marginStart="5dp"
+                    android:text="Support  ›"
+                    android:textColor="#495057"
+                    android:textSize="13sp"/>
+            </LinearLayout>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
 
-    <!-- View Details -->
-    <TextView
-        android:id="@+id/btn_view_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_marginTop="20dp"
-        android:text="View Details"
-        android:textColor="#3B82F6"
-        android:textStyle="bold"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintTop_toBottomOf="@id/cv_details"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <!-- Support -->
-    <LinearLayout
-        android:id="@+id/btn_support"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp"
-        android:layout_marginEnd="8dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintTop_toTopOf="@id/btn_view_details"
-        app:layout_constraintBottom_toBottomOf="@id/btn_view_details"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/support"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:text="Support"
-            android:textColor="#495057"
-            android:textSize="14sp"/>
     </LinearLayout>
-
-
-    <!-- Loader -->
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="24dp"
-        android:indeterminateDrawable="@drawable/progress_colors"
-        app:layout_constraintBottom_toTopOf="@id/cancelTrip"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Cancel -->
-    <TextView
-        android:id="@+id/cancelTrip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="76dp"
-        android:text="Cancel Trip"
-        android:textColor="#EF4444"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

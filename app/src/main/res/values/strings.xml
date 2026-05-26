@@ -44,6 +44,20 @@
     <string name="goods_type">GOODS TYPE</string>
     <string name="scooter">Scooter</string>
 
+    <string name="tooltip_text">
+    जहाँ से सामान उठाना है, उस जगह का
+    <font color="#2E7D32"><b>पूरा पता</b></font>,
+    <font color="#1565C0"><b>नाम</b></font> और
+    <font color="#6A1B9A"><b>मोबाइल नंबर</b></font> भरें।
+</string>
+
+    <string name="tooltip_text_rev">
+    जहाँ सामान पहुँचाना है, उस जगह का
+    <font color="#D32F2F"><b>पूरा पता</b></font>,
+    <font color="#1565C0"><b>नाम</b></font> और
+    <font color="#6A1B9A"><b>मोबाइल नंबर</b></font> भरें।
+</string>
+
     <string name="view_address_details"><![CDATA[View Address Details >]]></string>
 
     <!-- ✅ No Internet Bottom Sheet -->

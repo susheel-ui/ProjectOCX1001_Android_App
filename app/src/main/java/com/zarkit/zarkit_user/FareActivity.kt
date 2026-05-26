@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -19,6 +19,7 @@ import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.view.ViewGroup
 
 class FareActivity : BaseActivity() {
 
@@ -48,13 +49,10 @@ class FareActivity : BaseActivity() {
 
     private lateinit var proceedBtn: Button
 
-    private val vm by lazy { (application as MyApp).vm }
-
     private var selectedVehicle = ""
     private var finalKm = 0.0
 
     private val fareMap = HashMap<String, Double>()
-
     private var selectedCard: CardView? = null
 
     // ================= LIFECYCLE =================
@@ -62,23 +60,19 @@ class FareActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_fare)
-        // ✅ HANDLE SYSTEM BARS (STATUS + NAV BAR)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.setPadding(
-                systemBars.left,
-                systemBars.top,
-                systemBars.right,
-                systemBars.bottom
-            )
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-
         bindViews()
-        findViewById<ImageView>(R.id.backBtn).setOnClickListener {
+
+        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
         setLocationInfo()
         setupClickListeners()
 
@@ -89,47 +83,43 @@ class FareActivity : BaseActivity() {
 
     // ================= VIEW BINDING =================
     private fun bindViews() {
-        pickupText = findViewById(R.id.pickupText)
-        dropText = findViewById(R.id.dropText)
-        bikeEvCard = findViewById(R.id.vehicleBikeEv)
-        bikePetrolCard = findViewById(R.id.vehicleBikePetrol)
-        loaderEvCard = findViewById(R.id.vehicleLoaderEv)
-        loaderPetrolCard = findViewById(R.id.vehicleLoaderPetrol)
-        loaderCngCard = findViewById(R.id.vehicleLoaderCng)
-        truckEvCard = findViewById(R.id.vehicleTruckEv)
+        pickupText      = findViewById(R.id.pickupText)
+        dropText        = findViewById(R.id.dropText)
+        bikeEvCard      = findViewById(R.id.vehicleBikeEv)
+        bikePetrolCard  = findViewById(R.id.vehicleBikePetrol)
+        loaderEvCard    = findViewById(R.id.vehicleLoaderEv)
+        loaderPetrolCard= findViewById(R.id.vehicleLoaderPetrol)
+        loaderCngCard   = findViewById(R.id.vehicleLoaderCng)
+        truckEvCard     = findViewById(R.id.vehicleTruckEv)
         truckPetrolCard = findViewById(R.id.vehicleTruckPetrol)
-        truckCngCard = findViewById(R.id.vehicleTruckCng)
-        bikeEvFare = findViewById(R.id.bikeEvFareText)
-        bikePetrolFare = findViewById(R.id.bikePetrolFareText)
-        loaderEvFare = findViewById(R.id.loaderEvFareText)
-        loaderPetrolFare = findViewById(R.id.loaderPetrolFareText)
-        loaderCngFare = findViewById(R.id.loaderCngFareText)
-        truckEvFare = findViewById(R.id.truckEvFareText)
+        truckCngCard    = findViewById(R.id.vehicleTruckCng)
+        bikeEvFare      = findViewById(R.id.bikeEvFareText)
+        bikePetrolFare  = findViewById(R.id.bikePetrolFareText)
+        loaderEvFare    = findViewById(R.id.loaderEvFareText)
+        loaderPetrolFare= findViewById(R.id.loaderPetrolFareText)
+        loaderCngFare   = findViewById(R.id.loaderCngFareText)
+        truckEvFare     = findViewById(R.id.truckEvFareText)
         truckPetrolFare = findViewById(R.id.truckPetrolFareText)
-        truckCngFare = findViewById(R.id.truckCngFareText)
-        proceedBtn = findViewById(R.id.proceedBtn)
+        truckCngFare    = findViewById(R.id.truckCngFareText)
+        proceedBtn      = findViewById(R.id.proceedBtn)
     }
 
     // ================= LOCATION INFO =================
     private fun setLocationInfo() {
-        pickupText.text = vm.pickupAddress
-        dropText.text = vm.dropAddress
+        pickupText.text = LocalStorage.getPickupAddress(this)
+        dropText.text   = LocalStorage.getDropAddress(this)
+
+        val distanceValue = LocalStorage.getDistanceValue(this)
+        val distanceText  = LocalStorage.getDistanceText(this)
 
         finalKm = when {
-            vm.distanceValue > 0 -> {
-                vm.distanceValue / 1000.0
-            }
-
-            vm.distanceText.isNotEmpty() -> {
-                extractKmFromText(vm.distanceText)
-            }
-
+            distanceValue > 0 -> distanceValue / 1000.0
+            distanceText.isNotEmpty() -> extractKmFromText(distanceText)
             else -> 0.0
         }
 
         Log.d("FARE_DEBUG", "Distance KM = $finalKm")
     }
-
 
     private fun extractKmFromText(text: String): Double {
         return try {
@@ -170,98 +160,92 @@ class FareActivity : BaseActivity() {
     private fun applyApiResponse(list: List<JsonObject>) {
 
         val cardMap = mapOf(
-            "TWO_WHEELER_EV" to Pair(bikeEvCard, bikeEvFare),
-            "TWO_WHEELER_PETROL" to Pair(bikePetrolCard, bikePetrolFare),
-            "THREE_WHEELER_EV" to Pair(loaderEvCard, loaderEvFare),
+            "TWO_WHEELER_EV"       to Pair(bikeEvCard,       bikeEvFare),
+            "TWO_WHEELER_PETROL"   to Pair(bikePetrolCard,   bikePetrolFare),
+            "THREE_WHEELER_EV"     to Pair(loaderEvCard,     loaderEvFare),
             "THREE_WHEELER_PETROL" to Pair(loaderPetrolCard, loaderPetrolFare),
-            "THREE_WHEELER_CNG" to Pair(loaderCngCard, loaderCngFare),
-            "FOUR_WHEELER_EV" to Pair(truckEvCard, truckEvFare),
-            "FOUR_WHEELER_PETROL" to Pair(truckPetrolCard, truckPetrolFare),
-            "FOUR_WHEELER_CNG" to Pair(truckCngCard, truckCngFare)
+            "THREE_WHEELER_CNG"    to Pair(loaderCngCard,    loaderCngFare),
+            "FOUR_WHEELER_EV"      to Pair(truckEvCard,      truckEvFare),
+            "FOUR_WHEELER_PETROL"  to Pair(truckPetrolCard,  truckPetrolFare),
+            "FOUR_WHEELER_CNG"     to Pair(truckCngCard,     truckCngFare)
         )
 
-        // ✅ SORT AVAILABLE FIRST
         val sortedList = list.sortedByDescending {
             it["availability"]?.asBoolean ?: false
         }
 
         sortedList.forEach { obj ->
 
-            val vehicle = obj["vehicleInfo"]?.asString ?: return@forEach
-            val fare = obj["totalFare"]?.asDouble ?: 0.0
+            val vehicle      = obj["vehicleInfo"]?.asString ?: return@forEach
+            val fare         = obj["totalFare"]?.asDouble ?: 0.0
             val availability = obj["availability"]?.asBoolean ?: false
 
-            cardMap[vehicle]?.let { pair ->
+            cardMap[vehicle]?.let { (card, fareText) ->
 
-                val card = pair.first
-                val fareText = pair.second
+                val cardContainer = card.parent as? ViewGroup
+                val listContainer = cardContainer?.parent as? LinearLayout
 
-                // ✅ REMOVE CARD FROM OLD POSITION
-                val parent = card.parent as LinearLayout
-                parent.removeView(card)
-
-                // ✅ ADD AGAIN -> AVAILABLE WILL COME FIRST
-                parent.addView(card)
+                listContainer?.removeView(cardContainer)
+                listContainer?.addView(cardContainer)
 
                 card.visibility = View.VISIBLE
 
                 if (availability) {
-
                     fareMap[vehicle] = fare
-
                     fareText.text = "₹${fare.toInt()}"
                     fareText.setTextColor(Color.BLACK)
-
                     card.alpha = 1f
                     card.isEnabled = true
                     card.isClickable = true
                     card.setCardBackgroundColor(Color.WHITE)
-
                 } else {
-
                     fareMap.remove(vehicle)
-
                     fareText.text = "Not Available"
                     fareText.setTextColor(Color.BLACK)
-
                     card.alpha = 0.45f
                     card.isEnabled = false
                     card.isClickable = false
-                    card.setCardBackgroundColor(Color.parseColor("#E0E0E0"))
+                    card.setCardBackgroundColor(Color.parseColor("#FFF8E1"))
                 }
             }
         }
     }
+
     // ================= PORTER STYLE CLICK =================
     private fun setupClickListeners() {
 
-        setPorterClick(bikeEvCard, "TWO_WHEELER_EV")
-        setPorterClick(bikePetrolCard, "TWO_WHEELER_PETROL")
-        setPorterClick(loaderEvCard, "THREE_WHEELER_EV")
+        setPorterClick(bikeEvCard,       "TWO_WHEELER_EV")
+        setPorterClick(bikePetrolCard,   "TWO_WHEELER_PETROL")
+        setPorterClick(loaderEvCard,     "THREE_WHEELER_EV")
         setPorterClick(loaderPetrolCard, "THREE_WHEELER_PETROL")
-        setPorterClick(loaderCngCard, "THREE_WHEELER_CNG")
-        setPorterClick(truckEvCard, "FOUR_WHEELER_EV")
-        setPorterClick(truckPetrolCard, "FOUR_WHEELER_PETROL")
-        setPorterClick(truckCngCard, "FOUR_WHEELER_CNG")
+        setPorterClick(loaderCngCard,    "THREE_WHEELER_CNG")
+        setPorterClick(truckEvCard,      "FOUR_WHEELER_EV")
+        setPorterClick(truckPetrolCard,  "FOUR_WHEELER_PETROL")
+        setPorterClick(truckCngCard,     "FOUR_WHEELER_CNG")
 
         proceedBtn.setOnClickListener {
             if (selectedVehicle.isEmpty()) return@setOnClickListener
-            vm.selectedVehicle = selectedVehicle
-            vm.finalFare = fareMap[selectedVehicle] ?: 0.0
+
+            LocalStorage.saveFareDetails(
+                this,
+                vehicle   = selectedVehicle,
+                fare      = fareMap[selectedVehicle] ?: 0.0,
+                goodsType = LocalStorage.getGoodsType(this)   // preserve existing goodsType
+            )
+
             startActivity(Intent(this, FinalFareActivity::class.java))
         }
     }
 
     private fun setPorterClick(card: CardView, type: String) {
         card.setOnClickListener {
-            if (!fareMap.containsKey(type)) {
-                return@setOnClickListener
-            }
+            if (!fareMap.containsKey(type)) return@setOnClickListener
+
             if (selectedVehicle == type) {
                 VehicleInfoDialog.show(
-                    context = this,
+                    context     = this,
                     vehicleType = type,
-                    fare = fareMap[type] ?: 0.0
+                    fare        = fareMap[type] ?: 0.0
                 )
             } else {
                 selectVehicle(card, type)
@@ -274,16 +258,11 @@ class FareActivity : BaseActivity() {
 
         selectedCard?.let { resetCard(it) }
 
-        card.animate()
-            .scaleX(1.08f)
-            .scaleY(1.08f)
-            .setDuration(200)
-            .start()
-
+        card.animate().scaleX(1.08f).scaleY(1.08f).setDuration(200).start()
         card.cardElevation = 18f
-        card.setCardBackgroundColor(Color.parseColor("#E6F0FF"))
+        card.setCardBackgroundColor(Color.parseColor("#FFF8E1"))  // ← Yellow
 
-        selectedCard = card
+        selectedCard    = card
         selectedVehicle = type
 
         proceedBtn.isEnabled = true
@@ -291,12 +270,7 @@ class FareActivity : BaseActivity() {
     }
 
     private fun resetCard(card: CardView) {
-        card.animate()
-            .scaleX(1f)
-            .scaleY(1f)
-            .setDuration(200)
-            .start()
-
+        card.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
         card.cardElevation = 4f
         card.setCardBackgroundColor(Color.WHITE)
     }
@@ -311,41 +285,16 @@ class FareActivity : BaseActivity() {
     }
 
     private fun formatVehicleText(type: String): String {
-
         return when (type) {
-
-            // ================= 2W =================
-
-            "TWO_WHEELER_EV" ->
-                "2 Wheeler EV"
-
-            "TWO_WHEELER_PETROL" ->
-                "2 Wheeler Petrol/Diesel"
-
-            // ================= 3W =================
-
-            "THREE_WHEELER_EV" ->
-                "AUTO"
-
-            "THREE_WHEELER_PETROL" ->
-                "3 Wheeler Petrol/Diesel"
-
-            "THREE_WHEELER_CNG" ->
-                "3 Wheeler CNG"
-
-            // ================= TRUCK =================
-
-            "FOUR_WHEELER_EV" ->
-                "Truck 8ft"
-
-            "FOUR_WHEELER_PETROL" ->
-                "Truck 10ft"
-
-            "FOUR_WHEELER_CNG" ->
-                "Truck 12ft"
-
+            "TWO_WHEELER_EV"       -> "2 Wheeler EV"
+            "TWO_WHEELER_PETROL"   -> "2 Wheeler Petrol/Diesel"
+            "THREE_WHEELER_EV"     -> "AUTO"
+            "THREE_WHEELER_PETROL" -> "3 Wheeler Petrol/Diesel"
+            "THREE_WHEELER_CNG"    -> "3 Wheeler CNG"
+            "FOUR_WHEELER_EV"      -> "Truck 8ft"
+            "FOUR_WHEELER_PETROL"  -> "Truck 10ft"
+            "FOUR_WHEELER_CNG"     -> "Truck 12ft"
             else -> type
         }
     }
-
 }

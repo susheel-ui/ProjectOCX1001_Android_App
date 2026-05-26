@@ -20,8 +20,6 @@ import retrofit2.Response
 
 class FinalFareActivity : BaseActivity() {
 
-    private lateinit var vm: LocationViewModel
-
     private lateinit var btnChange: TextView
     private lateinit var goodsTypeText: TextView
     private var savedGstNumber: String = ""
@@ -37,157 +35,109 @@ class FinalFareActivity : BaseActivity() {
             insets
         }
 
-        vm = (application as MyApp).vm
+        // ── Rules — item_rule ke andar ruleText TextView hai ──
+        findViewById<LinearLayout>(R.id.rule1).findViewById<TextView>(R.id.ruleText).text = "No fragile items allowed"
+        findViewById<LinearLayout>(R.id.rule2).findViewById<TextView>(R.id.ruleText).text = "Maximum weight limit depends on the vehicle"
+        findViewById<LinearLayout>(R.id.rule3).findViewById<TextView>(R.id.ruleText).text = "Ensure proper packaging"
+        findViewById<LinearLayout>(R.id.rule4).findViewById<TextView>(R.id.ruleText).text = "Delivery within 24 hours"
+        findViewById<LinearLayout>(R.id.rule5).findViewById<TextView>(R.id.ruleText).text = "Driver not responsible for loss of valuables"
+        findViewById<LinearLayout>(R.id.rule6).findViewById<TextView>(R.id.ruleText).text = "Payment must be made before pickup"
+        findViewById<LinearLayout>(R.id.rule7).findViewById<TextView>(R.id.ruleText).text = "Follow all traffic rules"
 
-        val rule1 = findViewById<TextView>(R.id.rule1)
-        val rule2 = findViewById<TextView>(R.id.rule2)
-        val rule3 = findViewById<TextView>(R.id.rule3)
-        val rule4 = findViewById<TextView>(R.id.rule4)
-        val rule5 = findViewById<TextView>(R.id.rule5)
-        val rule6 = findViewById<TextView>(R.id.rule6)
-        val rule7 = findViewById<TextView>(R.id.rule7)
-
-        rule1.text = "\u2022 No fragile items allowed"
-        rule2.text = "\u2022 Maximum weight limit depends on the vehicle."
-        rule3.text = "\u2022 Ensure proper packaging"
-        rule4.text = "\u2022 Delivery within 24 hours"
-        rule5.text = "\u2022 Driver not responsible for loss of valuables"
-        rule6.text = "\u2022 Payment must be made before pickup"
-        rule7.text = "\u2022 Follow all traffic rules"
-
-        val addressDetails = findViewById<TextView>(R.id.addressDetails)
-
-        addressDetails.setOnClickListener {
-            openAddressDetailsPopup()
-        }
-
-        val btnBack = findViewById<ImageView>(R.id.btnBack)
-
-        btnBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
-
-        val vehicleImage = findViewById<ImageView>(R.id.vehicleImage)
-        val vehicleName = findViewById<TextView>(R.id.vehicleName)
-        val finalFareText = findViewById<TextView>(R.id.finalFareText)
-        val paymentFare = findViewById<TextView>(R.id.paymentFare)
+        val addressDetails    = findViewById<TextView>(R.id.addressDetails)
+        val btnBack           = findViewById<ImageView>(R.id.btnBack)
+        val vehicleImage      = findViewById<ImageView>(R.id.vehicleImage)
+        val vehicleName       = findViewById<TextView>(R.id.vehicleName)
+        val finalFareText     = findViewById<TextView>(R.id.finalFareText)
+        val paymentFare       = findViewById<TextView>(R.id.paymentFare)
         val fareDetailsLayout = findViewById<LinearLayout>(R.id.fareDetailsLayout)
-        val bookButton = findViewById<Button>(R.id.bookNowButton)
+        val bookButton        = findViewById<Button>(R.id.bookNowButton)
+        val btnAddGstTop      = findViewById<TextView>(R.id.btnAddGstTop)
+        val btnViewList       = findViewById<TextView>(R.id.btnViewList)
 
-        // ✅ ADD GST TOP BUTTON
-        val btnAddGstTop = findViewById<TextView>(R.id.btnAddGstTop)
+        goodsTypeText = findViewById(R.id.goodsType)
+        btnChange     = findViewById(R.id.btnChange)
 
-        btnAddGstTop.setOnClickListener {
-            openGstDetailsBottomSheet(btnAddGstTop)
-        }
+        // ── Back button ──
+        btnBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
-        val btnViewList = findViewById<TextView>(R.id.btnViewList)
+        // ── Address Details ──
+        addressDetails.setOnClickListener { openAddressDetailsPopup() }
 
+        // ── GST button ──
+        btnAddGstTop.setOnClickListener { openGstDetailsBottomSheet(btnAddGstTop) }
+
+        // ── Restricted items ──
         btnViewList.setOnClickListener {
             val dialog = BottomSheetDialog(this)
-            val sheetView = layoutInflater.inflate(
-                R.layout.bottom_sheet_restricted_items,
-                null
-            )
-
-            sheetView.findViewById<TextView>(R.id.btnCancel)
-                .setOnClickListener {
-                    dialog.dismiss()
-                }
-
-            sheetView.findViewById<Button>(R.id.btnOkUnderstood)
-                .setOnClickListener {
-                    dialog.dismiss()
-                }
-
+            val sheetView = layoutInflater.inflate(R.layout.bottom_sheet_restricted_items, null)
+            sheetView.findViewById<TextView>(R.id.btnCancel).setOnClickListener { dialog.dismiss() }
+            sheetView.findViewById<Button>(R.id.btnOkUnderstood).setOnClickListener { dialog.dismiss() }
             dialog.setContentView(sheetView)
             dialog.show()
         }
 
-        goodsTypeText = findViewById(R.id.goodsType)
-        btnChange = findViewById(R.id.btnChange)
-
-        if (vm.goodsType.isEmpty()) {
-            vm.goodsType = "General • Loose"
+        // ── Goods type default ──
+        if (LocalStorage.getGoodsType(this).isEmpty()) {
+            LocalStorage.saveFareDetails(
+                this,
+                vehicle   = LocalStorage.getSelectedVehicle(this),
+                fare      = LocalStorage.getFinalFare(this),
+                goodsType = "General • Loose"
+            )
         }
+        goodsTypeText.text = LocalStorage.getGoodsType(this)
+        btnChange.setOnClickListener { openGoodsTypeBottomSheet() }
 
-        goodsTypeText.text = vm.goodsType
-
-        btnChange.setOnClickListener {
-            openGoodsTypeBottomSheet()
-        }
-
-        val totalFare = vm.finalFare
-
-        val baseFare = totalFare / 1.18
+        // ── Fare display ──
+        val totalFare = LocalStorage.getFinalFare(this)
+        val baseFare  = totalFare / 1.18
         val gstAmount = totalFare - baseFare
 
-        paymentFare.text = "₹${String.format("%.2f", totalFare)}"
         finalFareText.text = "₹${String.format("%.2f", totalFare)}"
+        paymentFare.text   = "₹${String.format("%.2f", totalFare)}"
 
+        // ── Price breakdown bottom sheet ──
         fareDetailsLayout.setOnClickListener {
-
             val dialog = BottomSheetDialog(this)
-            val view = layoutInflater.inflate(
-                R.layout.bottom_sheet_price_breakdown,
-                null
-            )
-
-            val tvBaseFare = view.findViewById<TextView>(R.id.tvBaseFare)
-            val tvGstAmount = view.findViewById<TextView>(R.id.tvGstAmount)
-            val tvTotalFare = view.findViewById<TextView>(R.id.tvTotalFare)
-            val btnClose = view.findViewById<Button>(R.id.btnClosePriceBreakdown)
-
-            tvBaseFare.text = "₹${String.format("%.2f", baseFare)}"
-            tvGstAmount.text = "₹${String.format("%.2f", gstAmount)}"
-            tvTotalFare.text = "₹${String.format("%.2f", totalFare)}"
-
-            btnClose.setOnClickListener {
-                dialog.dismiss()
-            }
-
+            val view   = layoutInflater.inflate(R.layout.bottom_sheet_price_breakdown, null)
+            view.findViewById<TextView>(R.id.tvBaseFare).text  = "₹${String.format("%.2f", baseFare)}"
+            view.findViewById<TextView>(R.id.tvGstAmount).text = "₹${String.format("%.2f", gstAmount)}"
+            view.findViewById<TextView>(R.id.tvTotalFare).text = "₹${String.format("%.2f", totalFare)}"
+            view.findViewById<Button>(R.id.btnClosePriceBreakdown).setOnClickListener { dialog.dismiss() }
             dialog.setContentView(view)
             dialog.show()
         }
 
-        when (vm.selectedVehicle) {
-
+        // ── Vehicle image ──
+        when (LocalStorage.getSelectedVehicle(this)) {
             "TWO_WHEELER_EV", "TWO_WHEELER_PETROL" -> {
                 vehicleImage.setImageResource(R.drawable.v2w)
                 vehicleName.text = "2 Wheeler"
             }
-
-            "THREE_WHEELER_EV",
-            "THREE_WHEELER_PETROL",
-            "THREE_WHEELER_CNG" -> {
+            "THREE_WHEELER_EV", "THREE_WHEELER_PETROL", "THREE_WHEELER_CNG" -> {
                 vehicleImage.setImageResource(R.drawable.v3w)
                 vehicleName.text = "3 Wheeler"
             }
-
-            "FOUR_WHEELER_CNG",
-            "FOUR_WHEELER_EV",
-            "FOUR_WHEELER_PETROL" -> {
+            "FOUR_WHEELER_CNG", "FOUR_WHEELER_EV", "FOUR_WHEELER_PETROL" -> {
                 vehicleImage.setImageResource(R.drawable.v4w)
                 vehicleName.text = "Truck"
             }
-
             else -> {
                 vehicleImage.setImageResource(R.drawable.zarkitgroup)
                 vehicleName.text = "Vehicle"
             }
         }
 
+        // ── Book button ──
         bookButton.setOnClickListener {
 
             val activeRideId = LocalStorage.getActiveRideId(this)
-
             if (activeRideId > 0L) {
                 androidx.appcompat.app.AlertDialog.Builder(this)
                     .setTitle("Active Ride Found")
                     .setMessage("Please complete your current ride first before booking a new one.")
-                    .setPositiveButton("OK") { dialog, _ ->
-                        dialog.dismiss()
-                    }
+                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
                     .show()
                 return@setOnClickListener
             }
@@ -195,31 +145,26 @@ class FinalFareActivity : BaseActivity() {
             bookButton.isEnabled = false
 
             val createRideRequest = CreateRideRequest(
-                pickupLat = vm.pickupLat,
-                pickupLon = vm.pickupLon,
-                pickupAddress = vm.pickupAddress,
-
-                dropLat = vm.dropLat,
-                dropLon = vm.dropLon,
-                dropAddress = vm.dropAddress,
-
-                distanceText = vm.distanceText,
-                durationText = vm.durationText,
-                distanceValue = vm.distanceValue,
-                durationValue = vm.durationValue,
-
-                senderHouse = vm.senderHouse,
-                senderName = vm.senderName,
-                senderPhone = vm.senderPhone,
-                senderType = vm.senderType,
-
-                receiverHouse = vm.receiverHouse,
-                receiverName = vm.receiverName,
-                receiverPhone = vm.receiverPhone,
-                receiverType = vm.receiverType,
-
-                vehicleInfo = vm.selectedVehicle,
-                finalFare = vm.finalFare
+                pickupLat     = LocalStorage.getPickupLat(this),
+                pickupLon     = LocalStorage.getPickupLng(this),
+                pickupAddress = LocalStorage.getPickupAddress(this),
+                dropLat       = LocalStorage.getDropLat(this),
+                dropLon       = LocalStorage.getDropLng(this),
+                dropAddress   = LocalStorage.getDropAddress(this),
+                distanceText  = LocalStorage.getDistanceText(this),
+                durationText  = LocalStorage.getDurationText(this),
+                distanceValue = LocalStorage.getDistanceValue(this),
+                durationValue = LocalStorage.getDurationValue(this),
+                senderHouse   = LocalStorage.getSenderHouse(this),
+                senderName    = LocalStorage.getSenderName(this),
+                senderPhone   = LocalStorage.getSenderPhone(this),
+                senderType    = LocalStorage.getSenderType(this),
+                receiverHouse = LocalStorage.getReceiverHouse(this),
+                receiverName  = LocalStorage.getReceiverName(this),
+                receiverPhone = LocalStorage.getReceiverPhone(this),
+                receiverType  = LocalStorage.getReceiverType(this),
+                vehicleInfo   = LocalStorage.getSelectedVehicle(this),
+                finalFare     = LocalStorage.getFinalFare(this)
             )
 
             Toast.makeText(this, "Creating ride...", Toast.LENGTH_SHORT).show()
@@ -232,68 +177,33 @@ class FinalFareActivity : BaseActivity() {
                         response: Response<CreateRideResponse>
                     ) {
                         if (response.isSuccessful && response.body() != null) {
-
                             val ride = response.body()!!
-
-                            LocalStorage.saveActiveRideId(
-                                this@FinalFareActivity,
-                                ride.rideId
-                            )
-
-                            LocalStorage.savePickupLocation(
-                                this@FinalFareActivity,
-                                vm.pickupLat,
-                                vm.pickupLon
-                            )
-
-                            LocalStorage.saveDropLocation(
-                                this@FinalFareActivity,
-                                vm.dropLat,
-                                vm.dropLon
-                            )
-
+                            LocalStorage.saveActiveRideId(this@FinalFareActivity, ride.rideId)
                             sendNotification(ride.rideId)
-
-                            startActivity(
-                                Intent(
-                                    this@FinalFareActivity,
-                                    WaitingForApprovalActivity::class.java
-                                )
-                            )
+                            startActivity(Intent(this@FinalFareActivity, WaitingForApprovalActivity::class.java))
                             finish()
-
                         } else {
                             bookButton.isEnabled = true
-                            Toast.makeText(
-                                this@FinalFareActivity,
-                                "Ride creation failed",
-                                Toast.LENGTH_LONG
-                            ).show()
+                            Toast.makeText(this@FinalFareActivity, "Ride creation failed", Toast.LENGTH_LONG).show()
                         }
                     }
 
                     override fun onFailure(call: Call<CreateRideResponse>, t: Throwable) {
                         bookButton.isEnabled = true
-                        Toast.makeText(
-                            this@FinalFareActivity,
-                            "Network error: ${t.message}",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(this@FinalFareActivity, "Network error: ${t.message}", Toast.LENGTH_LONG).show()
                     }
                 })
         }
     }
 
-    private fun openGstDetailsBottomSheet(btnAddGstTop: TextView) {
+    // ================= GST BOTTOM SHEET =================
 
+    private fun openGstDetailsBottomSheet(btnAddGstTop: TextView) {
         val dialog = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(
-            R.layout.bottom_sheet_gst_details,
-            null
-        )
+        val view   = layoutInflater.inflate(R.layout.bottom_sheet_gst_details, null)
 
         val etGstNumber = view.findViewById<EditText>(R.id.etGstNumber)
-        val btnSaveGst = view.findViewById<Button>(R.id.btnSaveGst)
+        val btnSaveGst  = view.findViewById<Button>(R.id.btnSaveGst)
         val btnCloseGst = view.findViewById<Button>(R.id.btnCloseGst)
 
         if (savedGstNumber.isNotEmpty()) {
@@ -304,162 +214,109 @@ class FinalFareActivity : BaseActivity() {
         }
 
         btnSaveGst.setOnClickListener {
-
             val gst = etGstNumber.text.toString().trim().uppercase()
-
             if (gst.isEmpty()) {
                 etGstNumber.error = "Enter GST number"
                 return@setOnClickListener
             }
-
             val userId = LocalStorage.getUserId(this)
-
             if (userId == -1) {
-                Toast.makeText(
-                    this,
-                    "User not found. Please login again.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this, "User not found. Please login again.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
-            val body = mapOf(
-                "gstin" to gst
-            )
-
             btnSaveGst.isEnabled = false
-
-            ApiClient.api.updateUserPartial(userId, body)
+            ApiClient.api.updateUserPartial(userId, mapOf("gstin" to gst))
                 .enqueue(object : Callback<ResponseBody> {
-
-                    override fun onResponse(
-                        call: Call<ResponseBody>,
-                        response: Response<ResponseBody>
-                    ) {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         btnSaveGst.isEnabled = true
-
                         if (response.isSuccessful) {
-
                             savedGstNumber = gst
-
                             btnAddGstTop.text = "✓ GST Added"
                             btnAddGstTop.setBackgroundResource(R.drawable.bg_gst_added)
                             btnAddGstTop.setTextColor(android.graphics.Color.WHITE)
-
-                            Toast.makeText(
-                                this@FinalFareActivity,
-                                "GST saved successfully",
-                                Toast.LENGTH_SHORT
-                            ).show()
-
+                            Toast.makeText(this@FinalFareActivity, "GST saved successfully", Toast.LENGTH_SHORT).show()
                             dialog.dismiss()
-
                         } else {
-                            Toast.makeText(
-                                this@FinalFareActivity,
-                                "Failed: ${response.code()}",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(this@FinalFareActivity, "Failed: ${response.code()}", Toast.LENGTH_SHORT).show()
                         }
                     }
-
                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                         btnSaveGst.isEnabled = true
-
-                        Toast.makeText(
-                            this@FinalFareActivity,
-                            "Error: ${t.message}",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(this@FinalFareActivity, "Error: ${t.message}", Toast.LENGTH_LONG).show()
                     }
                 })
         }
 
-        btnCloseGst.setOnClickListener {
-            dialog.dismiss()
-        }
-
+        btnCloseGst.setOnClickListener { dialog.dismiss() }
         dialog.setContentView(view)
         dialog.show()
     }
+
+    // ================= ADDRESS POPUP =================
 
     private fun openAddressDetailsPopup() {
-
         val dialog = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(
-            R.layout.bottom_sheet_location_details,
-            null
-        )
-
-        val pickupText = view.findViewById<TextView>(R.id.tvPickupAddress)
-        val dropText = view.findViewById<TextView>(R.id.tvDropAddress)
-        val btnClose = view.findViewById<Button>(R.id.btnClose)
-
-        pickupText.text = vm.pickupAddress
-        dropText.text = vm.dropAddress
-
-        btnClose.setOnClickListener {
-            dialog.dismiss()
-        }
-
+        val view   = layoutInflater.inflate(R.layout.bottom_sheet_location_details, null)
+        view.findViewById<TextView>(R.id.tvPickupAddress).text = LocalStorage.getPickupAddress(this)
+        view.findViewById<TextView>(R.id.tvDropAddress).text   = LocalStorage.getDropAddress(this)
+        view.findViewById<Button>(R.id.btnClose).setOnClickListener { dialog.dismiss() }
         dialog.setContentView(view)
         dialog.show()
     }
 
-    private fun openGoodsTypeBottomSheet() {
+    // ================= GOODS TYPE =================
 
-        val dialog = BottomSheetDialog(this)
+    private fun openGoodsTypeBottomSheet() {
+        val dialog    = BottomSheetDialog(this)
         val sheetView = layoutInflater.inflate(R.layout.bottom_sheet_goods_type, null)
 
-        val optionGeneral = sheetView.findViewById<TextView>(R.id.optionGeneral)
-        val optionFragile = sheetView.findViewById<TextView>(R.id.optionFragile)
-        val optionElectronics = sheetView.findViewById<TextView>(R.id.optionElectronics)
-        val optionLogistics = sheetView.findViewById<TextView>(R.id.optionLogistics)
-        val optionMachines = sheetView.findViewById<TextView>(R.id.optionMachines)
-        val optionPharma = sheetView.findViewById<TextView>(R.id.optionPharma)
-        val optionPlastic = sheetView.findViewById<TextView>(R.id.optionPlastic)
-        val optionRubber = sheetView.findViewById<TextView>(R.id.optionRubber)
-        val optionTextile = sheetView.findViewById<TextView>(R.id.optionTextile)
-        val optionTimber = sheetView.findViewById<TextView>(R.id.optionTimber)
-        val optionBooks = sheetView.findViewById<TextView>(R.id.optionBooks)
+        val options = mapOf(
+            R.id.optionGeneral     to "General • Loose",
+            R.id.optionFragile     to "Fragile • Glass",
+            R.id.optionElectronics to "Electronics",
+            R.id.optionLogistics   to "Logistics Service Providers",
+            R.id.optionMachines    to "Machines / Equipments / Spare Parts",
+            R.id.optionPharma      to "Pharmaceutical / Healthcare Products",
+            R.id.optionPlastic     to "Plastic Products",
+            R.id.optionRubber      to "Rubber Products",
+            R.id.optionTextile     to "Textiles / Garments / Fashion / Accessories",
+            R.id.optionTimber      to "Timbers / Plywoods / Papers",
+            R.id.optionBooks       to "Books / Stationary / Gifts / Toys"
+        )
 
-        optionGeneral.setOnClickListener { updateGoods("General • Loose", dialog) }
-        optionFragile.setOnClickListener { updateGoods("Fragile • Glass", dialog) }
-        optionElectronics.setOnClickListener { updateGoods("Electronics", dialog) }
-        optionLogistics.setOnClickListener { updateGoods("Logistics Service Providers", dialog) }
-        optionMachines.setOnClickListener { updateGoods("Machines / Equipments / Spare Parts", dialog) }
-        optionPharma.setOnClickListener { updateGoods("Pharmaceutical / Healthcare Products", dialog) }
-        optionPlastic.setOnClickListener { updateGoods("Plastic Products", dialog) }
-        optionRubber.setOnClickListener { updateGoods("Rubber Products", dialog) }
-        optionTextile.setOnClickListener { updateGoods("Textiles / Garments / Fashion / Accessories", dialog) }
-        optionTimber.setOnClickListener { updateGoods("Timbers / Plywoods / Papers", dialog) }
-        optionBooks.setOnClickListener { updateGoods("Books / Stationary / Gifts / Toys", dialog) }
+        options.forEach { (id, value) ->
+            sheetView.findViewById<TextView>(id).setOnClickListener {
+                updateGoods(value, dialog)
+            }
+        }
 
         dialog.setContentView(sheetView)
         dialog.show()
     }
 
     private fun updateGoods(value: String, dialog: BottomSheetDialog) {
-        vm.goodsType = value
-
-        val firstWord = value.trim().split(" ")[0]
-        goodsTypeText.text = firstWord
-
+        LocalStorage.saveFareDetails(
+            this,
+            vehicle   = LocalStorage.getSelectedVehicle(this),
+            fare      = LocalStorage.getFinalFare(this),
+            goodsType = value
+        )
+        goodsTypeText.text = value.trim().split(" ")[0]
         dialog.dismiss()
     }
 
+    // ================= NOTIFICATION =================
+
     private fun sendNotification(rideId: Long) {
-
         val notificationRequest = RideNotificationRequest(
-            rideId = rideId,
-            message = "New Ride Request",
-            fare = vm.finalFare,
-            vehicle = mapVehicleForBackend(vm.selectedVehicle),
-            pickup = vm.pickupAddress,
-            drop = vm.dropAddress,
-            distance = vm.distanceText
+            rideId   = rideId,
+            message  = "New Ride Request",
+            fare     = LocalStorage.getFinalFare(this),
+            vehicle  = mapVehicleForBackend(LocalStorage.getSelectedVehicle(this)),
+            pickup   = LocalStorage.getPickupAddress(this),
+            drop     = LocalStorage.getDropAddress(this),
+            distance = LocalStorage.getDistanceText(this)
         )
-
         ApiClient.api.sendRideNotification(notificationRequest)
             .enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {}
@@ -469,10 +326,10 @@ class FinalFareActivity : BaseActivity() {
 
     private fun mapVehicleForBackend(vehicle: String): String {
         return when (vehicle) {
-            "Bike" -> "BIKE"
+            "Bike"   -> "BIKE"
             "Loader" -> "THREE_WHEELER"
-            "Truck" -> "FOUR_WHEELER_EV"
-            else -> vehicle.uppercase()
+            "Truck"  -> "FOUR_WHEELER_EV"
+            else     -> vehicle.uppercase()
         }
     }
 }

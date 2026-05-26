@@ -1,9 +1,10 @@
 package com.zarkit.zarkit_user
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.*
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,10 +14,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 
-
 class SenderDetailsActivity : BaseActivity(), OnMapReadyCallback {
 
-    private lateinit var vm: LocationViewModel
     private lateinit var addressShort: TextView
     private lateinit var addressFull: TextView
 
@@ -31,35 +30,70 @@ class SenderDetailsActivity : BaseActivity(), OnMapReadyCallback {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_sender_details)
-        //HANDLE SYSTEM BAR INSETS
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.setPadding(
-                systemBars.left,
-                systemBars.top,
-                systemBars.right,
-                systemBars.bottom
-            )
-            insets
-        }
 
-        vm = (application as MyApp).vm
+        window.statusBarColor = android.graphics.Color.TRANSPARENT
 
-        addressShort = findViewById(R.id.addressShort)
-        addressFull = findViewById(R.id.addressLabel)
-
-        houseEdit = findViewById(R.id.houseEdit)
-        nameEdit = findViewById(R.id.nameEdit)
-        phoneEdit = findViewById(R.id.phoneEdit)
+        addressShort   = findViewById(R.id.addressShort)
+        addressFull    = findViewById(R.id.addressLabel)
+        houseEdit      = findViewById(R.id.houseEdit)
+        nameEdit       = findViewById(R.id.nameEdit)
+        phoneEdit      = findViewById(R.id.phoneEdit)
         typeRadioGroup = findViewById(R.id.typeRadioGroup)
-        confirmButton = findViewById(R.id.confirmButton)
+        confirmButton  = findViewById(R.id.confirmButton)
+
+        val tooltip    = findViewById<View>(R.id.infoTooltip)
+        val helpButton = findViewById<TextView>(R.id.helpButton)
 
         // Back button
-        findViewById<ImageButton>(R.id.BackButton).setOnClickListener {
+        findViewById<ImageView>(R.id.btnBack).setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
+        // CLOSE button
+        findViewById<TextView>(R.id.closeTooltip).setOnClickListener {
+            tooltip.animate()
+                .alpha(0f)
+                .translationY(-10f)
+                .setDuration(200)
+                .withEndAction {
+                    tooltip.visibility = View.GONE
+                    helpButton.visibility = View.VISIBLE
+                    helpButton.alpha = 0f
+                    helpButton.scaleX = 0.5f
+                    helpButton.scaleY = 0.5f
+                    helpButton.animate()
+                        .alpha(1f)
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(250)
+                        .start()
+                }
+                .start()
+        }
+
+        // HELP ? button
+        helpButton.setOnClickListener {
+            helpButton.animate()
+                .alpha(0f)
+                .scaleX(0.5f)
+                .scaleY(0.5f)
+                .setDuration(180)
+                .withEndAction {
+                    helpButton.visibility = View.GONE
+                    tooltip.visibility = View.VISIBLE
+                    tooltip.alpha = 0f
+                    tooltip.translationY = -10f
+                    tooltip.animate()
+                        .alpha(1f)
+                        .translationY(0f)
+                        .setDuration(220)
+                        .start()
+                }
+                .start()
+        }
+
+
 
         // Auto-fill phone from LocalStorage
         val savedPhone = LocalStorage.getPhone(this)
@@ -67,33 +101,34 @@ class SenderDetailsActivity : BaseActivity(), OnMapReadyCallback {
             phoneEdit.setText(savedPhone)
         }
 
-        // Default radio button = Home
+        // Default radio
         findViewById<RadioButton>(R.id.homeRadio).isChecked = true
 
-        // Auto-fill address from VM
-        if (vm.pickupAddress.isNotEmpty()) {
-            addressShort.text = vm.pickupAddress.split(",").firstOrNull() ?: "Pickup"
-            addressFull.text = vm.pickupAddress
+        // Auto-fill pickup address
+        val pickupAddress = LocalStorage.getPickupAddress(this)
+        if (pickupAddress.isNotEmpty()) {
+            addressShort.text = pickupAddress.split(",").firstOrNull() ?: "Pickup"
+            addressFull.text  = pickupAddress
         } else {
             addressShort.text = "Pickup"
-            addressFull.text = "Pickup Address"
+            addressFull.text  = "Pickup Address"
         }
 
-        // Change Address button → go back
+        // Change Address
         findViewById<Button>(R.id.changeAddressButton).setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // Initialize map
+        // Map init
         val mapFragment =
             supportFragmentManager.findFragmentById(R.id.miniMapFragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        // Confirm button click
+        // Confirm
         confirmButton.setOnClickListener {
-            val house = houseEdit.text.toString().trim()
-            val name = nameEdit.text.toString().trim()
-            val phone = phoneEdit.text.toString().trim()
+            val house  = houseEdit.text.toString().trim()
+            val name   = nameEdit.text.toString().trim()
+            val phone  = phoneEdit.text.toString().trim()
             val typeId = typeRadioGroup.checkedRadioButtonId
 
             if (house.isEmpty() || name.isEmpty() || phone.isEmpty() || typeId == -1) {
@@ -101,52 +136,45 @@ class SenderDetailsActivity : BaseActivity(), OnMapReadyCallback {
                 return@setOnClickListener
             }
 
-            // Save sender details into VM
-            vm.senderHouse = house
-            vm.senderName = name
-            vm.senderPhone = phone
-            vm.senderType = findViewById<RadioButton>(typeId).text.toString()
+            LocalStorage.saveSenderDetails(
+                this,
+                house = house,
+                name  = name,
+                phone = phone,
+                type  = findViewById<RadioButton>(typeId).text.toString()
+            )
 
-            // Go to receiver screen
-            startActivity(android.content.Intent(this, ReceiverDetailsActivity::class.java))
+            startActivity(Intent(this, ReceiverDetailsActivity::class.java))
         }
     }
 
     override fun onMapReady(map: GoogleMap) {
         gMap = map
 
-        // If VM has pickup coordinates, show marker there; otherwise default
-        val lat = if (vm.pickupLat != 0.0) vm.pickupLat else 25.4489
-        val lon = if (vm.pickupLon != 0.0) vm.pickupLon else 78.5683
+        val lat = LocalStorage.getPickupLat(this).takeIf { it != 0.0 } ?: 25.4489
+        val lon = LocalStorage.getPickupLng(this).takeIf { it != 0.0 } ?: 78.5683
         val loc = LatLng(lat, lon)
+
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 16f))
 
-        // ------------------- GOOGLE-STYLE BLUE PICKUP MARKER -------------------
-
-        // Add pulsing circle at pickup point
         val circle = gMap.addCircle(
             com.google.android.gms.maps.model.CircleOptions()
                 .center(loc)
-                .radius(0.0) // start radius
-                .strokeColor(android.graphics.Color.parseColor("#FFD500")) // Google Blue
+                .radius(0.0)
+                .strokeColor(android.graphics.Color.parseColor("#FFD500"))
                 .strokeWidth(3f)
-                .fillColor(android.graphics.Color.parseColor("#33FFD500")) // semi-transparent Google Blue
+                .fillColor(android.graphics.Color.parseColor("#33FFD500"))
         )
 
-        // Animate the circle radius to pulse like Google Maps
-        val animator = android.animation.ValueAnimator.ofFloat(0f, 60f) // radius in meters
+        val animator = android.animation.ValueAnimator.ofFloat(0f, 60f)
         animator.duration = 1000
         animator.repeatMode = android.animation.ValueAnimator.RESTART
         animator.repeatCount = android.animation.ValueAnimator.INFINITE
         animator.addUpdateListener { valueAnimator ->
-            val animatedRadius = valueAnimator.animatedValue as Float
-            circle.radius = animatedRadius.toDouble()
+            circle.radius = (valueAnimator.animatedValue as Float).toDouble()
         }
         animator.start()
-        // ------------------- PULSING ANIMATION END -------------------
 
         gMap.uiSettings.setAllGesturesEnabled(false)
     }
-
-
 }

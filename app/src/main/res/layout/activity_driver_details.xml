@@ -245,13 +245,105 @@
 
             </LinearLayout>
 
-            <!-- Divider -->
-            <View
+            <!-- ===== OTP SECTION ===== -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#F0F0F5"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="14dp" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/chip_bg"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp">
+
+                <!-- Label -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🔒 Share OTP with driver to end ride / ड्राइवर को OTP बताएं।"
+                    android:textSize="9sp"
+                    android:textColor="#4A4A6A"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="8dp" />
+
+                <!-- OTP Boxes + hint vertical -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/otpDigit1"
+                            android:layout_width="26dp"
+                            android:layout_height="30dp"
+                            android:gravity="center"
+                            android:text="-"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/color_Primary"
+                            android:background="@drawable/otp_box_bg"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/otpDigit2"
+                            android:layout_width="26dp"
+                            android:layout_height="30dp"
+                            android:gravity="center"
+                            android:text="-"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/color_Primary"
+                            android:background="@drawable/otp_box_bg"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/otpDigit3"
+                            android:layout_width="26dp"
+                            android:layout_height="30dp"
+                            android:gravity="center"
+                            android:text="-"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/color_Primary"
+                            android:background="@drawable/otp_box_bg"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:id="@+id/otpDigit4"
+                            android:layout_width="26dp"
+                            android:layout_height="30dp"
+                            android:gravity="center"
+                            android:text="-"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/color_Primary"
+                            android:background="@drawable/otp_box_bg" />
+
+                    </LinearLayout>
+
+                    <!-- Sub hint -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sirf driver ko batayein"
+                        android:textSize="8sp"
+                        android:textColor="#888780"
+                        android:gravity="center"
+                        android:layout_marginTop="3dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <!-- PAY BUTTON -->
             <Button

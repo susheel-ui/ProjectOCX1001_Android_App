@@ -1,143 +1,391 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    KEY FIXES:
+    1. Map height = 35% of screen (layout_constraintHeight_percent="0.35")
+       → Map size fix rehta hai, keyboard aane pe shrink nahi hota
+    2. mainCard height = 0dp with top+bottom constraints
+       → Card sirf available space leta hai
+    3. NestedScrollView height = match_parent inside card
+       → Content scroll karta hai andar andar
+    4. confirmButton bottom pe pinned rehta hai hamesha
+    AndroidManifest mein: android:windowSoftInputMode="adjustResize"
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F2F2F2">
 
-    <ImageButton
-        android:id="@+id/BackButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="12dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/baseline_arrow_back_ios_24"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:elevation="10dp"/>
-
-
-    <!-- Map -->
-
+    <!-- ═══════════════════════════════════════════
+         MAP — FIXED 35% height (keyboard se affect nahi hoga)
+    ═══════════════════════════════════════════ -->
     <fragment
         android:id="@+id/miniMapFragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/addressCard"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.35"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintBottom_toTopOf="@id/mainCard" />
+
+    <!-- ===== BACK BUTTON (top left) ===== -->
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/baseline_arrow_back_ios_24"
+        android:background="@android:color/transparent"
+        android:padding="6dp"
+        android:elevation="12dp"
+        android:scaleType="fitCenter"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- ═══════════════════════════════════════════
+         TOOLTIP — floats over map, top-right
+    ═══════════════════════════════════════════ -->
+    <TextView
+        android:id="@+id/helpButton"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginTop="14dp"
+        android:textColor="#FFB300"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="@drawable/ic_help_outline"
+        android:visibility="gone"
+        android:elevation="8dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
-
-
     <androidx.cardview.widget.CardView
-        android:id="@+id/addressCard"
-        android:layout_width="362dp"
-        android:layout_height="388dp"
-        android:layout_margin="10dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/confirmButton"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/infoTooltip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginTop="14dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/miniMapFragment">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="14dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:gravity="top"
+                android:orientation="horizontal">
 
-                <!-- Drag Handle -->
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center"
+                    android:text="💡"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tooltipMainText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:lineSpacingMultiplier="1.4"
+                    android:text="@string/tooltip_text"
+                    android:textColor="#222222"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/closeTooltip"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center"
+                    android:text="✕"
+                    android:textColor="#AAAAAA"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/tooltip_info_bg"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:text="ℹ️"
+                    android:textSize="14sp"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="सही जानकारी भरने से आपका ऑर्डर जल्दी और आसानी से पूरा होगा।"
+                    android:textColor="#3D3D9E"
+                    android:textSize="12sp"
+                    android:lineSpacingMultiplier="1.3" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- ═══════════════════════════════════════════
+         MAIN CARD — map ke neeche, button ke upar
+         height=0dp → sirf available space lega
+         keyboard aane pe yeh shrink hoga, scroll hoga andar
+    ═══════════════════════════════════════════ -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/mainCard"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="12dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="12dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@id/miniMapFragment"
+        app:layout_constraintBottom_toTopOf="@id/confirmButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- NestedScrollView: poora content scroll hoga jab keyboard khule -->
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="16dp"
+                android:orientation="vertical">
+
+                <!-- Drag handle -->
                 <View
-                    android:layout_width="40dp"
+                    android:layout_width="36dp"
                     android:layout_height="4dp"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="16dp"
-                    android:background="#D0D0D0" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="14dp"
+                    android:background="@drawable/drag_handle_bg" />
+
+                <!-- Pickup Address Header Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        app:cardCornerRadius="21dp"
+                        app:cardBackgroundColor="#E8F5E9"
+                        app:cardElevation="0dp">
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_location_on_green"
+                            android:contentDescription="pickup" />
+                    </androidx.cardview.widget.CardView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pickup Address"
+                            android:textColor="#1A1A1A"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="यहाँ से सामान उठाना है"
+                            android:textColor="#888888"
+                            android:textSize="12sp"
+                            android:layout_marginTop="1dp" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/changeAddressButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:text="Change"
+                        android:textColor="#1A73E8"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="0dp" />
+                </LinearLayout>
 
                 <!-- Address Row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="12dp">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_location_on_green" />
+                        android:layout_width="41dp"
+                        android:layout_height="28dp"
+                        android:contentDescription="pin"
+                        android:src="@drawable/location" />
 
-                    <TextView
-                        android:id="@+id/addressShort"
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
                         android:layout_weight="1"
-                        android:text="Loading..."
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/changeAddressButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="46dp"
-                        android:backgroundTint="@android:color/white"
-                        android:text="Change"
-                        android:textColor="#1A73E8"
-                        android:textSize="14sp" />
+                        android:layout_marginStart="10dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/addressShort"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="FH5G+6J6, Jhokan Bagh"
+                            android:textColor="#1A1A1A"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/addressLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="FH5G+6J6, Jhokan Bagh"
+                            android:textColor="#888888"
+                            android:textSize="12sp"
+                            android:layout_marginTop="1dp" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Full Address -->
-                <TextView
-                    android:id="@+id/addressLabel"
+                <!-- House / Apartment -->
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Loading full address..."
-                    android:textColor="#666666"
-                    android:textSize="14sp" />
+                    android:layout_height="52dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/input_field_bg"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="14dp">
 
-                <!-- House -->
-                <EditText
-                    android:id="@+id/houseEdit"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="14dp"
-                    android:background="@drawable/edittext_border"
-                    android:hint="Pickup : House / Apartment / Shop "
-                    android:padding="12dp" />
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="32dp"
+                        android:contentDescription="address"
+                        android:src="@drawable/address" />
+                    <EditText
+                        android:id="@+id/houseEdit"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginStart="10dp"
+                        android:background="@android:color/transparent"
+                        android:hint="Pickup : House / Apartment / Building No."
+                        android:textColorHint="#AAAAAA"
+                        android:textColor="#1A1A1A"
+                        android:textSize="14sp"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPostalAddress"
+                        android:singleLine="true" />
+                </LinearLayout>
 
-                <!-- Name -->
-                <EditText
-                    android:id="@+id/nameEdit"
+                <!-- Person Name -->
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="52dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/edittext_border"
-                    android:hint="Pickup : Person Name"
-                    android:padding="12dp" />
+                    android:background="@drawable/input_field_bg"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="14dp">
 
-                <!-- Phone -->
-                <EditText
-                    android:id="@+id/phoneEdit"
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="52dp"
+                        android:contentDescription="person"
+                        android:src="@drawable/profile" />
+                    <EditText
+                        android:id="@+id/nameEdit"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginStart="10dp"
+                        android:background="@android:color/transparent"
+                        android:hint="Pickup : Person Name"
+                        android:textColorHint="#AAAAAA"
+                        android:textColor="#1A1A1A"
+                        android:textSize="14sp"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName|textCapWords"
+                        android:singleLine="true" />
+                </LinearLayout>
+
+                <!-- Mobile Number -->
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="52dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/edittext_border"
-                    android:hint="Pickup : Person Mobile number"
-                    android:inputType="phone"
-                    android:padding="12dp" />
+                    android:background="@drawable/input_field_bg"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="14dp">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="52dp"
+                        android:contentDescription="phone"
+                        android:src="@drawable/phone" />
+                    <EditText
+                        android:id="@+id/phoneEdit"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginStart="10dp"
+                        android:background="@android:color/transparent"
+                        android:hint="Pickup : Mobile Number"
+                        android:textColorHint="#AAAAAA"
+                        android:textColor="#1A1A1A"
+                        android:textSize="14sp"
+                        android:imeOptions="actionDone"
+                        android:inputType="phone"
+                        android:maxLength="10"
+                        android:singleLine="true" />
+                </LinearLayout>
 
                 <!-- Save As -->
                 <TextView
@@ -145,53 +393,65 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
                     android:text="Save as (optional)"
-                    android:textColor="#333"
-                    android:textSize="14sp" />
+                    android:textColor="#444444"
+                    android:textSize="13sp" />
 
+                <!-- Radio Group -->
                 <RadioGroup
                     android:id="@+id/typeRadioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
-
                     <RadioButton
                         android:id="@+id/homeRadio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Home" />
-
+                        android:text="Home"
+                        android:textColor="#333333"
+                        android:textSize="14sp"
+                        android:buttonTint="#FFB300" />
                     <RadioButton
                         android:id="@+id/shopRadio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:text="Shop" />
-
+                        android:layout_marginStart="24dp"
+                        android:text="Shop"
+                        android:textColor="#333333"
+                        android:textSize="14sp"
+                        android:buttonTint="#FFB300" />
                     <RadioButton
                         android:id="@+id/otherRadio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:text="Other" />
+                        android:layout_marginStart="24dp"
+                        android:text="Other"
+                        android:textColor="#333333"
+                        android:textSize="14sp"
+                        android:buttonTint="#FFB300" />
                 </RadioGroup>
 
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
     </androidx.cardview.widget.CardView>
 
-    <!-- Bottom CTA -->
+    <!-- ═══════════════════════════════════════════
+         CONFIRM BUTTON — hamesha bottom pe pinned
+         adjustResize ke saath yeh bhi upar aa jaayega
+    ═══════════════════════════════════════════ -->
     <Button
         android:id="@+id/confirmButton"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/color_primary"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:text="Confirm and Proceed"
-        android:textColor="@android:color/black"
+        android:textColor="#1A1A1A"
+        android:textSize="16sp"
         android:textStyle="bold"
+        android:backgroundTint="@color/color_Primary"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

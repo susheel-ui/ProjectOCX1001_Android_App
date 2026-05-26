@@ -30,7 +30,6 @@ import androidx.core.view.WindowInsetsCompat
 
 class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
 
-    private lateinit var vm: LocationViewModel
     private lateinit var gMap: GoogleMap
 
     private lateinit var pickupEdit: EditText
@@ -40,11 +39,8 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
     private lateinit var dropPin: ImageView
 
     private lateinit var btnBack: ImageView
-
-    private lateinit var btnCloseTooltip : ImageView
-
+    private lateinit var btnCloseTooltip: ImageView
     private lateinit var btnHelp: ImageView
-
     private lateinit var btnClearPickup: ImageView
     private lateinit var btnClearDrop: ImageView
 
@@ -53,7 +49,6 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
     private var isSelectingPickup = false
     private var isSelectingDrop = false
 
-    // 📍 JHANSI ELITE CENTER (REFERENCE POINT ONLY)
     private val JHANSI_LAT = 25.4484
     private val JHANSI_LNG = 78.5685
     private val MAX_RADIUS_KM = 40.0
@@ -82,44 +77,10 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
             )
 
         val root = findViewById<View>(android.R.id.content)
-
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
-
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-
-            view.setPadding(
-                systemBars.left,
-                systemBars.top,
-                systemBars.right,
-                systemBars.bottom
-            )
-
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
-        }
-
-        vm = (application as MyApp).vm
-        btnClearPickup = findViewById(R.id.btnClearPickup)
-        btnClearDrop = findViewById(R.id.btnClearDrop)
-        btnClearPickup.setOnClickListener {
-
-            pickupEdit.setText("")
-
-            vm.pickupAddress = ""
-            vm.pickupLat = 0.0
-            vm.pickupLon = 0.0
-
-            pickupPin.visibility = View.GONE
-        }
-
-        btnClearDrop.setOnClickListener {
-
-            dropEdit.setText("")
-
-            vm.dropAddress = ""
-            vm.dropLat = 0.0
-            vm.dropLon = 0.0
-
-            dropPin.visibility = View.GONE
         }
 
         pickupEdit = findViewById(R.id.pickupEdit)
@@ -127,31 +88,77 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
         btnNext = findViewById(R.id.btnNext)
         pickupPin = findViewById(R.id.pickupPin)
         dropPin = findViewById(R.id.dropPin)
+        btnBack = findViewById(R.id.btnBack)
+        btnCloseTooltip = findViewById(R.id.btnCloseTooltip)
+        tooltipCard = findViewById(R.id.tooltipCard)
+        btnHelp = findViewById(R.id.btnHelp)
+        btnClearPickup = findViewById(R.id.btnClearPickup)
+        btnClearDrop = findViewById(R.id.btnClearDrop)
 
         pickupPin.visibility = View.GONE
         dropPin.visibility = View.GONE
 
-        // KEEP EXISTING AUTO PICKUP FROM CURRENT LOCATION
-        if (vm.pickupAddress.isNotEmpty()) {
-            pickupEdit.setText(vm.pickupAddress)
+        // ── Restore existing pickup if already set ──
+        val savedPickupAddress = LocalStorage.getPickupAddress(this)
+        if (savedPickupAddress.isNotEmpty()) {
+            pickupEdit.setText(savedPickupAddress)
             pickupPin.visibility = View.VISIBLE
             isSelectingPickup = true
         }
-        btnBack = findViewById(R.id.btnBack)
 
-        btnBack.setOnClickListener {
-            goToHome()
+        btnClearPickup.setOnClickListener {
+            closeTooltip()
+            pickupEdit.setText("")
+            LocalStorage.savePickupLocation(this, 0.0, 0.0, "")
+            pickupPin.visibility = View.GONE
         }
 
-        btnCloseTooltip = findViewById(R.id.btnCloseTooltip)
-        tooltipCard = findViewById(R.id.tooltipCard)
-        btnHelp = findViewById(R.id.btnHelp)
+        btnClearDrop.setOnClickListener {
+            closeTooltip()
+            dropEdit.setText("")
+            LocalStorage.saveDropLocation(this, 0.0, 0.0, "")
+            dropPin.visibility = View.GONE
+        }
 
+        btnBack.setOnClickListener { goToHome() }
+
+
+
+        // Close tooltip → show help button
         btnCloseTooltip.setOnClickListener {
-            tooltipCard.visibility = View.GONE
+            tooltipCard.animate()
+                .alpha(0f)
+                .translationY(-10f)
+                .setDuration(200)
+                .withEndAction {
+                    tooltipCard.visibility = View.GONE
+                    tooltipCard.translationY = 0f   // ← reset for next time
+
+                    btnHelp.visibility = View.VISIBLE
+                    btnHelp.alpha = 0f
+                    btnHelp.scaleX = 0.5f
+                    btnHelp.scaleY = 0.5f
+                    btnHelp.animate()
+                        .alpha(1f).scaleX(1f).scaleY(1f)
+                        .setDuration(250).start()
+                }.start()
         }
+
+// Help button → show tooltip
         btnHelp.setOnClickListener {
-            tooltipCard.visibility = View.VISIBLE
+            btnHelp.animate()
+                .alpha(0f).scaleX(0.5f).scaleY(0.5f)
+                .setDuration(180)
+                .withEndAction {
+                    btnHelp.visibility = View.GONE
+
+                    tooltipCard.visibility = View.VISIBLE
+                    tooltipCard.alpha = 0f
+                    tooltipCard.translationY = -10f
+                    tooltipCard.animate()
+                        .alpha(1f).translationY(0f)
+                        .setDuration(220).start()
+                }.start()
         }
 
         val mapFragment =
@@ -159,6 +166,7 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         pickupEdit.setOnClickListener {
+            closeTooltip()
             isSelectingPickup = true
             isSelectingDrop = false
             pickupPin.visibility = View.VISIBLE
@@ -167,6 +175,7 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
         }
 
         dropEdit.setOnClickListener {
+            closeTooltip()
             isSelectingPickup = false
             isSelectingDrop = true
             pickupPin.visibility = View.GONE
@@ -174,9 +183,34 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
             openAutocomplete(false)
         }
 
-        btnNext.setOnClickListener {
-            validateAndProceed()
-        }
+        btnNext.setOnClickListener { validateAndProceed() }
+    }
+
+    private fun closeTooltip() {
+
+        tooltipCard.animate()
+            .alpha(0f)
+            .translationY(-10f)
+            .setDuration(200)
+            .withEndAction {
+
+                tooltipCard.visibility = View.GONE
+                tooltipCard.translationY = 0f
+                tooltipCard.alpha = 1f
+
+                btnHelp.visibility = View.VISIBLE
+                btnHelp.alpha = 0f
+                btnHelp.scaleX = 0.5f
+                btnHelp.scaleY = 0.5f
+
+                btnHelp.animate()
+                    .alpha(1f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(250)
+                    .start()
+
+            }.start()
     }
 
     private fun goToHome() {
@@ -186,15 +220,16 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
         finish()
     }
 
-
     // ================= MAP =================
 
     override fun onMapReady(map: GoogleMap) {
         gMap = map
 
-        // ✅ KEEP EXISTING CAMERA BEHAVIOR
-        if (vm.pickupLat != 0.0 && vm.pickupLon != 0.0) {
-            val pickup = LatLng(vm.pickupLat, vm.pickupLon)
+        val pickupLat = LocalStorage.getPickupLat(this)
+        val pickupLng = LocalStorage.getPickupLng(this)
+
+        if (pickupLat != 0.0 && pickupLng != 0.0) {
+            val pickup = LatLng(pickupLat, pickupLng)
             gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pickup, 17f))
             pickupPin.visibility = View.VISIBLE
             isSelectingPickup = true
@@ -211,7 +246,6 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
 
     private fun updateLocationFromMap(latLng: LatLng) {
 
-        //  BLOCK OUTSIDE 40 KM FROM JHANSI ELITE
         if (!isWithinJhansi(latLng.latitude, latLng.longitude)) {
             showOutOfRangeDialog()
             return
@@ -225,16 +259,12 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
                 val address = makeShortAddress(list[0].getAddressLine(0) ?: "")
 
                 if (isSelectingPickup) {
-                    vm.pickupLat = latLng.latitude
-                    vm.pickupLon = latLng.longitude
-                    vm.pickupAddress = address
+                    LocalStorage.savePickupLocation(this, latLng.latitude, latLng.longitude, address)
                     pickupEdit.setText(address)
                 }
 
                 if (isSelectingDrop) {
-                    vm.dropLat = latLng.latitude
-                    vm.dropLon = latLng.longitude
-                    vm.dropAddress = address
+                    LocalStorage.saveDropLocation(this, latLng.latitude, latLng.longitude, address)
                     dropEdit.setText(address)
                 }
             }
@@ -265,25 +295,19 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
             .setCountries(listOf("IN"))
             .build(this)
 
-        intent.putExtra(
-            "theme",
-            R.style.PlacesWhiteTheme
-        )
+        intent.putExtra("theme", R.style.PlacesWhiteTheme)
 
         if (isPickup) pickupLauncher.launch(intent)
         else dropLauncher.launch(intent)
     }
 
-    private fun handleAutocompleteResult(
-        result: ActivityResult,
-        isPickup: Boolean
-    ) {
+    private fun handleAutocompleteResult(result: ActivityResult, isPickup: Boolean) {
+
         if (result.resultCode != RESULT_OK || result.data == null) return
 
         val place = Autocomplete.getPlaceFromIntent(result.data!!)
         val latLng = place.latLng ?: return
 
-        //  BLOCK OUTSIDE 40 KM
         if (!isWithinJhansi(latLng.latitude, latLng.longitude)) {
             showOutOfRangeDialog()
             return
@@ -292,16 +316,12 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
         val address = makeShortAddress(place.address ?: "")
 
         if (isPickup) {
-            vm.pickupLat = latLng.latitude
-            vm.pickupLon = latLng.longitude
-            vm.pickupAddress = address
+            LocalStorage.savePickupLocation(this, latLng.latitude, latLng.longitude, address)
             pickupEdit.setText(address)
             pickupPin.visibility = View.VISIBLE
             dropPin.visibility = View.GONE
         } else {
-            vm.dropLat = latLng.latitude
-            vm.dropLon = latLng.longitude
-            vm.dropAddress = address
+            LocalStorage.saveDropLocation(this, latLng.latitude, latLng.longitude, address)
             dropEdit.setText(address)
             pickupPin.visibility = View.GONE
             dropPin.visibility = View.VISIBLE
@@ -314,19 +334,24 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
 
     private fun validateAndProceed() {
 
-        if (vm.pickupAddress.isEmpty()) {
+        val pickupAddress = LocalStorage.getPickupAddress(this)
+        val dropAddress = LocalStorage.getDropAddress(this)
+        val pickupLat = LocalStorage.getPickupLat(this)
+        val pickupLng = LocalStorage.getPickupLng(this)
+        val dropLat = LocalStorage.getDropLat(this)
+        val dropLng = LocalStorage.getDropLng(this)
+
+        if (pickupAddress.isEmpty()) {
             toast("Select Pickup Address")
             return
         }
 
-        if (vm.dropAddress.isEmpty()) {
+        if (dropAddress.isEmpty()) {
             toast("Select Drop Address")
             return
         }
 
-        if (!isWithinJhansi(vm.pickupLat, vm.pickupLon)
-            || !isWithinJhansi(vm.dropLat, vm.dropLon)
-        ) {
+        if (!isWithinJhansi(pickupLat, pickupLng) || !isWithinJhansi(dropLat, dropLng)) {
             showOutOfRangeDialog()
             return
         }
@@ -338,9 +363,8 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
 
     // ================= DISTANCE =================
 
-    private fun isWithinJhansi(lat: Double, lng: Double): Boolean {
-        return distanceFromJhansi(lat, lng) <= MAX_RADIUS_KM
-    }
+    private fun isWithinJhansi(lat: Double, lng: Double): Boolean =
+        distanceFromJhansi(lat, lng) <= MAX_RADIUS_KM
 
     private fun distanceFromJhansi(lat: Double, lng: Double): Double {
         val earthRadius = 6371.0
@@ -362,16 +386,20 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
 
         Log.d("DISTANCE_DEBUG", "FUNCTION CALLED")
 
+        val pickupLat = LocalStorage.getPickupLat(this)
+        val pickupLng = LocalStorage.getPickupLng(this)
+        val dropLat = LocalStorage.getDropLat(this)
+        val dropLng = LocalStorage.getDropLng(this)
+
         val url =
             "https://maps.googleapis.com/maps/api/directions/json?" +
-                    "origin=${vm.pickupLat},${vm.pickupLon}" +
-                    "&destination=${vm.dropLat},${vm.dropLon}" +
+                    "origin=$pickupLat,$pickupLng" +
+                    "&destination=$dropLat,$dropLng" +
                     "&mode=driving" +
-                    "&key=${("AIzaSyAk5HjRT_tihvIZ7Y0ZQbcvpzn0yOSM8ac")}"
+                    "&key=${"AIzaSyAk5HjRT_tihvIZ7Y0ZQbcvpzn0yOSM8ac"}"
 
         Thread {
             try {
-
                 val response = URL(url).readText()
                 val json = JSONObject(response)
 
@@ -390,13 +418,13 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
                 val distanceObj = legs.getJSONObject("distance")
                 val durationObj = legs.getJSONObject("duration")
 
-                //  TEXT
-                vm.distanceText = distanceObj.getString("text")
-                vm.durationText = durationObj.getString("text")
-
-                //  VALUE (Use Double)
-                vm.distanceValue = distanceObj.getDouble("value")   // meters
-                vm.durationValue = durationObj.getDouble("value")   // seconds
+                LocalStorage.saveDistanceAndDuration(
+                    this,
+                    distanceText = distanceObj.getString("text"),
+                    durationText = durationObj.getString("text"),
+                    distanceValue = distanceObj.getDouble("value"),
+                    durationValue = durationObj.getDouble("value")
+                )
 
             } catch (e: Exception) {
                 Log.e("DISTANCE_DEBUG", "ERROR = ${e.message}")
@@ -406,7 +434,6 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
 
         }.start()
     }
-
 
     // ================= UI =================
 
@@ -428,5 +455,4 @@ class Pickup_Drop_Selector_Activity : BaseActivity(), OnMapReadyCallback {
     private fun toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
-
 }

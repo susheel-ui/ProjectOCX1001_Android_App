@@ -4,16 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F6FA">
+    android:background="#F0F2F5">
 
     <!-- ================= TOP HEADER ================= -->
     <LinearLayout
         android:id="@+id/topHeader"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_height="64dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="12dp"
+        android:paddingHorizontal="14dp"
         android:background="@color/white"
         android:elevation="4dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -22,26 +22,41 @@
 
         <ImageButton
             android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/baseline_arrow_back_ios_24"
             android:contentDescription="Back"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="Review Booking"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#111"/>
+            android:orientation="vertical"
+            android:layout_marginStart="10dp">
 
-        <!-- Spacer for centering -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Review Booking"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="#111111"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="अपनी बुकिंग की समीक्षा करें"
+                android:textSize="11sp"
+                android:textColor="#888888"
+                android:layout_marginTop="1dp"/>
+        </LinearLayout>
+
+        <!-- Spacer for balance -->
         <View
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
+            android:layout_width="36dp"
+            android:layout_height="36dp"/>
+
     </LinearLayout>
 
     <!-- ================= SCROLLABLE CONTENT ================= -->
@@ -49,6 +64,7 @@
         android:id="@+id/scrollContent"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/topHeader"
         app:layout_constraintBottom_toTopOf="@id/bottomSection"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,26 +74,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp"
-            android:background="#F4F7FA">
+            android:padding="14dp"
+            android:background="#F0F2F5">
 
-            <!-- Vehicle Card -->
+            <!-- ===== VEHICLE CARD ===== -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp"
+                android:padding="14dp"
                 android:background="@drawable/white_card"
                 android:elevation="2dp"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="10dp">
 
                 <ImageView
                     android:id="@+id/vehicleImage"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:src="@drawable/zarkitgroup"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/bg_vehicle_icon_box"
+                    android:padding="4dp"/>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -88,10 +106,10 @@
 
                     <TextView
                         android:id="@+id/vehicleName"
-                        android:text="Scooter"
+                        android:text="2 Wheeler"
                         android:textStyle="bold"
-                        android:textSize="17sp"
-                        android:textColor="#111"
+                        android:textSize="16sp"
+                        android:textColor="#111111"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -100,23 +118,38 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="View Address Details"
-                        android:textColor="#2E64FE"
-                        android:textSize="14sp"
+                        android:textColor="#1A6FE0"
+                        android:textSize="10sp"
+                        android:layout_marginTop="3dp"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackgroundBorderless"/>
                 </LinearLayout>
+
+                <!-- Electric Badge -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⚡ Faster Delivery"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="#0A7A45"
+                    android:background="@drawable/bg_badge_electric"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"/>
+
             </LinearLayout>
 
-            <!-- GOODS TYPE CARD -->
+            <!-- ===== GOODS TYPE CARD ===== -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp"
+                android:padding="14dp"
                 android:background="@drawable/white_card"
                 android:elevation="2dp"
-                android:layout_marginBottom="12dp">
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -126,8 +159,8 @@
 
                     <TextView
                         android:text="Goods Type"
-                        android:textSize="14sp"
-                        android:textColor="#777"
+                        android:textSize="12sp"
+                        android:textColor="#888888"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -135,72 +168,142 @@
                         android:id="@+id/goodsType"
                         android:text="General • Loose"
                         android:textStyle="bold"
-                        android:textSize="16sp"
-                        android:textColor="#111"
+                        android:textSize="15sp"
+                        android:textColor="#111111"
+                        android:layout_marginTop="2dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/btnChange"
-                    android:text="Change"
-                    android:textColor="#2E64FE"
-                    android:textSize="15sp"
+                    android:text="Change ›"
+                    android:textColor="#1A6FE0"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:padding="6dp"
                     android:clickable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
 
-            <!-- WARNING -->
+            <!-- ===== WARNING CARD ===== -->
             <LinearLayout
                 android:id="@+id/restrictedItemsCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="13dp"
                 android:background="@drawable/yellow_card"
                 android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp">
 
                 <TextView
-                    android:text="Do not send restricted items"
-                    android:textSize="15sp"
-                    android:textColor="#111"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🛡️"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="10dp"/>
+
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:text="Do not send restricted items"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="#7A5700"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:text="प्रतिबंधित सामान की सूची देखने के लिए यहां क्लिक करें।"
+                        android:textSize="11sp"
+                        android:textColor="#A07800"
+                        android:layout_marginTop="2dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/btnViewList"
-                    android:text="View List"
-                    android:textColor="#2E64FE"
-                    android:textSize="15sp"
+                    android:text="View List ›"
+                    android:textColor="#1A6FE0"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:clickable="true"
+                    android:layout_marginStart="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
 
-            <!-- FINAL FARE -->
-            <TextView
-                android:id="@+id/finalFareText"
-                android:text="₹0"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="#111"
-                android:padding="18dp"
-                android:background="@drawable/white_card"
-                android:elevation="3dp"
+            <!-- ===== TOTAL FARE CARD ===== -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"/>
+                android:orientation="horizontal"
+                android:padding="14dp"
+                android:background="@drawable/white_card"
+                android:elevation="2dp"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
 
-            <!-- RULES -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏷️"
+                    android:textSize="22sp"
+                    android:layout_marginEnd="12dp"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Fare"
+                        android:textSize="12sp"
+                        android:textColor="#888888"/>
+
+                    <TextView
+                        android:id="@+id/finalFareText"
+                        android:text="₹30.00"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="#111111"
+                        android:layout_marginTop="1dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <!-- GST Info Pill -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ⓘ 18% GST\nincluded"
+                    android:textSize="11sp"
+                    android:textColor="#555555"
+                    android:gravity="center"
+                    android:background="@drawable/bg_gst_pill"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="6dp"/>
+
+            </LinearLayout>
+
+            <!-- ===== READ BEFORE BOOKING ===== -->
             <TextView
                 android:text="Read Before Booking"
                 android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="#111"
+                android:textSize="14sp"
+                android:textColor="#111111"
                 android:layout_marginBottom="8dp"
+                android:layout_marginStart="2dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -209,63 +312,72 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/white_card"
-                android:padding="16dp"
+                android:elevation="2dp"
                 android:orientation="vertical">
 
-                <TextView
+                <include
                     android:id="@+id/rule1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#555"
-                    android:layout_marginBottom="6dp"/>
+                    layout="@layout/item_rule"/>
 
-                <TextView
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#EEEEEE"
+                    android:layout_marginHorizontal="16dp"/>
+
+                <include
                     android:id="@+id/rule2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#555"
-                    android:layout_marginBottom="6dp"/>
+                    layout="@layout/item_rule"/>
 
-                <TextView
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#EEEEEE"
+                    android:layout_marginHorizontal="16dp"/>
+
+                <include
                     android:id="@+id/rule3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#555"
-                    android:layout_marginBottom="6dp"/>
+                    layout="@layout/item_rule"/>
 
-                <TextView
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#EEEEEE"
+                    android:layout_marginHorizontal="16dp"/>
+
+                <include
                     android:id="@+id/rule4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#555"
-                    android:layout_marginBottom="6dp"/>
+                    layout="@layout/item_rule"/>
 
-                <TextView
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#EEEEEE"
+                    android:layout_marginHorizontal="16dp"/>
+
+                <include
                     android:id="@+id/rule5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#555"
-                    android:layout_marginBottom="6dp"/>
+                    layout="@layout/item_rule"/>
 
-                <TextView
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#EEEEEE"
+                    android:layout_marginHorizontal="16dp"/>
+
+                <include
                     android:id="@+id/rule6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#555"
-                    android:layout_marginBottom="6dp"/>
+                    layout="@layout/item_rule"/>
 
-                <TextView
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#EEEEEE"
+                    android:layout_marginHorizontal="16dp"/>
+
+                <include
                     android:id="@+id/rule7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#555"/>
+                    layout="@layout/item_rule"/>
 
             </LinearLayout>
 
@@ -278,6 +390,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@color/white"
+        android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -286,106 +400,160 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#0039A6"
-            android:padding="14dp"
+            android:background="#0C3A9C"
+            android:padding="12dp"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <!-- GST Text -->
             <TextView
-                android:text="18% GST included in final fare"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🛡️"
+                android:textSize="18sp"
+                android:layout_marginEnd="8dp"/>
 
-            <!-- Add GST Button -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="18% GST included in final fare"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:text="Add or remove GST from your booking."
+                    android:textColor="#B3C6FF"
+                    android:textSize="11sp"
+                    android:layout_marginTop="1dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/btnAddGstTop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add GST"
-                android:textColor="#0039A6"
-                android:textSize="14sp"
+                android:textColor="#0C3A9C"
+                android:textSize="12sp"
                 android:textStyle="bold"
-                android:paddingHorizontal="14dp"
-                android:paddingVertical="8dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="7dp"
                 android:background="@drawable/bg_gst_button"
                 android:clickable="true"
                 android:focusable="true"/>
         </LinearLayout>
 
-        <!-- PAYMENT -->
+        <!-- PAYMENT ROW -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/white_card"
-            android:elevation="4dp"
-            android:padding="16dp"
+            android:background="@drawable/payment_card_bg"
+            android:elevation="3dp"
+            android:padding="14dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginTop="6dp">
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="10dp"
+            android:foreground="?attr/selectableItemBackground">
 
-            <TextView
-                android:text="Choose Payment Method"
-                android:textSize="16sp"
-                android:textColor="#111"
-                android:layout_weight="1"
+            <!-- Payment Icon -->
+            <LinearLayout
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/payment_icon_bg"
+                android:gravity="center"
+                android:layout_marginEnd="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💵"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+
+            <!-- Payment Title -->
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/paymentMethod"
-                android:text="Cash"
-                android:textSize="16sp"
-                android:textColor="#111"
-                android:layout_marginEnd="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Choose Payment Method"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#111111"/>
 
+                <TextView
+                    android:id="@+id/paymentMethod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cash Payment"
+                    android:textSize="12sp"
+                    android:textColor="#777777"
+                    android:layout_marginTop="2dp"/>
+            </LinearLayout>
+
+            <!-- Fare Section -->
             <LinearLayout
                 android:id="@+id/fareDetailsLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="6dp"
+                android:background="@drawable/fare_bg"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless">
 
                 <TextView
                     android:id="@+id/paymentFare"
-                    android:text="₹99"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#111"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="₹30.00"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#111111"/>
 
                 <TextView
                     android:id="@+id/priceInfoIcon"
-                    android:text=" ⓘ"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#2E64FE"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#555555"
+                    android:layout_marginStart="5dp"/>
             </LinearLayout>
 
         </LinearLayout>
 
+        <!-- CONFIRM BUTTON -->
         <Button
             android:id="@+id/bookNowButton"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:textColor="@color/black"
-            android:text="Confirm and Proceed"
+            android:layout_height="52dp"
+            android:textColor="#1A1200"
+            android:text="🔒  Confirm and Proceed"
             android:textStyle="bold"
-            android:textSize="16sp"
-            android:backgroundTint="@color/color_primary"
-            android:elevation="6dp"
-            android:layout_margin="16dp"/>
+            android:textSize="15sp"
+            android:backgroundTint="#F5C518"
+            android:elevation="4dp"
+            android:layout_margin="14dp"
+            android:stateListAnimator="@null"/>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

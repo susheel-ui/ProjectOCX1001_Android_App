@@ -16,8 +16,6 @@ import androidx.fragment.app.Fragment
 import com.zarkit.zarkit_user.BulkOrderActivity
 import com.zarkit.zarkit_user.DriverDetailsActivity
 import com.zarkit.zarkit_user.LocalStorage
-import com.zarkit.zarkit_user.LocationViewModel
-import com.zarkit.zarkit_user.MyApp
 import com.zarkit.zarkit_user.Pickup_Drop_Selector_Activity
 import com.zarkit.zarkit_user.R
 import com.zarkit.zarkit_user.api.ApiClient
@@ -35,7 +33,6 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var vm: LocationViewModel
 
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -59,7 +56,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        vm = (requireActivity().application as MyApp).vm
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         checkLocationPermission()
@@ -76,17 +72,9 @@ class HomeFragment : Fragment() {
             startActivity(Intent(requireContext(), BulkOrderActivity::class.java))
         }
 
-        binding.viewtwowheeler.setOnClickListener {
-            openPickupDrop(true)
-        }
-
-        binding.viewthreewheeler.setOnClickListener {
-            openPickupDrop(true)
-        }
-
-        binding.viewfourwheeler.setOnClickListener {
-            openPickupDrop(true)
-        }
+        binding.viewtwowheeler.setOnClickListener { openPickupDrop(true) }
+        binding.viewthreewheeler.setOnClickListener { openPickupDrop(true) }
+        binding.viewfourwheeler.setOnClickListener { openPickupDrop(true) }
 
         binding.btnChangeAddress.setOnClickListener {
             openPickupDrop(autoPickup = false)
@@ -102,7 +90,6 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         if (view != null) {
             checkActiveRide()
             checkRideStatusFromServer()
@@ -113,9 +100,7 @@ class HomeFragment : Fragment() {
 
     private fun checkRideStatusFromServer() {
         val ctx = context ?: return
-
         val activeRideId = LocalStorage.getActiveRideId(ctx)
-
         if (activeRideId <= 0) return
 
         ApiClient.api.getOnlyRideStatus(activeRideId)
@@ -125,24 +110,14 @@ class HomeFragment : Fragment() {
                     if (!isAdded || _binding == null) return
 
                     if (response.isSuccessful) {
-
                         val status = response.body()
                             ?.replace("\"", "")
                             ?.trim()
 
                         when (status) {
-
-                            "PENDING", "ACCEPTED", "STARTED" -> {
-                                // Do nothing
-                            }
-
-                            "COMPLETED" -> {
-                                showRideCompletedPopup()
-                            }
-
-                            "CANCELLED" -> {
-                                showRideCancelledPopup()
-                            }
+                            "PENDING", "ACCEPTED", "STARTED" -> { /* Do nothing */ }
+                            "COMPLETED" -> showRideCompletedPopup()
+                            "CANCELLED" -> showRideCancelledPopup()
                         }
                     }
                 }
@@ -192,7 +167,6 @@ class HomeFragment : Fragment() {
 
     private fun checkActiveRide() {
         val ctx = context ?: return
-
         val activeRideId = LocalStorage.getActiveRideId(ctx)
 
         if (activeRideId > 0) {
@@ -251,12 +225,10 @@ class HomeFragment : Fragment() {
 
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location ->
-
                 if (!isAdded || _binding == null) return@addOnSuccessListener
 
                 if (location != null) {
-                    vm.pickupLat = location.latitude
-                    vm.pickupLon = location.longitude
+                    LocalStorage.savePickupLocation(ctx, location.latitude, location.longitude)
                     fetchAddressFromLatLng(location.latitude, location.longitude)
                 } else {
                     _binding?.txtPickupAddress?.text = "Unable to get location"
@@ -287,7 +259,8 @@ class HomeFragment : Fragment() {
                     "Current location"
                 }
 
-                vm.pickupAddress = addressText
+                // Save address to LocalStorage
+                LocalStorage.savePickupLocation(ctx, lat, lng, addressText)
 
                 if (!isAdded || _binding == null) return@Thread
 
